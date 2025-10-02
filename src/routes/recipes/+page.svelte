@@ -1,8 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import type { Recipe } from "$lib/types";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
+  let recipes: Recipe[] = $state(data.items ?? []);
+  let searchValue: string = $state("");
 
   function handleGoBack() {
     goto("/");
@@ -10,12 +13,23 @@
   function handleAdd() {
     goto("/recipes/add");
   }
+
+  function handleSearch(searchText: string) {
+    recipes =
+      data.items?.filter((item) => item.name.includes(searchText)) ?? [];
+  }
 </script>
 
 <h1>Test</h1>
-{#if data.items}
+{#if recipes}
+  <input
+    placeholder="Search"
+    name="searchItems"
+    bind:value={searchValue}
+    oninput={() => handleSearch(searchValue)}
+  />
   <ul>
-    {#each data.items as recipe}
+    {#each recipes as recipe}
       <li>
         <a href="/recipes/{recipe.id}" data-sveltekit-preload-data="off"
           >{recipe.name}</a
