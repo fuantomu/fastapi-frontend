@@ -13,9 +13,9 @@
 </script>
 
 <h1>Test</h1>
-{#if data.ingredients}
+{#if data.items}
   <ul>
-    {#each data.ingredients as ingredient}
+    {#each data.items as ingredient}
       <li>
         <a href="/ingredients/{ingredient.id}" data-sveltekit-preload-data="off"
           >{ingredient.name}</a

@@ -13,10 +13,10 @@
 </script>
 
 <h1>Test</h1>
-{#if data.ingredient}
+{#if data.item}
   <form method="POST">
-    Are you sure you want to delete the ingredient '{data.ingredient.name}'?
-    <input id="id" type="hidden" name="id" value={data.ingredient.id} />
+    Are you sure you want to delete the ingredient '{data.item.name}'?
+    <input id="id" type="hidden" name="id" value={data.item.id} />
     <button type="submit">Delete</button>
   </form>
 {:else if data.error}

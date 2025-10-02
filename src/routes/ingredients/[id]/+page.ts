@@ -8,10 +8,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const { id } = params;
         const res = await fetch(`${PUBLIC_API_URL}/Ingredient/?id=${id}`);
         const data = await res.json()
-        const ingredient: Ingredient = data.Result[0];
+        const item: Ingredient = data.Result[0];
 
         return {
-            ingredient
+            item
         };
 
     } catch (err) {

@@ -8,10 +8,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const { id } = params;
         const res = await fetch(`${PUBLIC_API_URL}/Recipe/?id=${id}`);
         const data = await res.json()
-        const recipe: Recipe = data.Result[0];
+        const item: Recipe = data.Result[0];
 
         return {
-            recipe
+            item
         };
 
     } catch (err) {

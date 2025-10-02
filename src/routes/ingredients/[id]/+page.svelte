@@ -3,10 +3,12 @@
   import type { PageProps } from "./$types";
   import { page } from "$app/state";
   import AliasList from "$lib/components/AliasList.svelte";
+  import type { Ingredient } from "$lib/types";
 
   const id = page.url.pathname;
   let { data }: PageProps = $props();
-  let aliasList: string[] = $state(data.ingredient?.alias ?? []);
+  let aliasList: string[] = $state(data.item?.alias ?? []);
+  let ingredient: Ingredient | null = data.item ?? null
   let edit: Boolean = $state(false);
 
   function handleGoBack() {
@@ -17,7 +19,7 @@
   }
   function handleEdit() {
     edit = !edit;
-    aliasList = data.ingredient?.alias ?? [];
+    aliasList = ingredient?.alias ?? [];
     aliasError = null;
   }
 
@@ -28,23 +30,23 @@
 </script>
 
 <h1>Test</h1>
-{#if data.ingredient}
+{#if ingredient}
   {#if edit}
     <h2>Edit</h2>
     <form method="POST">
-      <input id="id" type="hidden" name="id" value={data.ingredient.id} />
+      <input id="id" type="hidden" name="id" value={ingredient.id} />
       <input
         id="name"
         name="name"
         type="text"
-        value={data.ingredient.name}
+        value={ingredient.name}
         required
       />
       <input
         id="description"
         name="description"
         type="text"
-        value={data.ingredient.description}
+        value={ingredient.description}
       />
       {#if aliasList}
         <AliasList {aliasList} onErrorChange={handleErrors} />
@@ -56,8 +58,8 @@
     </form>
   {:else}
     <h2>Show</h2>
-    {data.ingredient.name}
-    {data.ingredient.description}
+    {ingredient.name}
+    {ingredient.description}
     {#if aliasList}
       <ul>
         {#each aliasList as alias}

@@ -7,10 +7,10 @@ export const load: PageLoad = async ({ fetch }) => {
     try {
         const res = await fetch(`${PUBLIC_API_URL}/Ingredient/`);
         const data = await res.json()
-        const ingredients: Ingredient[] = data.Result;
+        const items: Ingredient[] = data.Result;
 
         return {
-            ingredients
+            items
         };
     } catch (err) {
         console.error('Unexpected error:', err);

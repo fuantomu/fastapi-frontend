@@ -7,10 +7,10 @@ export const load: PageLoad = async ({ fetch }) => {
     try {
         const res = await fetch(`${PUBLIC_API_URL}/Recipe/`);
         const data = await res.json()
-        const recipes: Recipe[] = data.Result;
+        const items: Recipe[] = data.Result;
 
         return {
-            recipes
+            items
         };
     } catch (err) {
         console.error('Unexpected error:', err);
