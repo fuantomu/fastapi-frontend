@@ -4,7 +4,7 @@
   import { page } from "$app/state";
   import type { Character, Guild } from "$lib/types";
   import { Faction, Gender, PlayerClass, PlayerSpec, Race } from "$lib/consts";
-  import ItemFrame from "$lib/components/itemFrame.svelte";
+  import ItemFrame from "$lib/components/ItemFrame.svelte";
   import { PUBLIC_API_URL } from "$env/static/public";
 
   const id = page.url.pathname;
