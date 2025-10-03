@@ -7,7 +7,7 @@
 
   const id = page.url.pathname;
   let { data }: PageProps = $props();
-  let guild: Guild | null = data.item ?? null;
+  let guild: Guild | null = $state(data.item ?? null);
   let edit: Boolean = $state(false);
 
   function handleGoBack() {

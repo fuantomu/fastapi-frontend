@@ -10,7 +10,7 @@
   let character: Character | null = $state(data.item ?? null);
   let edit: Boolean = $state(false);
   let guilds : Guild[] = $state(data.guilds ?? [])
-  let character_guild = data.guilds?.find((guild) => guild.id === character?.guild) ?? {"name": "Unknown", "id": 0}
+  let character_guild = $state(data.guilds?.find((guild) => guild.id === character?.guild) ?? {"name": "Unknown", "id": 0})
   let current_character_class = $state(character?.character_class ?? "Adventurer")
   let current_character_spec = $state(character?.active_spec ?? "Adventurer")
 
