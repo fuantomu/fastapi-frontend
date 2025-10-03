@@ -10,8 +10,13 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const data = await res.json()
         const item: Guild = data.Result[0];
 
+        const guilds_res = await fetch(`${PUBLIC_API_URL}/Guild/`);
+        const guilds_data = await guilds_res.json()
+        const guilds: Guild[] = guilds_data.Result;
+
         return {
-            item
+            item,
+            guilds
         };
 
     } catch (err) {

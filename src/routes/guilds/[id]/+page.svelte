@@ -9,6 +9,9 @@
   let { data }: PageProps = $props();
   let guild: Guild | null = $state(data.item ?? null);
   let edit: Boolean = $state(false);
+  let nameInput: string = $state(guild?.name ?? "");
+  let realmInput: string = $state(guild?.realm ?? "");
+  let guilds: Guild[] = $state(data.guilds ?? [])
 
   function handleGoBack() {
     goto("/guilds");
@@ -19,6 +22,27 @@
   function handleEdit() {
     edit = !edit;
   }
+
+  function handleNameInput(inputValue: string) {
+    nameInput = `${inputValue.charAt(0).toUpperCase()}${inputValue.slice(1)}`;
+    checkDuplicate(nameInput, realmInput);
+  }
+
+  function handleRealmInput(inputValue: string) {
+    realmInput = `${inputValue.charAt(0).toUpperCase()}${inputValue.slice(1)}`;
+    checkDuplicate(nameInput, realmInput);
+  }
+
+  let nameError: string | null = $state(null);
+  function checkDuplicate(name: string, realm: string) {
+    nameError = guilds.some(
+      (guild) =>
+        guild.realm.trim().toLowerCase() === realm.trim().toLowerCase() &&
+        guild.name.trim().toLowerCase() === name.trim().toLowerCase()
+    )
+      ? `"${name}" already exists on "${realm}".`
+      : null;
+  }
 </script>
 
 <h1>Test</h1>
@@ -27,13 +51,31 @@
     <h2>Edit</h2>
     <form method="POST">
       <input id="id" type="hidden" name="id" value={guild.id} />
-      <input id="name" type="hidden" name="name" value={guild.name} />
+      <input
+        id="name"
+        type="hidden"
+        name="name"
+        bind:value={nameInput}
+        oninput={() => handleNameInput(nameInput)}
+        required
+      />
+      {#if nameError}
+        <p style="color: red;">{nameError}</p>
+      {/if}
       <select id="faction" name="faction" bind:value={guild.faction} required>
         {#each Object.values(Faction) as faction}
           <option value={faction}>{faction}</option>
         {/each}
       </select>
-      <input id="realm" name="realm" type="text" value={guild.realm} placeholder="Realm" required />
+      <input
+        id="realm"
+        name="realm"
+        type="text"
+        placeholder="Realm"
+        bind:value={realmInput}
+        oninput={() => handleRealmInput(realmInput)}
+        required
+      />
       <input
         id="achievement_points"
         name="achievement_points"
@@ -52,8 +94,8 @@
         id="created_timestamp"
         name="created_timestamp"
         type="date"
-        value={new Date(guild.created_timestamp).toISOString().split('T')[0]}
-        placeholder={new Date().toISOString().split('T')[0]}
+        value={new Date(guild.created_timestamp).toISOString().split("T")[0]}
+        placeholder={new Date().toISOString().split("T")[0]}
       />
       <button type="submit">Save</button>
       <button type="reset" onclick={() => handleEdit()}>Cancel</button>
@@ -65,7 +107,7 @@
     {guild.faction}
     {guild.member_count}
     {guild.achievement_points}
-    {new Date(guild.created_timestamp).toISOString().split('T')[0]}
+    {new Date(guild.created_timestamp).toISOString().split("T")[0]}
     <button onclick={() => handleEdit()}>Edit</button>
     <button onclick={() => handleDelete()}>Delete Guild</button>
   {/if}

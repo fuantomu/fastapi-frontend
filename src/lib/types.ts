@@ -18,6 +18,28 @@ export type Character = {
     active_title: string;
 };
 
+export type CharacterEquipment = {
+    head: CharacterItem | null;
+    shoulders: CharacterItem | null;
+    neck: CharacterItem | null;
+    back: CharacterItem | null;
+    chest: CharacterItem | null;
+    shirt: CharacterItem | null;
+    tabard: CharacterItem | null;
+    wrist: CharacterItem | null;
+    hands: CharacterItem | null;
+    waist: CharacterItem | null;
+    legs: CharacterItem | null;
+    feet: CharacterItem | null;
+    ring_1: CharacterItem | null;
+    ring_2: CharacterItem | null;
+    trinket_1: CharacterItem | null;
+    trinket_2: CharacterItem | null;
+    main_hand: CharacterItem | null;
+    off_hand: CharacterItem | null;
+    ranged: CharacterItem | null;
+}
+
 export type CharacterItem = {
     character_id: number;
     id: number;
