@@ -206,7 +206,7 @@
     {new Date(character.last_login_timestamp).toISOString()}
     {#if active_spec}
       <br />
-      Active Spec
+      Active Spec {active_spec.name}
       <br />
       {#each active_spec?.talents as talent}
         <TalentFrame {talent}></TalentFrame>
@@ -218,7 +218,7 @@
     {/if}
     {#if off_spec}
       <br />
-      Off Spec
+      Off Spec {off_spec.name}
       <br />
       {#each off_spec?.talents as talent}
         <TalentFrame {talent}></TalentFrame>
