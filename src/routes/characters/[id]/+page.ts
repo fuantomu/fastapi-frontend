@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { Character, CharacterEquipment, Guild } from '$lib/types';
+import type { Character, CharacterEquipment, CharacterSpec, Guild } from '$lib/types';
 
 
 export const load: PageLoad = async ({ params, fetch }) => {
@@ -22,11 +22,16 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const data_equipment = await res_equipment.json()
         const equipment: CharacterEquipment = data_equipment.Result;
 
+        const res_specializiation = await fetch(`${PUBLIC_API_URL}/Character/Specialization/?id=${id}`);
+        const data_specializiation = await res_specializiation.json()
+        const specializiation: CharacterSpec[] = data_specializiation.Result;
+
         return {
             item,
             guilds,
             equipment,
-            characters
+            characters,
+            specializiation
         };
 
     } catch (err) {

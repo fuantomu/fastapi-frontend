@@ -2,10 +2,12 @@
   import { goto } from "$app/navigation";
   import type { PageProps } from "./$types";
   import { page } from "$app/state";
-  import type { Character, Guild } from "$lib/types";
+  import type { Character, CharacterSpec, Guild } from "$lib/types";
   import { Faction, Gender, PlayerClass, PlayerSpec, Race } from "$lib/consts";
   import ItemFrame from "$lib/components/ItemFrame.svelte";
   import { PUBLIC_API_URL } from "$env/static/public";
+  import TalentFrame from "$lib/components/TalentFrame.svelte";
+  import GlyphFrame from "$lib/components/GlyphFrame.svelte";
 
   const id = page.url.pathname;
   let { data }: PageProps = $props();
@@ -26,6 +28,9 @@
   let characters: Character[] = $state(data.characters ?? []);
   let nameInput: string = $state(character?.name ?? "");
   let realmInput: string = $state(character?.realm ?? "");
+  let specializations: CharacterSpec[] = data.specializiation ?? [];
+  let active_spec = specializations.find((spec: CharacterSpec) => spec.active);
+  let off_spec = specializations.find((spec: CharacterSpec) => !spec.active);
 
   function handleGoBack() {
     goto("/characters");
@@ -199,6 +204,30 @@
     {character.average_item_level}
     {character.equipped_item_level}
     {new Date(character.last_login_timestamp).toISOString()}
+    {#if active_spec}
+      <br />
+      Active Spec
+      <br />
+      {#each active_spec?.talents as talent}
+        <TalentFrame {talent}></TalentFrame>
+      {/each}
+      <br />
+      {#each active_spec?.glyphs as glyph}
+        <GlyphFrame {glyph}></GlyphFrame>
+      {/each}
+    {/if}
+    {#if off_spec}
+      <br />
+      Off Spec
+      <br />
+      {#each off_spec?.talents as talent}
+        <TalentFrame {talent}></TalentFrame>
+      {/each}
+      <br />
+      {#each off_spec?.glyphs as glyph}
+        <GlyphFrame {glyph}></GlyphFrame>
+      {/each}
+    {/if}
     <br />
     <ItemFrame equipment={data.equipment?.head ?? null}></ItemFrame>
     <ItemFrame equipment={data.equipment?.neck ?? null}></ItemFrame>

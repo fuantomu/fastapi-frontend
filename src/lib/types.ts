@@ -52,9 +52,19 @@ export type CharacterItem = {
 export type CharacterSpec = {
     id: number;
     name: string;
-    talents: number[];
-    glyphs: number[];
+    talents: Talent[];
+    glyphs: Glyph[];
     active: boolean;
+}
+
+export type Talent = {
+    id: number;
+    name: string;
+}
+
+export type Glyph = {
+    id: number;
+    name: string;
 }
 
 export type Guild = {
