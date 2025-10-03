@@ -1,0 +1,79 @@
+<script lang="ts">
+  import { goto } from "$app/navigation";
+  import type { PageProps } from "./$types";
+  import { page } from "$app/state";
+  import type { Guild } from "$lib/types";
+  import { Faction } from "$lib/consts";
+
+  const id = page.url.pathname;
+  let { data }: PageProps = $props();
+  let guild: Guild | null = data.item ?? null;
+  let edit: Boolean = $state(false);
+
+  function handleGoBack() {
+    goto("/guilds");
+  }
+  function handleDelete() {
+    goto(`${id}/delete`);
+  }
+  function handleEdit() {
+    edit = !edit;
+  }
+</script>
+
+<h1>Test</h1>
+{#if guild}
+  {#if edit}
+    <h2>Edit</h2>
+    <form method="POST">
+      <input id="id" type="hidden" name="id" value={guild.id} />
+      <input id="name" type="hidden" name="name" value={guild.name} />
+      <select id="faction" name="faction" bind:value={guild.faction} required>
+        {#each Object.values(Faction) as faction}
+          <option value={faction}>{faction}</option>
+        {/each}
+      </select>
+      <input id="realm" name="realm" type="text" value={guild.realm} placeholder="Realm" required />
+      <input
+        id="achievement_points"
+        name="achievement_points"
+        type="number"
+        value={guild.achievement_points}
+        placeholder="0"
+      />
+      <input
+        id="member_count"
+        name="member_count"
+        type="number"
+        value={guild.member_count}
+        placeholder="0"
+      />
+      <input
+        id="created_timestamp"
+        name="created_timestamp"
+        type="date"
+        value={new Date(guild.created_timestamp).toISOString().split('T')[0]}
+        placeholder={new Date().toISOString().split('T')[0]}
+      />
+      <button type="submit">Save</button>
+      <button type="reset" onclick={() => handleEdit()}>Cancel</button>
+    </form>
+  {:else}
+    <h2>Show</h2>
+    {guild.name}
+    {guild.realm}
+    {guild.faction}
+    {guild.member_count}
+    {guild.achievement_points}
+    {new Date(guild.created_timestamp).toISOString().split('T')[0]}
+    <button onclick={() => handleEdit()}>Edit</button>
+    <button onclick={() => handleDelete()}>Delete Guild</button>
+  {/if}
+{:else if data.error}
+  <p>Error Loading</p>
+{:else}
+  <p>Loading</p>
+{/if}
+
+<br />
+<button onclick={() => handleGoBack()}> Go back </button>

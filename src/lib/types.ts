@@ -1,19 +1,46 @@
+import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from "./consts";
 
-export type Recipe = {
-	id: string;
+export type Character = {
+	id: number;
 	name: string;
-	description?: string;
-	ingredients?: Array<RecipeIngredient>;
+	gender: Gender;
+    faction: Faction;
+    race: Race;
+    character_class: PlayerClass;
+    active_spec: PlayerSpec;
+    realm: string;
+    guild: number;
+    level: number;
+    achievement_points: number;
+    last_login_timestamp: number;
+    average_item_level: number;
+    equipped_item_level: number;
+    active_title: string;
 };
 
-export type RecipeIngredient = {
+export type CharacterItem = {
+    character_id: number;
+    id: number;
     name: string;
-    quantity: string;
+    slot: string;
+    quality: string;
+    wowhead_link: string;
 }
 
-export type Ingredient = {
-    id: string;
+export type CharacterSpec = {
+    id: number;
     name: string;
-    description?: string;
-    alias?: Array<string>;
+    talents: number[];
+    glyphs: number[];
+    active: boolean;
+}
+
+export type Guild = {
+    id: number;
+    name: string;
+    faction: Faction;
+    realm: string;
+    achievement_points: number;
+    member_count: number;
+    created_timestamp: number;
 }

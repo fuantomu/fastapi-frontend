@@ -3,16 +3,16 @@
 
   function handleGoto(page: string) {
     switch (page) {
-      case "Recipes":
-        goto("/recipes");
+      case "Characters":
+        goto("/characters");
         break;
-      case "Ingredients":
-        goto("/ingredients");
+      case "Guilds":
+        goto("/guilds");
         break;
     }
   }
 </script>
 
-<h1>Welcome to the CookBook</h1>
-<button onclick={() => handleGoto("Recipes")}> Go to Recipes </button>
-<button onclick={() => handleGoto("Ingredients")}> Go to Ingredients </button>
+<h1>Welcome to the Armory</h1>
+<button onclick={() => handleGoto("Characters")}> Go to Characters </button>
+<button onclick={() => handleGoto("Guilds")}> Go to Guilds </button>
