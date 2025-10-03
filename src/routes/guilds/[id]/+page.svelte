@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import type { PageProps } from "./$types";
   import { page } from "$app/state";
-  import type { Guild } from "$lib/types";
+  import type { Character, Guild } from "$lib/types";
   import { Faction } from "$lib/consts";
 
   const id = page.url.pathname;
@@ -12,6 +12,7 @@
   let nameInput: string = $state(guild?.name ?? "");
   let realmInput: string = $state(guild?.realm ?? "");
   let guilds: Guild[] = $state(data.guilds ?? [])
+  let members: Character[] = $state(data.characters ?? [])
 
   function handleGoBack() {
     goto("/guilds");
@@ -108,6 +109,13 @@
     {guild.member_count}
     {guild.achievement_points}
     {new Date(guild.created_timestamp).toISOString().split("T")[0]}
+    <br/>
+    Members
+    <br/>
+    {#each members as members}
+      {members.name}
+      <br/>
+    {/each}
     <button onclick={() => handleEdit()}>Edit</button>
     <button onclick={() => handleDelete()}>Delete Guild</button>
   {/if}
