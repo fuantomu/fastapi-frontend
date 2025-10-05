@@ -20,7 +20,7 @@
   {#if !src}
     <img src={`https://render-eu.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`} alt={label} class="warcraft-icon" />
   {:else}
-    <img src={checkSource()} alt={label} onerror={(err) => console.log(err)} class="warcraft-icon" />
+    <img src={checkSource()} alt={label} class="warcraft-icon" />
   {/if}
   
   {#if label}
