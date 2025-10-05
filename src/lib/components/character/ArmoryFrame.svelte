@@ -153,8 +153,9 @@
     {#if character}
       {#if edit}
         <h2>Edit</h2>
-        <form {onsubmit} method="POST">
+        <form method="POST">
           <input id="id" type="hidden" name="id" value={character.id} />
+          <input id="gameVersion" type="hidden" name="gameVersion" value={gameVersion} />
           <input
             id="name"
             type="text"

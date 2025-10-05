@@ -3,7 +3,6 @@ import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from '$lib/consts
 import type { Character } from '$lib/types';
 
 export async function handleCharacterSubmit(formData: FormData): Promise<string> {
-    console.log(formData)
     const id = formData.get('id') as unknown as number
     const name = formData.get('name') as string
     const gender = formData.get('gender') as Gender
