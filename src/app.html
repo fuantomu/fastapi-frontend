@@ -3,9 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    %sveltekit.head%
+    <link rel="icon" href="%sveltekit.assets%/favicon.ico"/>
+    <link rel="stylesheet" href="%sveltekit.assets%/bare.css"/>
+    <link rel="stylesheet" href="/smui-dark.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Material+Icons&Roboto+Mono:ital@0;1&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            rel="stylesheet"
+    />
+    <meta name="description" content="An armory tool for World of Warcraft"/>
+    <meta name="keywords" content="wow|warcraft|armory"/>
     <script>const whTooltips = {colorLinks: true};</script>
     <script src="https://wow.zamimg.com/js/tooltips.js"></script>
+    %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>

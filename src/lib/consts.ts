@@ -91,5 +91,9 @@ export enum PlayerSpec {
   MonkBrewmaster = "Brewmaster",
   MonkWindwalker = "Windwalker",
   MonkMistweaver = "Mistweaver",
-  Adventurer = "Adventurer"
+  AdventurerAdventurer = "Adventurer"
 }
+
+export const UNKNOWN_CLASS = "Adventurer"
+export const UNKNOWN_SPEC = "Adventurer"
+export const ICON_QUESTIONMARK = "inv_misc_questionmark";

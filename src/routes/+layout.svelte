@@ -1,11 +1,22 @@
-<script lang="ts">
-  import favicon from "$lib/assets/favicon.svg";
-
-  let { children } = $props();
+<script>
+  import BottomBar from "$lib/components/Bar/BottomBar.svelte";
+  import { GameVersionName } from "$lib/versions/GameVersion";
+  import { setContext } from "svelte";
+  try {
+    setContext("gameVersion", window.location.pathname.split("/")[1]);
+  } catch (err) {
+    window.location.href = "/mop";
+    setContext("gameVersion", GameVersionName.MOP);
+  }
 </script>
 
-<svelte:head>
-  <link rel="icon" href={favicon} />
-</svelte:head>
+<div class="container">
+  <slot />
+  <BottomBar></BottomBar>
+</div>
 
-{@render children?.()}
+<style>
+  .container {
+    padding-bottom: var(--bottom-bar-height, 64px);
+  }
+</style>

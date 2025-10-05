@@ -2,7 +2,8 @@ import { PUBLIC_API_URL } from '$env/static/public';
 import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from '$lib/consts';
 import type { Character } from '$lib/types';
 
-export async function handleCharacterSubmit(formData: FormData) {
+export async function handleCharacterSubmit(formData: FormData): Promise<string> {
+    console.log(formData)
     const id = formData.get('id') as unknown as number
     const name = formData.get('name') as string
     const gender = formData.get('gender') as Gender
@@ -28,16 +29,16 @@ export async function handleCharacterSubmit(formData: FormData) {
         character_class,
         active_spec,
         realm,
-        guild,
-        level : Number(level),
-        achievement_points : Number(achievement_points),
-        last_login_timestamp : new Date(last_login_timestamp).getTime(),
-        average_item_level : Number(average_item_level),
-        equipped_item_level : Number(equipped_item_level),
+        guild: guild ? guild : -1,
+        level: Number(level),
+        achievement_points: Number(achievement_points),
+        last_login_timestamp: new Date(last_login_timestamp).getTime(),
+        average_item_level: Number(average_item_level),
+        equipped_item_level: Number(equipped_item_level),
         active_title
     };
 
-    if (!character.last_login_timestamp){
+    if (!character.last_login_timestamp) {
         character.last_login_timestamp = Date.now()
     }
 
@@ -46,10 +47,10 @@ export async function handleCharacterSubmit(formData: FormData) {
             'Content-Type': 'application/json'
         },
     })
-    
+
     if (id == 0) {
         let data = await response.json();
-        return `/characters/${data['Result']}` 
+        return `/characters/${data['Result']}`
     }
     return `/characters/${id}`
 }

@@ -47,6 +47,7 @@ export type CharacterItem = {
     slot: string;
     quality: string;
     wowhead_link: string;
+    icon: string;
 }
 
 export type CharacterSpec = {
@@ -60,11 +61,13 @@ export type CharacterSpec = {
 export type Talent = {
     id: number;
     name: string;
+    icon: string;
 }
 
 export type Glyph = {
     id: number;
     name: string;
+    icon: string;
 }
 
 export type Guild = {
