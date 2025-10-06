@@ -12,7 +12,7 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     const active_spec = formData.get('active_spec') as PlayerSpec
     const realm = formData.get('realm') as string
     const guild = formData.get('guild') as unknown as number
-    const level = formData.get('achievement_points') as string
+    const level = formData.get('level') as string
     const achievement_points = formData.get('achievement_points') as string
     const last_login_timestamp = formData.get('last_login_timestamp') as string
     const average_item_level = formData.get('average_item_level') as string
