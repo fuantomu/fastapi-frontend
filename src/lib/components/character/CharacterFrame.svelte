@@ -104,6 +104,14 @@
       ? true
       : false
   );
+
+  function handleLevelInput(levelInput: number) {
+    if (levelInput < 0) {
+      selectedLevel = 1;
+    } else if (levelInput > gameVersionFactory.gameVersion.getMaxLevel()) {
+      selectedLevel = gameVersionFactory.gameVersion.getMaxLevel();
+    }
+  }
 </script>
 
 <Paper style={"border: 1px solid black"}>
@@ -185,7 +193,10 @@
                   type="number"
                   class="input"
                   bind:value={selectedLevel}
+                  oninput={() => handleLevelInput(selectedLevel)}
                   placeholder="0"
+                  min="1"
+                  max={gameVersionFactory.gameVersion.getMaxLevel()}
                   title="Level"
                 />
               </span>
@@ -197,6 +208,7 @@
                 class="input"
                 bind:value={selectedItemlevel}
                 placeholder="0"
+                min="0"
                 title={t("ui.itemlevel")}
               />
               <input
@@ -206,6 +218,7 @@
                 class="input"
                 bind:value={selectedAchievementPoints}
                 placeholder="0"
+                min="0"
                 title={t("ui.achievement_points")}
               />
             </div>

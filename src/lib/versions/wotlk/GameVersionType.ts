@@ -63,5 +63,6 @@ export const versionType: GameVersionType = {
             class: "Deathknight"
         }
     ],
-    factionRaces: [...PreviousVersionType.factionRaces]
+    factionRaces: [...PreviousVersionType.factionRaces],
+    maxLevel: 80
 };

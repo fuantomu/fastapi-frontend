@@ -116,5 +116,6 @@ export const versionType: GameVersionType = {
         }, {
             faction: "Alliance",
             race: "Worgen"
-        }]
+        }],
+    maxLevel: 85
 };

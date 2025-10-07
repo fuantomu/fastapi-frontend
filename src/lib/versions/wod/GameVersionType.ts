@@ -10,5 +10,6 @@ export const versionType: GameVersionType = {
     races: [...PreviousVersionType.races
     ],
     raceClasses: [...PreviousVersionType.raceClasses],
-    factionRaces: [...PreviousVersionType.factionRaces]
+    factionRaces: [...PreviousVersionType.factionRaces],
+    maxLevel: 100
 };

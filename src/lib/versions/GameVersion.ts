@@ -15,6 +15,7 @@ export abstract class BaseGameVersion {
     protected factions: PlayerFaction[] = [];
     protected raceClasses: PlayerRaceClass[] = [];
     protected factionRaces: PlayerFactionRace[] = [];
+    protected maxLevel: number = 1;
 
     protected constructor(versionSource: GameVersionType) {
         this.classes = versionSource.classes
@@ -26,11 +27,12 @@ export abstract class BaseGameVersion {
         this.races = versionSource.races
             .map((r) => PlayerRace.fromSource(r))
             .sort(sortByNameMoveLast(UNKNOWN_SPEC));
-        this.factions = [{ name: "Horde", icon: 'inv_bannerpvp_01' }, { name: "Alliance", icon: 'inv_bannerpvp_02' }].map((f) => PlayerFaction.fromSource(f))
+        this.factions = [{ name: "Horde", icon: 'inv_bannerpvp_01' }, { name: "Alliance", icon: 'inv_bannerpvp_02' }].map((f) => PlayerFaction.fromSource(f));
         this.raceClasses = versionSource.raceClasses
-            .map((rc) => PlayerRaceClass.fromSource(rc))
+            .map((rc) => PlayerRaceClass.fromSource(rc));
         this.factionRaces = versionSource.factionRaces
-            .map((fr) => PlayerFactionRace.fromSource(fr))
+            .map((fr) => PlayerFactionRace.fromSource(fr));
+        this.maxLevel = versionSource.maxLevel;
     }
 
     abstract getName(): GameVersionName;
@@ -64,6 +66,10 @@ export abstract class BaseGameVersion {
             return this.factionRaces.filter((rc: PlayerFactionRace) => rc.faction === faction)
         }
         return this.factionRaces;
+    }
+
+    getMaxLevel(): number {
+        return this.maxLevel
     }
 
 }

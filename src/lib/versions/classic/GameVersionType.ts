@@ -181,5 +181,6 @@ export const versionType: GameVersionType = {
         }, {
             faction: "Alliance",
             race: "Goblin"
-        }]
+        }],
+    maxLevel: 60
 };

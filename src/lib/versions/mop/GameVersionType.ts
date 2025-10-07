@@ -102,5 +102,6 @@ export const versionType: GameVersionType = {
         }, {
             faction: "Alliance",
             race: "Pandaren"
-        }]
+        }],
+    maxLevel: 90
 };

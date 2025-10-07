@@ -4,6 +4,7 @@ export type GameVersionType = {
 	races: PlayerRaceType[];
 	raceClasses: PlayerRaceClassType[];
 	factionRaces: PlayerFactionRaceType[];
+	maxLevel: number;
 };
 
 export type PlayerClassType = {

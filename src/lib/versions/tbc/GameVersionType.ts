@@ -77,5 +77,6 @@ export const versionType: GameVersionType = {
         }, {
             faction: "Alliance",
             race: "Draenei"
-        }]
+        }],
+    maxLevel: 70
 };
