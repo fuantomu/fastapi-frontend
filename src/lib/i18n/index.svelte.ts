@@ -33,7 +33,7 @@ let localeMap: Record<string, (() => Promise<Dictionary>) | Dictionary> = {};
 /** Adds the given object as a preloaded dictionary */
 export const addMessages = (code: string, messages: Dictionary) => {
     localeMap[code] = messages;
-    localeMap = {...localeMap};
+    localeMap = { ...localeMap };
 };
 /**
  * Registers a way to load a dictionary for the given locale code.
@@ -41,7 +41,7 @@ export const addMessages = (code: string, messages: Dictionary) => {
  */
 export const register = (code: string, registrar: () => Promise<Dictionary>) => {
     localeMap[code] = registrar;
-    localeMap = {...localeMap};
+    localeMap = { ...localeMap };
 };
 
 /** Loads the needed dictionary. */
@@ -61,7 +61,7 @@ const getLocale = (code: string): Promise<Dictionary> | Dictionary => {
 /** A function that must be called once when your app starts.
  * It initializes the dictionary with fallbackLocale, and then applies the initialLocale on top of it.
  */
-export const init = async({
+export const init = async ({
     initialLocale,
     fallbackLocale
 }: {
@@ -116,7 +116,7 @@ export const t = (key: string, vars?: Record<string, string | number>): string =
 
     if (vars) {
         for (const [varKey, varValue] of Object.entries(vars)) {
-            value = value.replaceAll(`{${varKey}}`, String(varValue));
+            value = value.replaceAll(`{${varKey}}`, varValue);
         }
     }
 

@@ -1,12 +1,25 @@
-<script>
+<script lang="ts">
+  import { PUBLIC_API_URL } from "$env/static/public";
   import BottomBar from "$lib/components/Bar/BottomBar.svelte";
   import { GameVersionName } from "$lib/versions/GameVersion";
+  import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { setContext } from "svelte";
   try {
-    setContext("gameVersion", window.location.pathname.split("/")[1]);
+    let location = window.location.pathname.split("/")[1];
+    setContext("gameVersion", location);
+    setContext(
+      "gameVersionFactory",
+      GameVersionFactory.getContext(
+        GameVersionName[location.toUpperCase() as keyof typeof GameVersionName]
+      )
+    );
   } catch (err) {
     window.location.href = "/mop";
     setContext("gameVersion", GameVersionName.MOP);
+    setContext(
+      "gameVersionFactory",
+      GameVersionFactory.getContext(GameVersionName.MOP)
+    );
   }
 </script>
 
@@ -17,6 +30,6 @@
 
 <style>
   .container {
-    padding-bottom: var(--bottom-bar-height, 64px);
+    padding-bottom: var(--bottom-bar-size, 64px);
   }
 </style>

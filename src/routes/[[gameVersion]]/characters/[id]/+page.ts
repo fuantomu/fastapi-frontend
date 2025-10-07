@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 
 
-export const load: PageLoad = async ({ params, fetch }) => {
+export const load: PageLoad = async ({ params }) => {
     try {
         return params
 

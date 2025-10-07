@@ -6,6 +6,10 @@
   "version": {
     "mop": "Mists of Pandaria Classic"
   },
+  "error": {
+    "duplicateCharacter": "'{name}' already exists on '{realm}'",
+    "empty": "{var} is empty"
+  },
   "classes": {
     "Deathknight": "Death Knight",
     "Druid": "Druid",

@@ -5,7 +5,7 @@
   import WarcraftIcon from "./WarcraftIcon.svelte";
   import { getContext } from "svelte";
   export let talent: Talent | null;
-  const gameVersion = getContext<GameVersionName>("gameVersion")
+  const gameVersion = getContext<GameVersionName>("gameVersion");
 </script>
 
 {#if talent}

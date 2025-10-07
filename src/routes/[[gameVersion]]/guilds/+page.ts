@@ -4,7 +4,7 @@ import type { Guild } from '$lib/types';
 import { sortBy } from '$lib/helper/sort';
 
 
-export const load: PageLoad = async ({  fetch }) => {
+export const load: PageLoad = async ({ fetch }) => {
     try {
         const res = await fetch(`${PUBLIC_API_URL}/Guild/`);
         const data = await res.json()

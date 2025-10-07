@@ -34,9 +34,9 @@ export class PlayerSpec {
 		classes: PlayerClass[],
 	) {
 		const playerClass = classes.find((c) => c.name === source.class);
-        if (!playerClass){
-            throw error(500, `No class found for spec '${source.name}'`)
-        }
+		if (!playerClass) {
+			throw error(500, `No class found for spec '${source.name}'`)
+		}
 
 		return new PlayerSpec(
 			source.name,

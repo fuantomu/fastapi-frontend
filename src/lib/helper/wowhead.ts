@@ -1,6 +1,6 @@
 import { GameVersionName } from "$lib/versions/GameVersion";
 
-export const getWowheadLink = (search_type:string, version: string) => {
+export const getWowheadLink = (search_type: string, version: string) => {
     switch (version) {
         case GameVersionName.WOD:
             return `https://www.wowhead.com/wod-classic/${search_type}=`

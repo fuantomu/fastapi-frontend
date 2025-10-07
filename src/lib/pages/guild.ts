@@ -16,7 +16,7 @@ export async function handleGuildSubmit(formData: FormData) {
         name,
         faction,
         realm,
-        achievement_points: Number(achievement_points)?? 0,
+        achievement_points: Number(achievement_points) ?? 0,
         member_count: Number(member_count) ?? 0,
         created_timestamp: new Date(created_timestamp).getTime() ?? Date.now()
     };
@@ -28,10 +28,10 @@ export async function handleGuildSubmit(formData: FormData) {
     })
     if (id == 0) {
         let data = await response.json();
-        return `/guilds/${data['Result']}` 
+        return `/guilds/${data['Result']}`
     }
     return `/guilds/${id}`
-    
+
 }
 
 export async function handleGuildDelete(formData: FormData) {

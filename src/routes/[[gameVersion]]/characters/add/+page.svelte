@@ -42,8 +42,8 @@
       : null;
   }
 
-  function onsubmit(){
-    submitted = true
+  function onsubmit() {
+    submitted = true;
   }
 </script>
 
@@ -138,7 +138,9 @@
     name="gameVersion"
     value={gameVersion}
   />
-  <button {onsubmit} type="submit" disabled={nameError ? true : false}>Save</button>
+  <button {onsubmit} type="submit" disabled={nameError ? true : false}
+    >Save</button
+  >
   {#if submitted}
     <p style="color: yellow;">
       Added character. Checking existing characters...

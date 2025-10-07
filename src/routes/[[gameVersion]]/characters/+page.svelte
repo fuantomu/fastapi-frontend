@@ -9,7 +9,7 @@
   let { data }: PageProps = $props();
   let characters: Character[] = $state(data.items ?? []);
   let searchValue: string = $state("");
-  const gameVersion = getContext<GameVersionName>("gameVersion")
+  const gameVersion = getContext<GameVersionName>("gameVersion");
 
   function handleGoBack() {
     goto(`/${gameVersion}`);

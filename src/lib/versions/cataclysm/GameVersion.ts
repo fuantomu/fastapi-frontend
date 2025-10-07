@@ -1,5 +1,5 @@
 import { BaseGameVersion, GameVersionName } from "$lib/versions/GameVersion";
-import { versionType } from "$lib/versions/mop/source";
+import { versionType } from "$lib/versions/cataclysm/GameVersionType";
 
 export class GameVersion extends BaseGameVersion {
     constructor() {

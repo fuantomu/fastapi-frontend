@@ -1,6 +1,6 @@
-export const ssr = true;
+export const ssr = false;
 
-import {init, getLocaleFromNavigator, addMessages} from '$lib/i18n/index.svelte';
+import { init, getLocaleFromNavigator, addMessages } from '$lib/i18n/index.svelte';
 
 // Setup UI translations
 import en from '$lib/i18n/en.json';

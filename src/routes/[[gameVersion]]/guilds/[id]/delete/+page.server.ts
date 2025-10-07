@@ -1,4 +1,4 @@
-import { handleGuildDelete  } from '$lib/pages/guild';
+import { handleGuildDelete } from '$lib/pages/guild';
 import { redirect, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {

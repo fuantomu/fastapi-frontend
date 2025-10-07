@@ -5,11 +5,10 @@
   import WarcraftIcon from "./WarcraftIcon.svelte";
   import { getContext } from "svelte";
   export let equipment: CharacterItem | null;
-  const gameVersion = getContext<GameVersionName>("gameVersion")
+  const gameVersion = getContext<GameVersionName>("gameVersion");
 </script>
 
 {#if equipment}
-
   <a
     href={`${getWowheadLink("item", gameVersion)}${equipment.id}`}
     data-wowhead={`${equipment.wowhead_link}`}

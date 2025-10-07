@@ -7,9 +7,10 @@
   import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { t } from "$lib/i18n/index.svelte";
   import { getContext } from "svelte";
+  import type { VersionContext } from "$lib/versions/VersionContext";
 
-
-  const gameVersion = getContext<GameVersionName>("gameVersion")
+  const gameVersion = getContext<GameVersionName>("gameVersion");
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   let selectedVersion: GameVersionName = $state(gameVersion);
   let open = $state(false);
 
@@ -23,14 +24,9 @@
 </script>
 
 <div>
-  <IconButton
-    aria-label={t(`ui.changeVersion`)}
-    onclick={() => (open = !open)}
-  >
+  <IconButton aria-label={t(`ui.changeVersion`)} onclick={() => (open = !open)}>
     <WarcraftIcon
-      src={GameVersionFactory.getContext(
-              gameVersion
-            ).iconProvider.getVersionIcon("56")}
+      src={gameVersionFactory.iconProvider.getVersionIcon("56")}
       label={t(`ui.changeVersion`)}
     />
   </IconButton>

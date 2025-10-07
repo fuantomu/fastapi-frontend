@@ -1,9 +1,9 @@
 import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from "./consts";
 
 export type Character = {
-	id: number;
-	name: string;
-	gender: Gender;
+    id: number;
+    name: string;
+    gender: Gender;
     faction: Faction;
     race: Race;
     character_class: PlayerClass;

@@ -60,7 +60,7 @@ export class GameVersionFactory {
                 gameVersion: GameVersionFactory.createGameVersion(window.location.pathname.split("/")[1] as GameVersionName),
             };
         }
-        catch (err){
+        catch (err) {
             window.location.href = "/mop"
             return {
                 iconProvider: GameVersionFactory.createIconProvider(GameVersionName.MOP),

@@ -28,7 +28,7 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         character_class,
         active_spec,
         realm,
-        guild: guild ? guild : -1,
+        guild: guild ? Number(guild) : -1,
         level: Number(level),
         achievement_points: Number(achievement_points),
         last_login_timestamp: new Date(last_login_timestamp).getTime(),
