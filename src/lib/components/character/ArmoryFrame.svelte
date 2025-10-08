@@ -6,17 +6,18 @@
     CharacterSpec,
     Guild,
   } from "$lib/types";
-  import ItemFrame from "$lib/components/ItemFrame.svelte";
   import { PUBLIC_API_URL } from "$env/static/public";
   import TalentFrame from "$lib/components/TalentFrame.svelte";
   import GlyphFrame from "$lib/components/GlyphFrame.svelte";
   import { getContext } from "svelte";
-  import type { GameVersionName } from "$lib/versions/GameVersion";
   import CharacterFrame from "./CharacterFrame.svelte";
+  import Paper, { Content } from "@smui/paper";
+  import EquipmentFrame from "./EquipmentFrame.svelte";
+  import type { VersionContext } from "$lib/versions/VersionContext";
 
   const { id } = $props<{ id: number }>();
 
-  const gameVersion = getContext<GameVersionName>("gameVersion");
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
   let character: Character = $state({} as Character);
   let other_characters: Character[] = $state([]);
@@ -81,7 +82,7 @@
   let equipment_updated: string | null = $state(null);
 
   function handleGoBack() {
-    goto(`/${gameVersion}/characters`);
+    goto(`/${gameVersionFactory.gameVersion}/characters`);
   }
   function handleDelete() {
     goto(`${id}/delete`);
@@ -122,12 +123,21 @@
       {#if equipment_updated}
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
-      <CharacterFrame
-        {character}
-        {character_guild}
-        {other_characters}
-        {guilds}
-      />
+      <Paper
+        style={"border: 1px solid black; display: grid; grid-template-columns: 20% 35%;"}
+      >
+        <Content>
+          <CharacterFrame
+            {character}
+            {character_guild}
+            {other_characters}
+            {guilds}
+          />
+        </Content>
+        <Content>
+          <EquipmentFrame equipment={character_equipment} />
+        </Content>
+      </Paper>
       {#if active_spec}
         <br />
         Active Spec {active_spec.name}
@@ -153,25 +163,6 @@
         {/each}
       {/if}
       <br />
-      <ItemFrame equipment={character_equipment.head}></ItemFrame>
-      <ItemFrame equipment={character_equipment.neck}></ItemFrame>
-      <ItemFrame equipment={character_equipment.shoulders}></ItemFrame>
-      <ItemFrame equipment={character_equipment.back}></ItemFrame>
-      <ItemFrame equipment={character_equipment.chest}></ItemFrame>
-      <ItemFrame equipment={character_equipment.shirt}></ItemFrame>
-      <ItemFrame equipment={character_equipment.tabard}></ItemFrame>
-      <ItemFrame equipment={character_equipment.wrist}></ItemFrame>
-      <ItemFrame equipment={character_equipment.hands}></ItemFrame>
-      <ItemFrame equipment={character_equipment.waist}></ItemFrame>
-      <ItemFrame equipment={character_equipment.legs}></ItemFrame>
-      <ItemFrame equipment={character_equipment.feet}></ItemFrame>
-      <ItemFrame equipment={character_equipment.ring_1}></ItemFrame>
-      <ItemFrame equipment={character_equipment.ring_2}></ItemFrame>
-      <ItemFrame equipment={character_equipment.trinket_1}></ItemFrame>
-      <ItemFrame equipment={character_equipment.trinket_2}></ItemFrame>
-      <ItemFrame equipment={character_equipment.main_hand}></ItemFrame>
-      <ItemFrame equipment={character_equipment.off_hand}></ItemFrame>
-      <ItemFrame equipment={character_equipment.ranged}></ItemFrame>
       <button
         disabled={equipment_updated ? true : false}
         onclick={() => handleRefresh()}>Refresh</button

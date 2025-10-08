@@ -48,6 +48,8 @@ export type CharacterItem = {
     quality: string;
     wowhead_link: string;
     icon: string;
+    inventory_type: string;
+    enchantment: string;
 }
 
 export type CharacterSpec = {
