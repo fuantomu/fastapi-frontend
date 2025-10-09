@@ -49,9 +49,9 @@
   const fetchGuilds = async () => {
     const res = await fetch(`${PUBLIC_API_URL}/Guild/`);
     const data = await res.json();
-    guilds = data.Result;
+    guilds = data.Result.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName());
     character_guild =
-      guilds.find((guild) => guild.id === character?.guild) ?? ({} as Guild);
+      guilds.find((guild: Guild) => guild.id === character?.guild) ?? ({} as Guild);
   };
 
   const fetchEquipment = async () => {
