@@ -14,6 +14,7 @@
   import Paper, { Content } from "@smui/paper";
   import EquipmentFrame from "./EquipmentFrame.svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
+  import { t } from "$lib/i18n/index.svelte";
 
   const { id } = $props<{ id: number }>();
 
@@ -30,7 +31,7 @@
   let off_spec: CharacterSpec = $state({} as CharacterSpec);
 
   const fetchCharacter = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}`);
+    const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
     const data = await res.json();
     if (data.Result.length == 0){
       window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`
@@ -39,7 +40,7 @@
   };
 
   const fetchOtherCharacters = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/`);
+    const res = await fetch(`${PUBLIC_API_URL}/Character/?version=${gameVersionFactory.gameVersion.getName()}`);
     const data = await res.json();
     other_characters = data.Result.filter(
       (other_character: Character) => character?.name !== other_character.name
@@ -47,7 +48,7 @@
   };
 
   const fetchGuilds = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Guild/`);
+    const res = await fetch(`${PUBLIC_API_URL}/Guild/?version=${gameVersionFactory.gameVersion.getName()}`);
     const data = await res.json();
     guilds = data.Result.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName());
     character_guild =
@@ -55,14 +56,14 @@
   };
 
   const fetchEquipment = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/Equipment/?id=${id}`);
+    const res = await fetch(`${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
     const data = await res.json();
     character_equipment = data.Result;
   };
 
   const fetchSpecialization = async () => {
     const res = await fetch(
-      `${PUBLIC_API_URL}/Character/Specialization/?id=${id}`
+      `${PUBLIC_API_URL}/Character/Specialization/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
     );
     const data = await res.json();
     let character_specializations = data.Result;
@@ -92,7 +93,7 @@
   }
 
   async function handleRefresh() {
-    equipment_updated = "Updating Character...";
+    equipment_updated = t("ui.updatingCharacter");
 
     let response = await fetch(`${PUBLIC_API_URL}/Character/Parse/`, {
       method: "POST",
@@ -107,14 +108,15 @@
     });
     if (response.ok) {
       const data = await response.json();
-      if (data["Result"] === "Success") {
-        await fetchData();
-        equipment_updated = null;
-      } else {
-        equipment_updated = data["Result"];
+      if (data["Result"] === "Not Found"){
+        equipment_updated = t("ui.characterNotFound");
+        return
       }
+      await fetchData();
+      equipment_updated = null;
+      goto(`/${gameVersionFactory.gameVersion.getName()}/characters/${data['Result']}`);
     } else {
-      equipment_updated = "Error fetching data";
+      equipment_updated = t("ui.errorFetchingData");
     }
   }
 </script>

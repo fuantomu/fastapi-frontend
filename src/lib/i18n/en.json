@@ -2,7 +2,7 @@
   "ui": {
     "reportBug": "Report a bug",
     "changeVersion": "Change game version",
-    "existingCharacterFound": "Found existing character. Updating..."
+    "checkingForCharacter": "Searching for existing character..."
   },
   "version": {
     "mop": "Mists of Pandaria Classic"

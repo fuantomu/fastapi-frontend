@@ -52,8 +52,11 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         },
     })
 
-    if (id == 0) {
-        let data = await response.json();
+
+    let data = await response.json();
+
+    if (id == 0 || Number.isInteger(Number(data["Result"]))) {
+        
         return `/characters/${data['Result']}`
     }
     return `/characters/${id}`
