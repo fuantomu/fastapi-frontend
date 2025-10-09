@@ -1,12 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { Faction, Gender, PlayerClass, PlayerSpec, Race } from "$lib/consts";
+  import { Faction, Gender, PlayerClass, PlayerSpec, Race, Region } from "$lib/consts";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { getContext } from "svelte";
   import type { PageProps } from "./$types";
   import { t } from "$lib/i18n/index.svelte";
-  import { enhance } from "$app/forms";
-
+  import type { VersionContext } from "$lib/versions/VersionContext";
   let nameInput: string = $state("");
   let realmInput: string = $state("");
   let { data }: PageProps = $props();
@@ -15,10 +14,12 @@
   let characters = $state(data.characters ?? []);
   let submitted: boolean = $state(false);
 
-  const gameVersion = getContext<GameVersionName>("gameVersion");
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  let selectedVersion: GameVersionName = $state(gameVersionFactory.gameVersion.getName())
+  let selectedRegion: Region = $state(Region.EU)
 
   function handleGoBack() {
-    goto("/characters");
+    goto(`/${gameVersionFactory.gameVersion.getName()}/characters`);
   }
 
   function handleNameInput(inputValue: string) {
@@ -47,7 +48,7 @@
   }
 </script>
 
-<h1>Test {t(`version.${gameVersion}`)}</h1>
+<h1>Test {t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
 <form {onsubmit} method="POST">
   <input id="id" type="hidden" name="id" value={0} />
   <input
@@ -132,18 +133,22 @@
     type="datetime"
     placeholder={new Date().toISOString()}
   />
-  <input
-    id="gameVersion"
-    type="hidden"
-    name="gameVersion"
-    value={gameVersion}
-  />
+  <select id="gameVersion" name="gameVersion" bind:value={selectedVersion} required>
+    {#each Object.values(GameVersionName) as version}
+      <option value={version}>{t(`version.${version}`)}</option>
+    {/each}
+  </select>
+  <select id="region" name="region" bind:value={selectedRegion} required>
+    {#each Object.values(Region) as region}
+      <option value={region}>{t(`region.${region}`)}</option>
+    {/each}
+  </select>
   <button {onsubmit} type="submit" disabled={nameError ? true : false}
-    >Save</button
+    >{t("ui.save")}</button
   >
   {#if submitted}
     <p style="color: yellow;">
-      Added character. Checking existing characters...
+      {t("ui.existingCharacterFound")}
     </p>
   {/if}
 </form>

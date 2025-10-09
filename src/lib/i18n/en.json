@@ -1,7 +1,8 @@
 {
   "ui": {
     "reportBug": "Report a bug",
-    "changeVersion": "Change game version"
+    "changeVersion": "Change game version",
+    "existingCharacterFound": "Found existing character. Updating..."
   },
   "version": {
     "mop": "Mists of Pandaria Classic"
@@ -32,7 +33,7 @@
     "DruidFeral": "Feral",
     "DruidGuardian": "Guardian",
     "DruidRestoration": "Restoration",
-    "HunterBeastmastery": "Beast Mastery",
+    "HunterBeastmastery": "Beastmastery",
     "HunterMarksmanship": "Marksmanship",
     "HunterSurvival": "Survival",
     "MageArcane": "Arcane",
@@ -49,6 +50,7 @@
     "PaladinRetribution": "Retribution",
     "RogueAssassination": "Assassination",
     "RogueOutlaw": "Outlaw",
+    "RogueCombat": "Combat",
     "RogueSubtlety": "Subtlety",
     "WarlockAffliction": "Affliction",
     "WarlockDemonology": "Demonology",

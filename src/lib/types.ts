@@ -1,4 +1,5 @@
-import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from "./consts";
+import type { Faction, Gender, PlayerClass, PlayerSpec, Race, Region } from "./consts";
+import type { GameVersionName } from "./versions/GameVersion";
 
 export type Character = {
     id: number;
@@ -16,6 +17,8 @@ export type Character = {
     average_item_level: number;
     equipped_item_level: number;
     active_title: string;
+    region: Region;
+    version: GameVersionName;
 };
 
 export type CharacterEquipment = {
@@ -50,6 +53,7 @@ export type CharacterItem = {
     icon: string;
     inventory_type: string;
     enchantment: string;
+    version: GameVersionName;
 }
 
 export type CharacterSpec = {
@@ -58,6 +62,8 @@ export type CharacterSpec = {
     talents: Talent[];
     glyphs: Glyph[];
     active: boolean;
+    version: GameVersionName;
+    spent_points: string;
 }
 
 export type Talent = {
@@ -80,4 +86,6 @@ export type Guild = {
     achievement_points: number;
     member_count: number;
     created_timestamp: number;
+    region: Region,
+    version: GameVersionName;
 }

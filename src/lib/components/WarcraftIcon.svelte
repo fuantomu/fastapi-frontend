@@ -25,7 +25,7 @@
     />
   {:else}
     {#key src}
-      <img src={checkSource()} alt={label} class="warcraft-icon" />
+      <img src={checkSource()} alt={label} class="warcraft-icon" onerror={() => src=checkSource().replace("classic1x","classic")} />
     {/key}
   {/if}
 

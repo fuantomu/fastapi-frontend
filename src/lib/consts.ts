@@ -114,3 +114,11 @@ export const UNKNOWN_CLASS = "Adventurer"
 export const UNKNOWN_SPEC = "Adventurer"
 export const UNKNOWN_RACE = "Alien"
 export const ICON_QUESTIONMARK = "inv_misc_questionmark";
+
+export enum Region {
+  EU = "eu",
+  US = "us",
+  CN = "cn",
+  KR = "kr",
+  TW = "tw"
+}

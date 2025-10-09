@@ -42,7 +42,7 @@
     "
   >
     <ItemFrame equipment={equipment.main_hand} slot={"main_hand"}></ItemFrame>
-    {#if equipment.main_hand?.inventory_type !== "Two-Hand"}
+    {#if equipment.main_hand?.inventory_type !== "Two-Hand" && equipment.main_hand?.inventory_type !== "Ranged"}
       <ItemFrame equipment={equipment.off_hand} slot={"off_hand"}></ItemFrame>
     {/if}
     {#if ["classic", "tbc", "wotlk", "cataclysm"].includes(gameVersionFactory.gameVersion.getName())}

@@ -32,6 +32,9 @@
   const fetchCharacter = async () => {
     const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}`);
     const data = await res.json();
+    if (data.Result.length == 0){
+      window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`
+    }
     character = data.Result[0];
   };
 
@@ -82,7 +85,7 @@
   let equipment_updated: string | null = $state(null);
 
   function handleGoBack() {
-    goto(`/${gameVersionFactory.gameVersion}/characters`);
+    goto(`/${gameVersionFactory.gameVersion.getName()}/characters`);
   }
   function handleDelete() {
     goto(`${id}/delete`);
@@ -95,6 +98,8 @@
       method: "POST",
       body: JSON.stringify({
         players: [[character?.name, character?.realm]],
+        region: character.region,
+        version: gameVersionFactory.gameVersion.getName()
       }),
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +145,7 @@
       </Paper>
       {#if active_spec}
         <br />
-        Active Spec {active_spec.name}
+        Active Spec {active_spec.name} {["classic","tbc","wotlk"].includes(gameVersionFactory.gameVersion.getName())? active_spec.spent_points : ""}
         <br />
         {#each active_spec?.talents as talent}
           <TalentFrame {talent}></TalentFrame>
@@ -152,7 +157,7 @@
       {/if}
       {#if off_spec}
         <br />
-        Off Spec {off_spec.name}
+        Off Spec {off_spec.name} {["classic","tbc","wotlk"].includes(gameVersionFactory.gameVersion.getName())? off_spec.spent_points : ""}
         <br />
         {#each off_spec?.talents as talent}
           <TalentFrame {talent}></TalentFrame>

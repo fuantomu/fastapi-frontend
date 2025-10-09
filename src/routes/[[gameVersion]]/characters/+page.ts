@@ -4,9 +4,9 @@ import type { Character } from '$lib/types';
 import { sortBy } from '$lib/helper/sort';
 
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageLoad = async ({ params, fetch }) => {
     try {
-        const res = await fetch(`${PUBLIC_API_URL}/Character/`);
+        const res = await fetch(`${PUBLIC_API_URL}/Character/?version=${params.gameVersion}`);
         const data = await res.json()
         const items: Character[] = data.Result;
 

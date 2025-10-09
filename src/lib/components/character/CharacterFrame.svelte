@@ -121,6 +121,12 @@
         name="gameVersion"
         value={gameVersionFactory.gameVersion}
       />
+      <input
+        id="region"
+        type="hidden"
+        name="region"
+        value={character.region}
+      />
       <div class="player-grid">
         <div class="icons">
           <CharacterChangeList
@@ -269,7 +275,7 @@
             style={`color: var(--player-class-colour-${character.character_class})`}
           >
             {character.name}
-            <span class="realm">{character.realm}</span>
+            <span class="realm">{character.realm}-{character.region.toUpperCase()}</span>
           </span>
 
           <a

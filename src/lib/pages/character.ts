@@ -1,6 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { Faction, Gender, PlayerClass, PlayerSpec, Race } from '$lib/consts';
+import { type Faction, type Gender, type PlayerClass, type PlayerSpec, type Race, type Region } from '$lib/consts';
 import type { Character } from '$lib/types';
+import type { GameVersionName } from '$lib/versions/GameVersion';
 
 export async function handleCharacterSubmit(formData: FormData): Promise<string> {
     const id = formData.get('id') as unknown as number
@@ -18,6 +19,8 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     const average_item_level = formData.get('average_item_level') as string
     const equipped_item_level = formData.get('equipped_item_level') as string
     const active_title = formData.get('active_title') as string
+    const version = formData.get('gameVersion') as GameVersionName
+    const region = formData.get('region') as Region
 
     const character: Character = {
         id,
@@ -34,7 +37,9 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         last_login_timestamp: new Date(last_login_timestamp).getTime(),
         average_item_level: Number(average_item_level),
         equipped_item_level: Number(equipped_item_level),
-        active_title
+        active_title,
+        region,
+        version
     };
 
     if (!character.last_login_timestamp) {
@@ -56,8 +61,9 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
 
 export async function handleCharacterDelete(formData: FormData) {
     const id = formData.get('id') as string
+    const gameVersion = formData.get('gameVersion') as string
 
-    await fetch(`${PUBLIC_API_URL}/Character/?id=${id}`, {
+    await fetch(`${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersion}`, {
         method: 'DELETE',
     })
 }
