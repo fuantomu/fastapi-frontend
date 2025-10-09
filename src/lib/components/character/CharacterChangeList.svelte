@@ -15,14 +15,12 @@
     currentClass,
     currentRace,
     currentSpec,
-    gender,
-    error = $bindable(),
+    gender
   } = $props<{
     currentClass: PlayerClass;
     currentRace: PlayerRace;
     currentSpec: PlayerSpec;
-    gender: Gender;
-    error: boolean;
+    gender: Gender
   }>();
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
@@ -74,7 +72,6 @@
       if (!versionClasses.find((_class) => _class.name === currentClass.name)) {
         currentClass = { name: "Adventurer" } as PlayerClass;
         currentSpec = { name: "Adventurer" } as PlayerSpec;
-        error = true;
       }
     }
     getFaction();
@@ -88,7 +85,6 @@
         .getSpecs()
         .filter((_spec) => _spec.playerClass.name === `${currentClass.name}`);
       currentSpec = { name: "Adventurer" } as PlayerSpec;
-      error = true;
     }
     openClass = false;
   }
@@ -110,7 +106,6 @@
 
   function handleChangeSpec(_spec: PlayerSpec) {
     currentSpec = _spec;
-    error = false;
   }
 
   function getFaction() {
@@ -209,15 +204,12 @@
     type="button"
     aria-label={t(`ui.changeClass`)}
     onclick={() => (openClass = !openClass)}
-    style={currentClass.name === "Adventurer" ? "border: 1px solid red;" : ""}
   >
     <WarcraftIcon
       src={gameVersionFactory.iconProvider.getFromSource(
         currentClass.icon ?? ICON_QUESTIONMARK
       )}
-      label={currentClass.name === "Adventurer"
-        ? t("ui.missingClass")
-        : t(`ui.changeClass`)}
+      label={t(`ui.changeClass`)}
     />
   </IconButton>
   <Menu bind:open={openClass}>
@@ -246,15 +238,12 @@
     type="button"
     aria-label={t(`ui.changeSpecialization`)}
     onclick={() => (openSpec = !openSpec)}
-    style={currentSpec.name === "Adventurer" ? "border: 1px solid red;" : ""}
   >
     <WarcraftIcon
       src={gameVersionFactory.iconProvider.getFromSource(
         currentSpec.icon ?? ICON_QUESTIONMARK
       )}
-      label={currentSpec.name === "Adventurer"
-        ? t("ui.missingSpecialization")
-        : t(`ui.changeSpecialization`)}
+      label={t(`ui.changeSpecialization`)}
     />
   </IconButton>
   <Menu bind:open={openSpec}>

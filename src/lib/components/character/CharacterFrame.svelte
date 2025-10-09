@@ -22,7 +22,7 @@
   let nameInput: string = $state(character.name);
   let realmInput: string = $state(character.realm);
   let selectedGuild: number = $state(character_guild.id);
-  let selectedLevel: number = $state(character.level);
+  let selectedLevel: number = $state(character.level ?? 1);
   let selectedAchievementPoints: number = $state(character.achievement_points);
   let selectedItemlevel: number = $state(character.equipped_item_level);
 
@@ -96,12 +96,6 @@
     }
   }
 
-  let spec_raceError: boolean = $state(
-    player_class?.name === "Adventurer" || player_spec.name === "Adventurer"
-      ? true
-      : false
-  );
-
   function handleLevelInput(levelInput: number) {
     if (levelInput < 0) {
       selectedLevel = 1;
@@ -134,7 +128,6 @@
             currentRace={player_race ?? character.race}
             currentSpec={player_spec ?? character.spec}
             gender={character.gender}
-            bind:error={spec_raceError}
           ></CharacterChangeList>
         </div>
 
@@ -236,7 +229,7 @@
       </div>
       <button
         type="submit"
-        disabled={nameError || spec_raceError || realmError ? true : false}
+        disabled={nameError || realmError ? true : false}
         >{t(`ui.save`)}</button
       >
     </form>
