@@ -196,7 +196,7 @@
                 class="input"
                 bind:value={selectedLevel}
                 oninput={() => handleLevelInput(selectedLevel)}
-                placeholder="0"
+                placeholder="1"
                 min="1"
                 max={gameVersionFactory.gameVersion.getMaxLevel()}
                 title="Level"

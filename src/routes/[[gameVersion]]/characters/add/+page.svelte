@@ -82,7 +82,7 @@
       <option value={race}>{race}</option>
     {/each}
   </select>
-  <input id="level" name="level" type="number" placeholder="0" />
+  <input id="level" name="level" type="number" placeholder="1" />
   <select id="guild" name="guild">
     <option value={null}>{"None"}</option>
     {#each guilds as guild}
@@ -148,7 +148,7 @@
   >
   {#if submitted}
     <p style="color: yellow;">
-      {t("ui.existingCharacterFound")}
+      {t("ui.checkingForCharacter")}
     </p>
   {/if}
 </form>
