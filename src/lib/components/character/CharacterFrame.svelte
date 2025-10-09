@@ -119,7 +119,7 @@
         id="gameVersion"
         type="hidden"
         name="gameVersion"
-        value={gameVersionFactory.gameVersion}
+        value={gameVersionFactory.gameVersion.getName()}
       />
       <input
         id="region"
@@ -280,7 +280,7 @@
 
           <a
             class="guild"
-            href={`/${gameVersionFactory.gameVersion}/guilds/${character_guild.id}`}
+            href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
             style={`color: var(--faction-colour-${character_guild.faction})`}
           >
             {character_guild.name}
