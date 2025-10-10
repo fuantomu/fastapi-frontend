@@ -298,6 +298,7 @@
         </div>
 
         <div class="last-login">
+          <img style="width: 16px; height: 16px; align-self: center" src="/image/icon_online.png" alt={t("character.activity")}/>
           {t("character.activity")}: {new Date(
             character.last_login_timestamp
           ).toLocaleString("en-GB", {
@@ -388,6 +389,7 @@
   .last-login {
     font-size: 0.85em;
     color: #888;
+    display: flex;
   }
 
   .input {
