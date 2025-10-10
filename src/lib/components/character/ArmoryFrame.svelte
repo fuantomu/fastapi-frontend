@@ -4,6 +4,7 @@
     Character,
     CharacterEquipment,
     CharacterSpec,
+    CharacterStatistic,
     Guild,
   } from "$lib/types";
   import { PUBLIC_API_URL } from "$env/static/public";
@@ -15,6 +16,7 @@
   import EquipmentFrame from "./EquipmentFrame.svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
   import { t } from "$lib/i18n/index.svelte";
+  import StatisticFrame from "./StatisticFrame.svelte";
 
   const { id } = $props<{ id: number }>();
 
@@ -29,6 +31,7 @@
   let character_guild: Guild = $state({} as Guild);
   let active_spec: CharacterSpec = $state({} as CharacterSpec);
   let off_spec: CharacterSpec = $state({} as CharacterSpec);
+  let character_statistics : CharacterStatistic = $state({} as CharacterStatistic)
 
   const fetchCharacter = async () => {
     const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
@@ -75,12 +78,19 @@
       ({} as CharacterSpec);
   };
 
+  const fetchStatistic = async () => {
+    const res = await fetch(`${PUBLIC_API_URL}/Character/Statistic/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
+    const data = await res.json();
+    character_statistics = data.Result;
+  };
+
   let fetchData = async () => {
     await fetchCharacter();
     await fetchGuilds();
     await fetchOtherCharacters();
     await fetchEquipment();
     await fetchSpecialization();
+    await fetchStatistic();
   };
 
   let equipment_updated: string | null = $state(null);
@@ -131,7 +141,7 @@
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
       <Paper
-        style={"border: 1px solid black; display: grid; grid-template-columns: 20% 35%;"}
+        style={"border: 1px solid black; display: grid; grid-template-columns: 25% 35% 40%"}
       >
         <Content>
           <CharacterFrame
@@ -143,6 +153,9 @@
         </Content>
         <Content>
           <EquipmentFrame equipment={character_equipment} />
+        </Content>
+        <Content>
+          <StatisticFrame statistics={character_statistics} />
         </Content>
       </Paper>
       {#if active_spec}

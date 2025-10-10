@@ -11,7 +11,7 @@
   }>();
 </script>
 
-<div style="background-color: #111111; border: 1px solid black; padding: 20px;">
+<div style="background-color: #111111; border: 1px solid black; padding: 20px; min-height: 400px;">
   <div style="display: flex; justify-content: space-between;">
     <div style="display: flex; flex-direction: column; gap: 4px;">
       <ItemFrame equipment={equipment.head} slot={"head"}></ItemFrame>

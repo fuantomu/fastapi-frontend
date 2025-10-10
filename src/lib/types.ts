@@ -66,6 +66,19 @@ export type CharacterSpec = {
     spent_points: string;
 }
 
+export type CharacterStatistic = {
+    id: number;
+    name: string;
+    type: string;
+    value: string | RatingModel;
+    version: GameVersionName;
+}
+
+export type RatingModel = {
+    value: number;
+    rating: number
+}
+
 export type Talent = {
     id: number;
     name: string;
