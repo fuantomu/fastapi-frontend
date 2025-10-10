@@ -89,6 +89,7 @@ export type Glyph = {
     id: number;
     name: string;
     icon: string;
+    type: string;
 }
 
 export type Guild = {
