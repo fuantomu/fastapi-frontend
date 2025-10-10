@@ -8,8 +8,6 @@
     Guild,
   } from "$lib/types";
   import { PUBLIC_API_URL } from "$env/static/public";
-  import TalentFrame from "$lib/components/TalentFrame.svelte";
-  import GlyphFrame from "$lib/components/GlyphFrame.svelte";
   import { getContext } from "svelte";
   import CharacterFrame from "./CharacterFrame.svelte";
   import Paper, { Content } from "@smui/paper";
@@ -17,6 +15,8 @@
   import type { VersionContext } from "$lib/versions/VersionContext";
   import { t } from "$lib/i18n/index.svelte";
   import StatisticFrame from "./StatisticFrame.svelte";
+  import GlyphFrame from "$lib/components/character/GlyphFrame.svelte";
+  import TalentFrame from "$lib/components/character/TalentFrame.svelte";
 
   const { id } = $props<{ id: number }>();
 
@@ -31,19 +31,25 @@
   let character_guild: Guild = $state({} as Guild);
   let active_spec: CharacterSpec = $state({} as CharacterSpec);
   let off_spec: CharacterSpec = $state({} as CharacterSpec);
-  let character_statistics : CharacterStatistic = $state({} as CharacterStatistic)
+  let character_statistics: CharacterStatistic = $state(
+    {} as CharacterStatistic
+  );
 
   const fetchCharacter = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
+    const res = await fetch(
+      `${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+    );
     const data = await res.json();
-    if (data.Result.length == 0){
-      window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`
+    if (data.Result.length == 0) {
+      window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
     }
     character = data.Result[0];
   };
 
   const fetchOtherCharacters = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/?version=${gameVersionFactory.gameVersion.getName()}`);
+    const res = await fetch(
+      `${PUBLIC_API_URL}/Character/?version=${gameVersionFactory.gameVersion.getName()}`
+    );
     const data = await res.json();
     other_characters = data.Result.filter(
       (other_character: Character) => character?.name !== other_character.name
@@ -51,15 +57,23 @@
   };
 
   const fetchGuilds = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Guild/?version=${gameVersionFactory.gameVersion.getName()}`);
+    const res = await fetch(
+      `${PUBLIC_API_URL}/Guild/?version=${gameVersionFactory.gameVersion.getName()}`
+    );
     const data = await res.json();
-    guilds = data.Result.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName());
+    guilds = data.Result.filter(
+      (guild: Guild) =>
+        guild.version === gameVersionFactory.gameVersion.getName()
+    );
     character_guild =
-      guilds.find((guild: Guild) => guild.id === character?.guild) ?? ({} as Guild);
+      guilds.find((guild: Guild) => guild.id === character?.guild) ??
+      ({} as Guild);
   };
 
   const fetchEquipment = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
+    const res = await fetch(
+      `${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+    );
     const data = await res.json();
     character_equipment = data.Result;
   };
@@ -79,7 +93,9 @@
   };
 
   const fetchStatistic = async () => {
-    const res = await fetch(`${PUBLIC_API_URL}/Character/Statistic/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`);
+    const res = await fetch(
+      `${PUBLIC_API_URL}/Character/Statistic/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+    );
     const data = await res.json();
     character_statistics = data.Result;
   };
@@ -110,7 +126,7 @@
       body: JSON.stringify({
         players: [[character?.name, character?.realm]],
         region: character.region,
-        version: gameVersionFactory.gameVersion.getName()
+        version: gameVersionFactory.gameVersion.getName(),
       }),
       headers: {
         "Content-Type": "application/json",
@@ -118,13 +134,15 @@
     });
     if (response.ok) {
       const data = await response.json();
-      if (data["Result"] === "Not Found"){
+      if (data["Result"] === "Not Found") {
         equipment_updated = t("ui.characterNotFound");
-        return
+        return;
       }
       await fetchData();
       equipment_updated = null;
-      goto(`/${gameVersionFactory.gameVersion.getName()}/characters/${data['Result']}`);
+      goto(
+        `/${gameVersionFactory.gameVersion.getName()}/characters/${data["Result"]}`
+      );
     } else {
       equipment_updated = t("ui.errorFetchingData");
     }
@@ -136,7 +154,6 @@
     <p>Loading...</p>
   {:then}
     {#if character}
-      <h2>Show</h2>
       {#if equipment_updated}
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
@@ -159,28 +176,28 @@
         </Content>
       </Paper>
       {#if active_spec}
-        <br />
-        Active Spec {active_spec.name} {["classic","tbc","wotlk"].includes(gameVersionFactory.gameVersion.getName())? active_spec.spent_points : ""}
-        <br />
-        {#each active_spec?.talents as talent}
-          <TalentFrame {talent}></TalentFrame>
-        {/each}
-        <br />
-        {#each active_spec?.glyphs as glyph}
-          <GlyphFrame {glyph}></GlyphFrame>
-        {/each}
+        <Paper
+          style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"}
+        >
+          <Content>
+            <TalentFrame specialization={active_spec} character_class={character.character_class} active={true} />
+          </Content>
+          <Content>
+            <GlyphFrame glyphs={active_spec.glyphs} />
+          </Content>
+        </Paper>
       {/if}
       {#if off_spec}
-        <br />
-        Off Spec {off_spec.name} {["classic","tbc","wotlk"].includes(gameVersionFactory.gameVersion.getName())? off_spec.spent_points : ""}
-        <br />
-        {#each off_spec?.talents as talent}
-          <TalentFrame {talent}></TalentFrame>
-        {/each}
-        <br />
-        {#each off_spec?.glyphs as glyph}
-          <GlyphFrame {glyph}></GlyphFrame>
-        {/each}
+        <Paper
+          style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%"}
+        >
+          <Content>
+            <TalentFrame specialization={off_spec} character_class={character.character_class} active={false} />
+          </Content>
+          <Content>
+            <GlyphFrame glyphs={off_spec?.glyphs} />
+          </Content>
+        </Paper>
       {/if}
       <br />
       <button

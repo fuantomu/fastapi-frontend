@@ -2,7 +2,7 @@
   import type { CharacterEquipment } from "$lib/types";
   import { getContext } from "svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
-  import ItemFrame from "../ItemFrame.svelte";
+  import ItemFrame from "./ItemFrame.svelte";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 

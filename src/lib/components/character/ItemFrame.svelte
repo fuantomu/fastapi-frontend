@@ -2,7 +2,7 @@
   import type { CharacterItem } from "$lib/types";
   import type { GameVersionName } from "$lib/versions/GameVersion";
   import { getWowheadLink } from "$lib/helper/wowhead";
-  import WarcraftIcon from "./WarcraftIcon.svelte";
+  import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
   import { t } from "$lib/i18n/index.svelte";
   export let equipment: CharacterItem | null;

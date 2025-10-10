@@ -7,6 +7,7 @@ import { PlayerFactionRace } from "./PlayerFactionRace";
 import { PlayerRace } from "./PlayerRace";
 import { PlayerRaceClass } from "./playerRaceClass";
 import { PlayerSpec } from "./PlayerSpecialization";
+import { PlayerTalent } from "./PlayerTalent";
 
 export abstract class BaseGameVersion {
     protected classes: PlayerClass[] = [];
@@ -16,6 +17,7 @@ export abstract class BaseGameVersion {
     protected raceClasses: PlayerRaceClass[] = [];
     protected factionRaces: PlayerFactionRace[] = [];
     protected maxLevel: number = 1;
+    protected talents: PlayerTalent;
 
     protected constructor(versionSource: GameVersionType) {
         this.classes = versionSource.classes
@@ -33,6 +35,7 @@ export abstract class BaseGameVersion {
         this.factionRaces = versionSource.factionRaces
             .map((fr) => PlayerFactionRace.fromSource(fr));
         this.maxLevel = versionSource.maxLevel;
+        this.talents = PlayerTalent.fromSource(versionSource.talents);
     }
 
     abstract getName(): GameVersionName;
@@ -70,6 +73,10 @@ export abstract class BaseGameVersion {
 
     getMaxLevel(): number {
         return this.maxLevel
+    }
+
+    getTalents(): PlayerTalent {
+        return this.talents;
     }
 
 }

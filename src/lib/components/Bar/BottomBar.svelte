@@ -1,13 +1,12 @@
 <script lang="ts">
   import BottomAppBar, { Section } from "@smui-extra/bottom-app-bar";
   import Tooltip, { Wrapper } from "@smui/tooltip";
-  import IconButton from "@smui/icon-button";
   import ChangeVersionList from "./ChangeVersionList.svelte";
   import { t } from "$lib/i18n/index.svelte";
 </script>
 
-<div>
-  <BottomAppBar variant="static" color={"secondary"}>
+<div >
+  <BottomAppBar variant="static" color={"secondary"} >
     <Section>
       <Wrapper>
         <button class="image-button" style="width: 32px; height: 32px" onclick={() =>

@@ -78,5 +78,106 @@ export const versionType: GameVersionType = {
             faction: "Alliance",
             race: "Draenei"
         }],
-    maxLevel: 70
+    maxLevel: 70,
+    talents: {
+        druid: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        deathknight: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        rogue: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        paladin: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        priest: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        warlock: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        warrior: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        shaman: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        hunter: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        mage: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        },
+        monk: {
+            15: null,
+            30: null,
+            45: null,
+            60: null,
+            75: null,
+            90: null,
+            rows: []
+        }
+    }
 };

@@ -30,6 +30,6 @@
 
 <style>
   .container {
-    padding-bottom: var(--bottom-bar-size, 64px);
+    padding-bottom: var(--bottom-bar-size, 70px);
   }
 </style>

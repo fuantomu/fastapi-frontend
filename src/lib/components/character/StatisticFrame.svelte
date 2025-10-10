@@ -2,7 +2,7 @@
   import type { CharacterStatistic } from "$lib/types";
   import { getContext } from "svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
-  import StatFrame from "../StatFrame.svelte";
+  import StatFrame from "./StatFrame.svelte";
   import { t } from "i18next";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
@@ -10,7 +10,6 @@
   const { statistics } = $props<{
     statistics: CharacterStatistic;
   }>();
-  console.log(statistics);
 </script>
 
 <div

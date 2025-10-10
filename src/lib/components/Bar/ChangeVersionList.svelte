@@ -1,9 +1,7 @@
 <script lang="ts">
-  import WarcraftIcon from "../WarcraftIcon.svelte";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import Menu from "@smui/menu";
   import List, { Item, Text } from "@smui/list";
-  import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { t } from "$lib/i18n/index.svelte";
   import { getContext } from "svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
@@ -23,10 +21,10 @@
   }
 </script>
 
-<div style="width: 112px; height: 56px; margin: 0; align-self: center;">
+<div style="width: 100px; height: 50px; margin: 0; margin-top: 5px; align-self: center;">
   <button class="image-button" onclick={() => (open = !open)}>
     <img
-      style="width: fit-content; height: 56px"
+      style="width: fit-content; height: 50px"
       src="/image/expansion/gamelogo_{gameVersionFactory.gameVersion.getName()}.png"
       alt={t(`version.${gameVersionFactory.gameVersion.getName()}`)}
     />

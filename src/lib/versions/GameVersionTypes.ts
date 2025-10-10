@@ -5,6 +5,7 @@ export type GameVersionType = {
 	raceClasses: PlayerRaceClassType[];
 	factionRaces: PlayerFactionRaceType[];
 	maxLevel: number;
+	talents: PlayerTalentType;
 };
 
 export type PlayerClassType = {
@@ -37,4 +38,35 @@ export type PlayerRaceClassType = {
 export type PlayerFactionRaceType = {
 	faction: string;
 	race: string;
+}
+
+export type Talent = {
+	name: string;
+	icon: string;
+	id: number;
+	cell: string | null;
+}
+
+export type TalentRow = {
+	15: Talent[] | null;
+	30: Talent[] | null;
+	45: Talent[] | null;
+	60: Talent[] | null;
+	75: Talent[] | null;
+	90: Talent[] | null;
+	rows: Talent[] | null;
+}
+
+export type PlayerTalentType = {
+	druid: TalentRow;
+	mage: TalentRow;
+	warlock: TalentRow;
+	rogue: TalentRow;
+	warrior: TalentRow;
+	priest: TalentRow;
+	paladin: TalentRow;
+	shaman: TalentRow;
+	deathknight: TalentRow;
+	hunter: TalentRow;
+	monk: TalentRow;
 }
