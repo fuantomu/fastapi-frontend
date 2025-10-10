@@ -6,57 +6,37 @@
   import { t } from "$lib/i18n/index.svelte";
 </script>
 
-<div class="flexy">
-  <div class="bottom-app-bar-container flexor">
-    <BottomAppBar variant="static" color={"secondary"}>
-      <Section>
-        <Wrapper>
-          <IconButton
-            class="material-icons"
-            aria-label={t(`ui.reportBug`)}
-            style="color: var(--palette-warning-main)"
-            onclick={() =>
-              window.open(
-                "https://github.com/fuantomu/fastapi-frontend/issues"
-              )}
-          >
-            bug_report
-          </IconButton>
-          <Tooltip yPos="above">{t(`ui.reportBug`)}</Tooltip>
-        </Wrapper>
-      </Section>
+<div>
+  <BottomAppBar variant="static" color={"secondary"}>
+    <Section>
+      <Wrapper>
+        <button class="image-button" style="width: 32px; height: 32px" onclick={() =>
+            window.open("https://github.com/fuantomu/fastapi-frontend/issues")}>
+          <img
+            style="width: 32px; height: 32px"
+            src="/image/icon_bug.png"
+            alt={t(`ui.reportBug`)}
+          />
+        </button>
+        <Tooltip yPos="above">{t(`ui.reportBug`)}</Tooltip>
+      </Wrapper>
+    </Section>
 
-      <Section>
+    <Section >
+      <Wrapper>
         <ChangeVersionList></ChangeVersionList>
-      </Section>
-    </BottomAppBar>
-  </div>
+      </Wrapper>
+    </Section>
+  </BottomAppBar>
 </div>
 
 <style>
-  .bottom-app-bar-container {
-    max-width: 480px;
-    width: 100%;
-    margin: 0 0 0 0;
-
-    overflow: auto;
+  .image-button {
+    position: relative;
     display: inline-block;
-  }
-
-  @media (max-width: 480px) {
-    .bottom-app-bar-container {
-      margin-right: 0;
-    }
-  }
-
-  .flexy {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .flexor {
-    overflow: hidden;
-    display: inline-flex;
-    flex-direction: column;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
   }
 </style>

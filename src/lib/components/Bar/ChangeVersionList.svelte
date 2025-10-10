@@ -3,15 +3,15 @@
   import { GameVersionName } from "$lib/versions/GameVersion";
   import Menu from "@smui/menu";
   import List, { Item, Text } from "@smui/list";
-  import IconButton from "@smui/icon-button";
   import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { t } from "$lib/i18n/index.svelte";
   import { getContext } from "svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
 
-  const gameVersion = getContext<GameVersionName>("gameVersion");
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  let selectedVersion: GameVersionName = $state(gameVersion);
+  let selectedVersion: GameVersionName = $state(
+    gameVersionFactory.gameVersion.getName()
+  );
   let open = $state(false);
 
   function handleChangeVersion(version: GameVersionName | undefined) {
@@ -23,13 +23,14 @@
   }
 </script>
 
-<div>
-  <IconButton aria-label={t(`ui.changeVersion`)} onclick={() => (open = !open)}>
-    <WarcraftIcon
-      src={gameVersionFactory.iconProvider.getVersionIcon("56")}
-      label={t(`ui.changeVersion`)}
+<div style="width: 112px; height: 56px; margin: 0; align-self: center;">
+  <button class="image-button" onclick={() => (open = !open)}>
+    <img
+      style="width: fit-content; height: 56px"
+      src="/image/expansion/gamelogo_{gameVersionFactory.gameVersion.getName()}.png"
+      alt={t(`version.${gameVersionFactory.gameVersion.getName()}`)}
     />
-  </IconButton>
+  </button>
   <Menu bind:open>
     <List>
       {#each Object.values(GameVersionName) as version}
@@ -38,14 +39,13 @@
             handleChangeVersion(version);
           }}
           style={selectedVersion === version
-            ? "background-color: var(--palette-success-dark);"
-            : ""}
+            ? "background-color: var(--palette-success-dark); padding: 10px"
+            : "padding: 10px"}
         >
-          <WarcraftIcon
-            src={GameVersionFactory.getContext(
-              version
-            ).iconProvider.getVersionIcon("56")}
-            label={`version.${version}`}
+          <img
+            style="width: fit-content; height: 56px"
+            src="/image/expansion/gamelogo_{version}.png"
+            alt={t(`version.${gameVersionFactory.gameVersion.getName()}`)}
           />
           <Text style={"margin: 20px"}>{t(`version.${version}`)}</Text>
         </Item>
@@ -53,3 +53,14 @@
     </List>
   </Menu>
 </div>
+
+<style>
+  .image-button {
+    position: relative;
+    display: inline-block;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+  }
+</style>
