@@ -24,6 +24,7 @@
         >{row}</span
       >
       {#each talents as talent}
+        {#if talent.id}
         <div
           style={active_talent?.id === talent.id
             ? "position: relative; height: 50px; border: 1px solid yellow;"
@@ -40,6 +41,7 @@
         color: inherit;
       "
           >
+          
             <div
               style="
           position: absolute;
@@ -50,7 +52,7 @@
             >
               <WarcraftIcon src={talent.icon} />
             </div>
-
+         
             <span
               style="
           position: absolute;
@@ -64,6 +66,7 @@
             </span>
           </a>
         </div>
+        {/if}
       {/each}
     </div>
   </div>

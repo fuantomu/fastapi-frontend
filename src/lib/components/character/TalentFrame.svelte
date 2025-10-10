@@ -37,7 +37,7 @@
         talents={talents[levels as TalentLevel]}
         row={levels}
         active_talent={talents[levels as TalentLevel]?.find((el: Talent) => {
-          return specialization.talents.find((addr: TalentType) => {
+          return specialization.talents?.find((addr: TalentType) => {
             return addr.id === el.id;
           });
         })}
