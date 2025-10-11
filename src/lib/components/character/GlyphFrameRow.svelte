@@ -9,8 +9,9 @@
   const { glyphs } = $props<{
     glyphs: Glyph[];
   }>();
-  if (glyphs.length < 3) {
-    glyphs.push({});
+  const emptyArray = Array(3).fill({})
+  if (glyphs.length < emptyArray.length) {
+    glyphs.push(...emptyArray.slice(0, emptyArray.length-glyphs.length));
   }
 </script>
 
