@@ -4,8 +4,7 @@ import type { Character } from '$lib/types';
 
 export const load: PageLoad = async ({ params, fetch }) => {
     try {
-        const { id } = params;
-        const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${id}`);
+        const res = await fetch(`${PUBLIC_API_URL}/Character/?id=${params.id}&version=${params.gameVersion}`);
         const data = await res.json()
         const item: Character = data.Result[0];
 
