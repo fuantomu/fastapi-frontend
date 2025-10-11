@@ -9,9 +9,10 @@
   import type { Talent, TalentRow } from "$lib/versions/GameVersionTypes";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  const { specialization, character_class, active } = $props<{
+  const { specialization, character_class, level, active } = $props<{
     specialization: CharacterSpec;
     character_class: PlayerClass;
+    level: number;
     active: boolean;
   }>();
 
@@ -20,6 +21,11 @@
       character_class.toLowerCase() as keyof PlayerTalent
     ];
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
+
+  function getTalentTiers(){
+    const talentTiers = [15, 30, 45, 60, 75, 90]
+    return talentTiers
+  }
 </script>
 
 <div
@@ -32,15 +38,16 @@
   </span>
 
   {#if gameVersionFactory.gameVersion.getName() === "mop"}
-    {#each [15, 30, 45, 60, 75, 90] as levels}
+    {#each getTalentTiers() as tier}
       <TalentFrameRow
-        talents={talents[levels as TalentLevel]}
-        row={levels}
-        active_talent={talents[levels as TalentLevel]?.find((el: Talent) => {
+        talents={talents[tier as TalentLevel]}
+        row={tier}
+        active_talent={talents[tier as TalentLevel]?.find((el: Talent) => {
           return specialization.talents?.find((addr: TalentType) => {
             return addr.id === el.id;
           });
         })}
+        inactive={tier < level}
       ></TalentFrameRow>
     {/each}
   {:else}

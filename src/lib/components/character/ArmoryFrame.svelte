@@ -183,6 +183,7 @@
             <TalentFrame
               specialization={active_spec}
               character_class={character.character_class}
+              level={character.level}
               active={true}
             />
           </Content>
@@ -199,6 +200,7 @@
             <TalentFrame
               specialization={off_spec}
               character_class={character.character_class}
+              level={character.level}
               active={false}
             />
           </Content>
