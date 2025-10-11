@@ -10,13 +10,18 @@
     glyphs: Glyph[];
   }>();
   const emptyArray = Array(3).fill({})
-  if (glyphs.length < emptyArray.length) {
-    glyphs.push(...emptyArray.slice(0, emptyArray.length-glyphs.length));
+  
+
+  function getGlyphs() {
+    if (glyphs.length < emptyArray.length) {
+      glyphs.push(...emptyArray.slice(0, emptyArray.length-glyphs.length));
+    }
+    return glyphs
   }
 </script>
 
 {#if glyphs}
-  {#each glyphs as glyph}
+  {#each getGlyphs() as glyph}
     <div style="margin-bottom: 5px;">
       <div style="border: 1px solid black; height: 80px;">
         <a

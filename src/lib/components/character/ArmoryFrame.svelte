@@ -180,7 +180,11 @@
           style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"}
         >
           <Content>
-            <TalentFrame specialization={active_spec} character_class={character.character_class} active={true} />
+            <TalentFrame
+              specialization={active_spec}
+              character_class={character.character_class}
+              active={true}
+            />
           </Content>
           <Content>
             <GlyphFrame glyphs={active_spec.glyphs} />
@@ -192,10 +196,14 @@
           style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%"}
         >
           <Content>
-            <TalentFrame specialization={off_spec} character_class={character.character_class} active={false} />
+            <TalentFrame
+              specialization={off_spec}
+              character_class={character.character_class}
+              active={false}
+            />
           </Content>
           <Content>
-            <GlyphFrame glyphs={off_spec?.glyphs} />
+            <GlyphFrame glyphs={off_spec.glyphs} />
           </Content>
         </Paper>
       {/if}
