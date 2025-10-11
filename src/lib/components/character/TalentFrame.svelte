@@ -22,6 +22,8 @@
     ];
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
 
+  
+
   function getTalentTiers(){
     const talentTiers = [15, 30, 45, 60, 75, 90]
     return talentTiers
@@ -39,6 +41,7 @@
 
   {#if gameVersionFactory.gameVersion.getName() === "mop"}
     {#each getTalentTiers() as tier}
+      {console.log(level,tier,tier<level)}
       <TalentFrameRow
         talents={talents[tier as TalentLevel]}
         row={tier}
@@ -47,7 +50,7 @@
             return addr.id === el.id;
           });
         })}
-        inactive={tier < level}
+        inactive={tier <= level}
       ></TalentFrameRow>
     {/each}
   {:else}
