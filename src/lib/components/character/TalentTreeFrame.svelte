@@ -35,11 +35,24 @@
     const found = character_talents.find((ctalent: Talent) =>
       currentTalent.ranks.includes(ctalent.id)
     );
-
+    
     if (found) {
       return currentTalent.ranks.indexOf(found.id) + 1;
     }
     return 0;
+  }
+
+  function isConnectionActive(currentTalent: TalentTreeCell, tree: number){
+    if (currentTalent.connection) {
+      const connection_id : TalentTreeCell = talents[tree]?.find(
+        (_talent: TalentTreeCell) => _talent.cell === currentTalent.connection
+      );
+      if (connection_id) {
+        
+        return findTalentRank(connection_id) > 0;
+      }
+    }
+    return false;
   }
 
   function getSpentPoints(tree: TalentTreeCell[]) {
@@ -74,7 +87,7 @@
               <TalentArrow
                 startCell={talent.cell}
                 endCell={talent.connection}
-                isSet={findTalentRank(talent) > 0}
+                isSet={isConnectionActive(talent, 1)}
               />
             {/if}
           {/each}
@@ -104,7 +117,7 @@
               <TalentArrow
                 startCell={talent.cell}
                 endCell={talent.connection}
-                isSet={findTalentRank(talent) > 0}
+                isSet={isConnectionActive(talent, 2)}
               />
             {/if}
           {/each}
@@ -134,7 +147,7 @@
               <TalentArrow
                 startCell={talent.cell}
                 endCell={talent.connection}
-                isSet={findTalentRank(talent) > 0}
+                isSet={isConnectionActive(talent, 3)}
               />
             {/if}
           {/each}
@@ -156,17 +169,6 @@
 {/if}
 
 <style>
-  .grid {
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    grid-template-columns: repeat(4, 32px);
-    grid-template-rows: repeat(7, 32px);
-    padding: 20px;
-    gap: 20px;
-    position: relative;
-  }
-
   .cell {
     display: flex;
     align-items: center;
