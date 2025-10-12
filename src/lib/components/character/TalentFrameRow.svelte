@@ -3,13 +3,12 @@
   import type { VersionContext } from "$lib/versions/VersionContext";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getWowheadLink } from "$lib/helper/wowhead";
-  import type { Talent as TalentType } from "$lib/types";
   import type { Talent } from "$lib/versions/GameVersionTypes";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   const { talents, active_talent, row, inactive } = $props<{
     talents: Talent[] | null;
-    active_talent: TalentType | undefined;
+    active_talent: Talent | undefined;
     row: number;
     inactive: boolean;
   }>();
@@ -44,7 +43,7 @@
           {#if talent.id}
             <div
               style={active_talent?.id === talent.id
-                ? "position: relative; height: 50px; border: 1px solid yellow;"
+                ? "position: relative; height: 50px; border: 1px solid var(--ui-colour-talent-tree-full);"
                 : "position: relative; height: 50px;"}
             >
               <a
@@ -66,7 +65,7 @@
           transform: translateY(-50%);
         "
                 >
-                  <WarcraftIcon src={talent.icon} />
+                  <WarcraftIcon src={talent.icon} grayscale={!inactive} />
                 </div>
 
                 <span

@@ -44,7 +44,21 @@ export type Talent = {
 	name: string;
 	icon: string;
 	id: number;
+}
+
+export type TalentTreeCell = {
+	name: string;
+	icon: string;
 	cell: string | null;
+	ranks: number[]
+	connection : string | null;
+}
+
+export type TalentTreeRow = {
+	names: string[];
+	1: TalentTreeCell[];
+	2: TalentTreeCell[];
+	3: TalentTreeCell[];
 }
 
 export type TalentRow = {
@@ -54,7 +68,7 @@ export type TalentRow = {
 	60: Talent[] | null;
 	75: Talent[] | null;
 	90: Talent[] | null;
-	rows: Talent[] | null;
+	talent_tree: TalentTreeRow | null;
 }
 
 export type PlayerTalentType = {

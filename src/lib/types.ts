@@ -63,7 +63,6 @@ export type CharacterSpec = {
     glyphs: Glyph[];
     active: boolean;
     version: GameVersionName;
-    spent_points: string;
 }
 
 export type CharacterStatistic = {
@@ -83,6 +82,7 @@ export type Talent = {
     id: number;
     name: string;
     icon: string;
+    rank: number;
 }
 
 export type Glyph = {

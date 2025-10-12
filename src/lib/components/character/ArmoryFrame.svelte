@@ -177,7 +177,11 @@
       </Paper>
       {#if active_spec}
         <Paper
-          style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"}
+          style={["wotlk", "cataclysm", "mop"].includes(
+            gameVersionFactory.gameVersion.getName()
+          )
+            ? "border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"
+            : "border: 1px solid black; display: grid;"}
         >
           <Content>
             <TalentFrame
@@ -187,14 +191,20 @@
               active={true}
             />
           </Content>
-          <Content>
-            <GlyphFrame glyphs={active_spec.glyphs} />
-          </Content>
+          {#if ["wotlk", "cataclysm", "mop"].includes(gameVersionFactory.gameVersion.getName())}
+            <Content>
+              <GlyphFrame glyphs={active_spec.glyphs} />
+            </Content>
+          {/if}
         </Paper>
       {/if}
       {#if off_spec}
         <Paper
-          style={"border: 1px solid black; display: grid; grid-template-columns: 50% 50%"}
+          style={["wotlk", "cataclysm", "mop"].includes(
+            gameVersionFactory.gameVersion.getName()
+          )
+            ? "border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"
+            : "border: 1px solid black; display: grid; "}
         >
           <Content>
             <TalentFrame
@@ -204,9 +214,11 @@
               active={false}
             />
           </Content>
-          <Content>
-            <GlyphFrame glyphs={off_spec.glyphs} />
-          </Content>
+          {#if ["wotlk", "cataclysm", "mop"].includes(gameVersionFactory.gameVersion.getName())}
+            <Content>
+              <GlyphFrame glyphs={off_spec.glyphs} />
+            </Content>
+          {/if}
         </Paper>
       {/if}
       <br />
