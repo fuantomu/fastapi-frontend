@@ -175,7 +175,7 @@
           <StatisticFrame statistics={character_statistics} />
         </Content>
       </Paper>
-      {#if active_spec}
+      {#if active_spec.name}
         <Paper
           style={["wotlk", "cataclysm", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
@@ -198,7 +198,7 @@
           {/if}
         </Paper>
       {/if}
-      {#if off_spec}
+      {#if off_spec.name}
         <Paper
           style={["wotlk", "cataclysm", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
