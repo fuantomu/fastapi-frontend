@@ -126,7 +126,7 @@
   }
 
   .arrow-segment.arrow_down {
-    margin-top: -16px;
+    margin-top: -21px;
     z-index: 2;
   }
 
