@@ -74,7 +74,7 @@
           left: 50%;
           top: 50%;
           transform: translate(-25%, -50%);
-          width: 100%;
+          width: 60%;
         "
                 >
                   {talent.name}
