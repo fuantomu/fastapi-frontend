@@ -158,7 +158,7 @@
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
       <Paper
-        style={"border: 1px solid black; display: grid; grid-template-columns: 25% 35% 40%"}
+        style={"border: 1px solid black; display: grid; grid-template-columns: 25% 40% 35%"}
       >
         <Content>
           <CharacterFrame
@@ -168,10 +168,10 @@
             {guilds}
           />
         </Content>
-        <Content>
+        <Content style={"width: 100%"}>
           <EquipmentFrame equipment={character_equipment} />
         </Content>
-        <Content>
+        <Content style={"width: 100%"}>
           <StatisticFrame statistics={character_statistics} />
         </Content>
       </Paper>

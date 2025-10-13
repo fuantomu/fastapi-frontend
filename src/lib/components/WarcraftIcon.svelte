@@ -37,8 +37,8 @@
 
 <style>
   .warcraft-icon {
-    width: var(--spacing-xl);
-    height: var(--spacing-xl);
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
   }
 

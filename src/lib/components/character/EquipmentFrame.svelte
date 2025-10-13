@@ -13,7 +13,7 @@
 
 <div style="background-color: #111111; border: 1px solid black; padding: 20px; min-height: 400px;">
   <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex; flex-direction: column; gap: 4px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
       <ItemFrame equipment={equipment.head} slot={"head"}></ItemFrame>
       <ItemFrame equipment={equipment.neck} slot={"neck"}></ItemFrame>
       <ItemFrame equipment={equipment.shoulders} slot={"shoulders"}></ItemFrame>
@@ -23,7 +23,7 @@
       <ItemFrame equipment={equipment.tabard} slot={"tabard"}></ItemFrame>
       <ItemFrame equipment={equipment.wrist} slot={"wrist"}></ItemFrame>
     </div>
-    <div style="display: flex; flex-direction: column; gap: 4px; align-items: end">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: end">
       <ItemFrame equipment={equipment.hands} slot={"hands"} reverse={true}></ItemFrame>
       <ItemFrame equipment={equipment.waist} slot={"waist"} reverse={true}></ItemFrame>
       <ItemFrame equipment={equipment.legs} slot={"legs"} reverse={true}></ItemFrame>
@@ -38,7 +38,10 @@
     style="
       display: flex;
       justify-content: center;
-      gap: 10px;
+      align-items: center;
+      flex-direction: row;
+      gap: 16px;
+      padding: 32px;
     "
   >
     <ItemFrame equipment={equipment.main_hand} slot={"main_hand"}></ItemFrame>

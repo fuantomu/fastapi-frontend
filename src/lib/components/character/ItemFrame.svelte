@@ -12,55 +12,67 @@
   const gameVersion = getContext<GameVersionName>("gameVersion");
 </script>
 
-<div style="display: flex; align-items: center; margin-top: 5px;">
+<div style="height: 32px;">
   {#if equipment}
-    {#if reverse}
-      <a
-        href={`${getWowheadLink("item", gameVersion)}${equipment.id}`}
-        data-wowhead={`${equipment.wowhead_link}`}
-        style="text-decoration:none"
-      >
+    <a
+      href={`${getWowheadLink("item", gameVersion)}${equipment.id}`}
+      data-wowhead={`${equipment.wowhead_link}`}
+      class="equipment-link"
+    >
+      {#if reverse}
         <span
-          style="color: var(--item-quality-colour-{equipment.quality}); margin-right: 5px;"
+          class="equipment-text"
+          style="color: var(--item-quality-colour-{equipment.quality});"
           >{equipment.name}</span
         >
-        <WarcraftIcon src={equipment.icon}></WarcraftIcon>
-      </a>
-    {:else}
-      <a
-        href={`${getWowheadLink("item", gameVersion)}${equipment.id}`}
-        data-wowhead={`${equipment.wowhead_link}`}
-        style="text-decoration:none"
-      >
-        <WarcraftIcon src={equipment.icon}></WarcraftIcon>
+        <WarcraftIcon src={equipment.icon} />
+      {:else}
+        <WarcraftIcon src={equipment.icon} />
         <span
-          style="color: var(--item-quality-colour-{equipment.quality}); margin-left: 5px;"
+          class="equipment-text"
+          style="color: var(--item-quality-colour-{equipment.quality});"
           >{equipment.name}</span
         >
-      </a>
-    {/if}
+      {/if}
+    </a>
   {:else if reverse}
-    <span style="color: var(--palette-secondary-main); margin-right: 10px;"
-      >{t("equipment.empty")}</span
-    >
-    <img
-      src={`/image/paperdoll/empty_${slot}.png`}
-      alt={t(`equipment.${slot}`)}
-      style="width: var(--spacing-xl); height: var(--spacing-xl)"
-    />
+    <div class="equipment-link">
+      <span class="equipment-text">{t("equipment.empty")}</span>
+      <img
+        src={`/image/paperdoll/empty_${slot}.png`}
+        alt={t(`equipment.${slot}`)}
+        style="width: 32px; height: 32px"
+      />
+    </div>
   {:else}
-    <img
-      src={`/image/paperdoll/empty_${slot}.png`}
-      alt={t(`equipment.${slot}`)}
-      style="width: var(--spacing-xl); height: var(--spacing-xl)"
-    /><span style="color: var(--palette-secondary-main); margin-left: 10px;"
-      >{t("equipment.empty")}</span
-    >
+    <div class="equipment-link">
+      <img
+        src={`/image/paperdoll/empty_${slot}.png`}
+        alt={t(`equipment.${slot}`)}
+        style="width: 32px; height: 32px"
+      /><span class="equipment-text">{t("equipment.empty")}</span>
+    </div>
   {/if}
 </div>
 
 <style>
   :global(.wowhead-tooltip .whtt-tooltip-icon) {
     display: none !important;
+  }
+  .equipment-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .equipment-text {
+    color: var(--palette-secondary-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: inline-block;
   }
 </style>
