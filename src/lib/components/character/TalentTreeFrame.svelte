@@ -72,12 +72,12 @@
 {#if character_talents}
   <div style="display: flex; justify-content: space-between; width: 100%;">
     <Content
-      style="width: 30%; border: 1px solid black; padding: 10px; height: 400px"
+      style="width: 30%; border: 1px solid black; padding: 10px; height: 400px;"
     >
       <div style="display: flex; justify-content: center;">
-        {t(`game.specs.${character_class}${talents.names?.at(0)}`)} : {getSpentPoints(
+        {t(`specs.${character_class}${talents.names?.at(0)}`)} ({getSpentPoints(
           talents[1]
-        )}
+        )})
       </div>
 
       <div class="tree-wrapper">
@@ -107,8 +107,8 @@
     </Content>
     <Content style="width: 30%; border: 1px solid black; padding: 10px">
       <div style="display: flex; justify-content: center; margin-bottom: 8px">
-        {t(`game.specs.${character_class}${talents.names?.at(1)}`)}
-        {getSpentPoints(talents[2])}
+        {t(`specs.${character_class}${talents.names?.at(1)}`)}
+        ({getSpentPoints(talents[2])})
       </div>
       <div class="tree-wrapper">
         <div class="arrow-overlay">
@@ -137,8 +137,8 @@
     </Content>
     <Content style="width: 30%; border: 1px solid black; padding: 10px">
       <div style="display: flex; justify-content: center; margin-bottom: 8px">
-        {t(`game.specs.${character_class}${talents.names?.at(2)}`)}
-        {getSpentPoints(talents[3])}
+        {t(`specs.${character_class}${talents.names?.at(2)}`)}
+        ({getSpentPoints(talents[3])})
       </div>
       <div class="tree-wrapper">
         <div class="arrow-overlay">
@@ -179,7 +179,8 @@
 
   .tree-wrapper {
     position: relative;
-    width: 100%;
+    width: 100%; 
+    margin-left: -16px;
     z-index: 0;
   }
 
@@ -191,7 +192,6 @@
     grid-template-rows: repeat(7, 32px);
     gap: 20px;
     position: relative;
-
     z-index: 1;
   }
 
