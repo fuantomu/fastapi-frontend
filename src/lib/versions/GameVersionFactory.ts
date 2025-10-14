@@ -23,7 +23,7 @@ export class GameVersionFactory {
                 return new WodIconProvider();
             case GameVersionName.MOP:
                 return new MopIconProvider();
-            case GameVersionName.CATACLYSM:
+            case GameVersionName.CATA:
                 return new CataIconProvider();
             case GameVersionName.WOTLK:
                 return new WotlkIconProvider();
@@ -41,7 +41,7 @@ export class GameVersionFactory {
                 return new WodGameVersion();
             case GameVersionName.MOP:
                 return new MopGameVersion();
-            case GameVersionName.CATACLYSM:
+            case GameVersionName.CATA:
                 return new CataGameVersion();
             case GameVersionName.WOTLK:
                 return new WotlkGameVersion();

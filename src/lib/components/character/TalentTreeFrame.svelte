@@ -13,15 +13,28 @@
   import TalentArrow from "../talent/TalentArrow.svelte";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  const { talents, character_class, character_talents } = $props<{
+  const {
+    talents,
+    character_class,
+    character_talents = [],
+  } = $props<{
     talents: TalentTreeRow | null;
     character_class: PlayerClass;
     character_talents: Talent;
   }>();
 
+  const versionRows = {
+    classic: 7,
+    tbc: 9,
+    wotlk: 11,
+    cata: 7,
+    mop: 0,
+    wod: 0,
+  };
+
   function generateTree(talents: TalentTreeCell[]) {
     const items: TalentTreeCell[] = Array.from(
-      { length: 7 * 4 },
+      { length: versionRows[gameVersionFactory.gameVersion.getName()] * 4 },
       () => ({}) as TalentTreeCell
     );
     talents.forEach((talent: TalentTreeCell) => {
@@ -32,23 +45,22 @@
     return items;
   }
   function findTalentRank(currentTalent: TalentTreeCell) {
-    const found = character_talents.find((ctalent: Talent) =>
+    const found = character_talents?.find((ctalent: Talent) =>
       currentTalent.ranks.includes(ctalent.id)
     );
-    
+
     if (found) {
       return currentTalent.ranks.indexOf(found.id) + 1;
     }
     return 0;
   }
 
-  function isConnectionActive(currentTalent: TalentTreeCell, tree: number){
-    if (currentTalent.connection) {
-      const connection_id : TalentTreeCell = talents[tree]?.find(
-        (_talent: TalentTreeCell) => _talent.cell === currentTalent.connection
+  function isConnectionActive(connection: string, tree: number) {
+    if (connection) {
+      const connection_id: TalentTreeCell = talents[tree]?.find(
+        (_talent: TalentTreeCell) => _talent.cell === connection
       );
       if (connection_id) {
-        
         return findTalentRank(connection_id) > 0;
       }
     }
@@ -67,12 +79,17 @@
 
     return totalTreeRank;
   }
+  console.log(talents)
 </script>
 
-{#if character_talents}
+{#if talents}
   <div style="display: flex; justify-content: space-between; width: 100%;">
     <Content
-      style="width: 30%; border: 1px solid black; padding: 10px; height: 400px;"
+      style="width: 30%; border: 1px solid black; padding: 10px; height: {versionRows[
+        gameVersionFactory.gameVersion.getName()
+      ] *
+        52 +
+        30}px;"
     >
       <div style="display: flex; justify-content: center;">
         {t(`specs.${character_class}${talents.names?.at(0)}`)} ({getSpentPoints(
@@ -83,12 +100,14 @@
       <div class="tree-wrapper">
         <div class="arrow-overlay">
           {#each talents[1] as talent}
-            {#if talent.connection}
-              <TalentArrow
-                startCell={talent.cell}
-                endCell={talent.connection}
-                isSet={isConnectionActive(talent, 1)}
-              />
+            {#if talent.connection.length > 0}
+              {#each talent.connection as conn}
+                <TalentArrow
+                  startCell={talent.cell}
+                  endCell={conn}
+                  isSet={isConnectionActive(conn, 1)}
+                />
+              {/each}
             {/if}
           {/each}
 
@@ -114,11 +133,13 @@
         <div class="arrow-overlay">
           {#each talents[2] as talent}
             {#if talent.connection}
-              <TalentArrow
-                startCell={talent.cell}
-                endCell={talent.connection}
-                isSet={isConnectionActive(talent, 2)}
-              />
+              {#each talent.connection as conn}
+                <TalentArrow
+                  startCell={talent.cell}
+                  endCell={conn}
+                  isSet={isConnectionActive(conn, 2)}
+                />
+              {/each}
             {/if}
           {/each}
 
@@ -144,11 +165,13 @@
         <div class="arrow-overlay">
           {#each talents[3] as talent}
             {#if talent.connection}
-              <TalentArrow
-                startCell={talent.cell}
-                endCell={talent.connection}
-                isSet={isConnectionActive(talent, 3)}
-              />
+              {#each talent.connection as conn}
+                <TalentArrow
+                  startCell={talent.cell}
+                  endCell={conn}
+                  isSet={isConnectionActive(conn, 3)}
+                />
+              {/each}
             {/if}
           {/each}
 
@@ -179,7 +202,7 @@
 
   .tree-wrapper {
     position: relative;
-    width: 100%; 
+    width: 100%;
     margin-left: -16px;
     z-index: 0;
   }

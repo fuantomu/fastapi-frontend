@@ -36,14 +36,14 @@
       route.push({
         type: "line_horizontal",
         top: row * STEP,
-        left: col * STEP,
+        left: horizontalDir > 0 ? col * STEP : GAP ,
       });
       col += horizontalDir;
     }
 
     if (colDiff !== 0 && rowDiff !== 0) {
       route.push({
-        type: "line_left_down",
+        type: horizontalDir > 0 ? "line_left_down" : "line_right_down",
         top: row * STEP,
         left: col * STEP,
       });
@@ -60,7 +60,7 @@
         left: col * STEP,
       });
       if (
-        route[route.length - 2]?.type === "line_left_down" ||
+        ["line_left_down", "line_right_down"].includes(route[route.length - 2]?.type) ||
         route[route.length - 2]?.style?.includes("margin-top")
       ) {
         route[route.length - 1].style = "margin-top: -23px;";
@@ -71,7 +71,7 @@
       row += verticalDir;
     }
 
-    const arrowType = rowDiff > 0 ? "arrow_down" : "arrow_right";
+    const arrowType = rowDiff > 0 ? "arrow_down" : horizontalDir > 0 ? "arrow_right" : "arrow_left";
 
     route.push({
       type: arrowType,
@@ -80,12 +80,11 @@
     });
 
     if (
-      route[route.length - 2]?.type === "line_left_down" ||
+      ["line_left_down", "line_right_down"].includes(route[route.length - 2]?.type) ||
       route[route.length - 2]?.style?.includes("margin-top")
     ) {
-      route[route.length - 1].style = "margin-top: -69px;";
+      route[route.length - 1].style = "margin-top: -73px;";
     }
-
     return route;
   }
 
@@ -125,13 +124,23 @@
     margin-top: -3px;
   }
 
+  .arrow-segment.line_right_down {
+    margin-top: -3px;
+  }
+
   .arrow-segment.arrow_down {
     margin-top: -21px;
     z-index: 2;
   }
 
   .arrow-segment.arrow_right {
-    margin-left: -15px;
+    margin-left: -18px;
+    margin-top: -3px;
+    z-index: 2;
+  }
+
+  .arrow-segment.arrow_left {
+    margin-left: 18px;
     margin-top: -3px;
     z-index: 2;
   }

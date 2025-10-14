@@ -84,7 +84,7 @@ export abstract class BaseGameVersion {
 export enum GameVersionName {
     WOD = "wod",
     MOP = 'mop',
-    CATACLYSM = 'cataclysm',
+    CATA = 'cata',
     WOTLK = "wotlk",
     TBC = "tbc",
     CLASSIC = "classic"

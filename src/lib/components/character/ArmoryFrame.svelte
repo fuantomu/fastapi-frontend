@@ -184,10 +184,10 @@
       </Paper>
       {#if active_spec}
         <Paper
-          style={["wotlk", "cataclysm", "mop"].includes(
+          style={["wotlk", "cata", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
           )
-            ? "border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"
+            ? "border: 1px solid black; display: grid; grid-template-columns: 65% 35%;"
             : "border: 1px solid black; display: grid;"}
         >
           <Content>
@@ -198,7 +198,7 @@
               active={true}
             />
           </Content>
-          {#if ["wotlk", "cataclysm", "mop"].includes(gameVersionFactory.gameVersion.getName())}
+          {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
               <GlyphFrame glyphs={active_spec.glyphs} />
             </Content>
@@ -207,10 +207,10 @@
       {/if}
       {#if off_spec}
         <Paper
-          style={["wotlk", "cataclysm", "mop"].includes(
+          style={["wotlk", "cata", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
           )
-            ? "border: 1px solid black; display: grid; grid-template-columns: 50% 50%;"
+            ? "border: 1px solid black; display: grid; grid-template-columns: 65% 35%;"
             : "border: 1px solid black; display: grid; "}
         >
           <Content>
@@ -221,7 +221,7 @@
               active={false}
             />
           </Content>
-          {#if ["wotlk", "cataclysm", "mop"].includes(gameVersionFactory.gameVersion.getName())}
+          {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
               <GlyphFrame glyphs={off_spec.glyphs} />
             </Content>

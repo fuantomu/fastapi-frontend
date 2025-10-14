@@ -7,6 +7,6 @@ export class GameVersion extends BaseGameVersion {
     }
 
     getName(): GameVersionName {
-        return GameVersionName.CATACLYSM;
+        return GameVersionName.CATA;
     }
 }

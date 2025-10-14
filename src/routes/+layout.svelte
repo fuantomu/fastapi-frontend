@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { PUBLIC_API_URL } from "$env/static/public";
   import BottomBar from "$lib/components/Bar/BottomBar.svelte";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { setContext } from "svelte";
   try {
     let location = window.location.pathname.split("/")[1];
+    console.log(location)
     setContext("gameVersion", location);
     setContext(
       "gameVersionFactory",

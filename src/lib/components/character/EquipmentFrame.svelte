@@ -48,7 +48,7 @@
     {#if equipment.main_hand?.inventory_type !== "Two-Hand" && equipment.main_hand?.inventory_type !== "Ranged"}
       <ItemFrame equipment={equipment.off_hand} slot={"off_hand"}></ItemFrame>
     {/if}
-    {#if ["classic", "tbc", "wotlk", "cataclysm"].includes(gameVersionFactory.gameVersion.getName())}
+    {#if ["classic", "tbc", "wotlk", "cata"].includes(gameVersionFactory.gameVersion.getName())}
       <ItemFrame equipment={equipment.ranged} slot={"ranged"}></ItemFrame>
     {/if}
   </div>

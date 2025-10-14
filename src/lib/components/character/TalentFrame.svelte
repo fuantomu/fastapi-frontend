@@ -52,6 +52,6 @@
       ></TalentFrameRow>
     {/each}
   {:else}
-    <TalentTreeFrame talents={talents.talent_tree} character_talents={specialization.talents} character_class={character_class}></TalentTreeFrame>
+    <TalentTreeFrame talents={talents?.talent_tree} character_talents={specialization?.talents} character_class={character_class}></TalentTreeFrame>
   {/if}
 </div>

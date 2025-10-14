@@ -8,21 +8,19 @@
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
-  const { glyphs } = $props<{
+  const { glyphs = [] } = $props<{
     glyphs: Glyph[];
   }>();
 </script>
 
-{#if ["classic", "tbc"].includes(gameVersionFactory.gameVersion.getName())}
-  <div></div>
-{:else if glyphs}
+{#if glyphs}
   <div
     style="background-color: #111111; border: 1px solid black; padding: 20px; display: flex; flex-direction: column; min-height: 400px;"
   >
     <span style="align-self: center; margin-bottom: 15px">
       {t("ui.glyphs")}
     </span>
-    {#if gameVersionFactory.gameVersion.getName() === "mop"}
+    {#if ["mop", "wotlk"].includes(gameVersionFactory.gameVersion.getName())}
       <div style="display: flex; justify-content: space-between; width: 100%;">
         <Content style="width: 50%">
           <div
