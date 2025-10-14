@@ -33,9 +33,9 @@
   style="background-color: #111111; border: 1px solid black; padding: 20px; display: flex; flex-direction: column; min-height: 400px;"
 >
   <span style="align-self: center; margin-bottom: 15px">
-    {active ? t("character.activeSpec") : t("character.offSpec")} : {t(
+    {active ? t("character.activeSpec") : t("character.offSpec")} : {specialization.name? t(
       `specs.${character_class}${specialization.name}`
-    )}
+    ) : t("ui.unlearnedSpecialization")}
   </span>
 
   {#if gameVersionFactory.gameVersion.getName() === "mop"}

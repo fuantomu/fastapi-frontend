@@ -84,12 +84,19 @@
     );
     const data = await res.json();
     let character_specializations = data.Result;
-    active_spec =
-      character_specializations?.find((spec: CharacterSpec) => spec.active) ??
-      ({} as CharacterSpec);
-    off_spec =
-      character_specializations?.find((spec: CharacterSpec) => !spec.active) ??
-      ({} as CharacterSpec);
+
+    if (character_specializations.length == 1) {
+      active_spec = character_specializations[0];
+      off_spec = {} as CharacterSpec;
+    } else {
+      active_spec =
+        character_specializations?.find((spec: CharacterSpec) => spec.active) ??
+        ({} as CharacterSpec);
+      off_spec =
+        character_specializations?.find(
+          (spec: CharacterSpec) => !spec.active
+        ) ?? ({} as CharacterSpec);
+    }
   };
 
   const fetchStatistic = async () => {
@@ -175,7 +182,7 @@
           <StatisticFrame statistics={character_statistics} />
         </Content>
       </Paper>
-      {#if active_spec.name}
+      {#if active_spec}
         <Paper
           style={["wotlk", "cataclysm", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
@@ -198,7 +205,7 @@
           {/if}
         </Paper>
       {/if}
-      {#if off_spec.name}
+      {#if off_spec}
         <Paper
           style={["wotlk", "cataclysm", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
