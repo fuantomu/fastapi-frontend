@@ -37,7 +37,8 @@
     nameError = characters.some(
       (character) =>
         character.realm.trim().toLowerCase() === realm.trim().toLowerCase() &&
-        character.name.trim().toLowerCase() === name.trim().toLowerCase()
+        character.name.trim().toLowerCase() === name.trim().toLowerCase() &&
+        character.version === gameVersionFactory.gameVersion.getName()
     )
       ? `"${name}" already exists on "${realm}".`
       : null;

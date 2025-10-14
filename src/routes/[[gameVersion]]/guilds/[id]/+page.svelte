@@ -43,7 +43,8 @@
     nameError = guilds.some(
       (guild) =>
         guild.realm.trim().toLowerCase() === realm.trim().toLowerCase() &&
-        guild.name.trim().toLowerCase() === name.trim().toLowerCase()
+        guild.name.trim().toLowerCase() === name.trim().toLowerCase() &&
+        guild.version === gameVersion
     )
       ? `"${name}" already exists on "${realm}".`
       : null;
