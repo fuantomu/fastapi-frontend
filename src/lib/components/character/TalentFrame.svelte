@@ -23,9 +23,9 @@
     ];
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
 
-  function getTalentTiers(){
-    const talentTiers = [15, 30, 45, 60, 75, 90]
-    return talentTiers
+  function getTalentTiers() {
+    const talentTiers = [15, 30, 45, 60, 75, 90];
+    return talentTiers;
   }
 </script>
 
@@ -33,25 +33,32 @@
   style="background-color: #111111; border: 1px solid black; padding: 20px; display: flex; flex-direction: column; min-height: 400px;"
 >
   <span style="align-self: center; margin-bottom: 15px">
-    {active ? t("character.activeSpec") : t("character.offSpec")} : {specialization.name? t(
-      `specs.${character_class}${specialization.name}`
-    ) : t("ui.unlearnedSpecialization")}
+    {active ? t("character.activeSpec") : t("character.offSpec")} : {specialization.name
+      ? t(`specs.${character_class}${specialization.name}`)
+      : t("ui.unlearnedSpecialization")}
   </span>
-
-  {#if gameVersionFactory.gameVersion.getName() === "mop"}
-    {#each getTalentTiers() as tier}
-      <TalentFrameRow
-        talents={talents[tier as TalentLevel]}
-        row={tier}
-        active_talent={talents[tier as TalentLevel]?.find((_talent: Talent) => {
-          return specialization.talents?.find((t_type: TalentType) => {
-            return t_type.id === _talent.id;
-          });
-        })}
-        inactive={tier <= level}
-      ></TalentFrameRow>
-    {/each}
-  {:else}
-    <TalentTreeFrame talents={talents?.talent_tree} character_talents={specialization?.talents} character_class={character_class}></TalentTreeFrame>
+  {#if talents}
+    {#if gameVersionFactory.gameVersion.getName() === "mop"}
+      {#each getTalentTiers() as tier}
+        <TalentFrameRow
+          talents={talents[tier as TalentLevel]}
+          row={tier}
+          active_talent={talents[tier as TalentLevel]?.find(
+            (_talent: Talent) => {
+              return specialization.talents?.find((t_type: TalentType) => {
+                return t_type.id === _talent.id;
+              });
+            }
+          )}
+          inactive={tier <= level}
+        ></TalentFrameRow>
+      {/each}
+    {:else}
+      <TalentTreeFrame
+        talents={talents?.talent_tree}
+        character_talents={specialization?.talents}
+        {character_class}
+      ></TalentTreeFrame>
+    {/if}
   {/if}
 </div>

@@ -5,7 +5,6 @@
   import { setContext } from "svelte";
   try {
     let location = window.location.pathname.split("/")[1];
-    console.log(location)
     setContext("gameVersion", location);
     setContext(
       "gameVersionFactory",
@@ -14,6 +13,7 @@
       )
     );
   } catch (err) {
+    console.log(err)
     window.location.href = "/mop";
     setContext("gameVersion", GameVersionName.MOP);
     setContext(

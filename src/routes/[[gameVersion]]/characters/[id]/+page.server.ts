@@ -5,7 +5,8 @@ export const actions: Actions = {
   default: async ({ request }) => {
     const data = await request.formData();
     const result = await handleCharacterSubmit(data);
-    const gameVersion = data.get("gameVersion")
+    console.log(data,result)
+    const gameVersion = data.get("version")
     throw redirect(303, `/${gameVersion}${result}`)
   }
 };

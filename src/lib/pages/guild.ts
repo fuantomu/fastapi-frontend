@@ -1,6 +1,7 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { Faction } from '$lib/consts';
+import type { Faction, Region } from '$lib/consts';
 import type { Guild } from '$lib/types';
+import type { GameVersionName } from '$lib/versions/GameVersion';
 
 export async function handleGuildSubmit(formData: FormData) {
     const id = formData.get('id') as unknown as number
@@ -10,6 +11,8 @@ export async function handleGuildSubmit(formData: FormData) {
     const achievement_points = formData.get('achievement_points') as string
     const member_count = formData.get('member_count') as string
     const created_timestamp = formData.get('created_timestamp') as string
+    const version = formData.get('gameVersion') as GameVersionName
+    const region = formData.get('region') as Region
 
     const guild: Guild = {
         id,
@@ -18,7 +21,9 @@ export async function handleGuildSubmit(formData: FormData) {
         realm,
         achievement_points: Number(achievement_points) ?? 0,
         member_count: Number(member_count) ?? 0,
-        created_timestamp: new Date(created_timestamp).getTime() ?? Date.now()
+        created_timestamp: new Date(created_timestamp).getTime() ?? Date.now(),
+        region,
+        version
     };
 
     let response = await fetch(`${PUBLIC_API_URL}/Guild/`, {

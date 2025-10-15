@@ -79,7 +79,6 @@
 
     return totalTreeRank;
   }
-  console.log(talents)
 </script>
 
 {#if talents}

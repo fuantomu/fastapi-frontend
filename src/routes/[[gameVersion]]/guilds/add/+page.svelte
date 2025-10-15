@@ -1,20 +1,23 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { Faction } from "$lib/consts";
+  import { Faction, Region } from "$lib/consts";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { getContext } from "svelte";
   import type { PageProps } from "./$types";
   import { t } from "$lib/i18n/index.svelte";
+  import type { VersionContext } from "$lib/versions/VersionContext";
+  import type { Guild } from "$lib/types";
 
   let nameInput: string = $state("");
   let realmInput: string = $state("");
   let { data }: PageProps = $props();
-  let guilds = $state(data.guilds ?? []);
-
-  const gameVersion = getContext<GameVersionName>("gameVersion");
+  let guilds : Guild[] = $state(data.guilds ?? []);
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  let selectedVersion: GameVersionName = $state(gameVersionFactory.gameVersion.getName());
+  let selectedRegion: Region = $state(Region.EU);
 
   function handleGoBack() {
-    goto(`/${gameVersion}/guilds`);
+    goto(`/${gameVersionFactory.gameVersion.getName()}/guilds`);
   }
 
   function handleNameInput(inputValue: string) {
@@ -30,17 +33,17 @@
   let nameError: string | null = $state(null);
   function checkDuplicate(name: string, realm: string) {
     nameError = guilds.some(
-      (guild) =>
+      (guild : Guild) =>
         guild.realm.trim().toLowerCase() === realm.trim().toLowerCase() &&
         guild.name.trim().toLowerCase() === name.trim().toLowerCase() &&
-        guild.version === gameVersion
+        guild.version === selectedVersion
     )
       ? `"${name}" already exists on "${realm}".`
       : null;
   }
 </script>
 
-<h1>Test {t(`version.${gameVersion}`)}</h1>
+<h1>Test {t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
 <form method="POST">
   <input id="id" type="hidden" name="id" value={0} />
   <input
@@ -82,12 +85,21 @@
     type="date"
     value={new Date().toISOString().split("T")[0]}
   />
-  <input
+  <select
     id="gameVersion"
-    type="hidden"
     name="gameVersion"
-    value={gameVersion}
-  />
+    bind:value={selectedVersion}
+    required
+  >
+    {#each Object.values(GameVersionName) as version}
+      <option value={version}>{t(`version.${version}`)}</option>
+    {/each}
+  </select>
+  <select id="region" name="region" bind:value={selectedRegion} required>
+    {#each Object.values(Region) as region}
+      <option value={region}>{t(`region.${region}`)}</option>
+    {/each}
+  </select>
   <button type="submit" disabled={nameError ? true : false}>Save</button>
 </form>
 <button onclick={() => handleGoBack()}> Go back </button>

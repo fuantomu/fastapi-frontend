@@ -17,11 +17,13 @@
   import StatisticFrame from "./StatisticFrame.svelte";
   import GlyphFrame from "$lib/components/character/GlyphFrame.svelte";
   import TalentFrame from "$lib/components/character/TalentFrame.svelte";
+  import CharacterEditFrame from "./add/CharacterEditFrame.svelte";
 
   const { id } = $props<{ id: number }>();
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
+  let edit: Boolean = $state(false);
   let character: Character = $state({} as Character);
   let other_characters: Character[] = $state([]);
   let guilds: Guild[] = $state([]);
@@ -165,22 +167,40 @@
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
       <Paper
-        style={"border: 1px solid black; display: grid; grid-template-columns: 25% 40% 35%"}
+        style={`border: 1px solid black; display: grid; grid-template-columns: ${edit ? "40% 50%" : "25% 40% 35%"}`}
       >
         <Content>
-          <CharacterFrame
-            {character}
-            {character_guild}
-            {other_characters}
-            {guilds}
-          />
+          {#if edit}
+            <CharacterEditFrame
+              {character}
+              {character_guild}
+              characters={other_characters}
+              {guilds}
+            ></CharacterEditFrame>
+          {:else}
+            <CharacterFrame {character} {character_guild} />
+          {/if}
+          <br />
+          <button
+            type="button"
+            onclick={() => {
+              edit = !edit;
+            }}>{t(edit ? `ui.cancel` : `ui.edit`)}</button
+          >
+          <button
+            disabled={equipment_updated ? true : false}
+            onclick={() => handleRefresh()}>Refresh</button
+          >
+          <button onclick={() => handleDelete()}>Delete Character </button>
         </Content>
         <Content style={"width: 100%"}>
           <EquipmentFrame equipment={character_equipment} />
         </Content>
-        <Content style={"width: 100%"}>
-          <StatisticFrame statistics={character_statistics} />
-        </Content>
+        {#if !edit}
+          <Content style={"width: 100%"}>
+            <StatisticFrame statistics={character_statistics} />
+          </Content>
+        {/if}
       </Paper>
       {#if active_spec}
         <Paper
@@ -228,12 +248,6 @@
           {/if}
         </Paper>
       {/if}
-      <br />
-      <button
-        disabled={equipment_updated ? true : false}
-        onclick={() => handleRefresh()}>Refresh</button
-      >
-      <button onclick={() => handleDelete()}>Delete Character </button>
     {/if}
 
     <br />

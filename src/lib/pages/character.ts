@@ -10,7 +10,8 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     const faction = formData.get('faction') as Faction
     const race = formData.get('race') as Race
     const character_class = formData.get('character_class') as PlayerClass
-    const active_spec = formData.get('active_spec') as PlayerSpec
+    let active_spec = formData.get('active_spec') as PlayerSpec
+    active_spec = active_spec.replace(character_class,"") as PlayerSpec
     const realm = formData.get('realm') as string
     const guild = formData.get('guild') as unknown as number
     const level = formData.get('level') as string
@@ -19,8 +20,10 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     const average_item_level = formData.get('average_item_level') as string
     const equipped_item_level = formData.get('equipped_item_level') as string
     const active_title = formData.get('active_title') as string
-    const version = formData.get('gameVersion') as GameVersionName
+    const version = formData.get('version') as GameVersionName
     const region = formData.get('region') as Region
+
+    console.log(formData)
 
     const character: Character = {
         id,
@@ -32,7 +35,7 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         active_spec,
         realm,
         guild: guild ? Number(guild) : -1,
-        level: Number(level),
+        level: Number(level) ?? 1,
         achievement_points: Number(achievement_points),
         last_login_timestamp: new Date(last_login_timestamp).getTime(),
         average_item_level: Number(average_item_level),
@@ -41,6 +44,9 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         region,
         version
     };
+
+    console.log(character)
+
 
     if (!character.last_login_timestamp) {
         character.last_login_timestamp = Date.now()
@@ -54,6 +60,8 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
 
 
     let data = await response.json();
+
+    console.log("RESPONSE", data)
 
     if (id == 0 || Number.isInteger(Number(data["Result"]))) {
         

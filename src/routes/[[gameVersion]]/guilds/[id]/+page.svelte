@@ -5,8 +5,8 @@
   import type { Character, Guild } from "$lib/types";
   import { Faction } from "$lib/consts";
   import { getContext } from "svelte";
-  import type { GameVersionName } from "$lib/versions/GameVersion";
   import { t } from "$lib/i18n/index.svelte";
+  import type { VersionContext } from "$lib/versions/VersionContext";
 
   const id = page.url.pathname;
   let { data }: PageProps = $props();
@@ -16,10 +16,11 @@
   let realmInput: string = $state(guild?.realm ?? "");
   let guilds: Guild[] = $state(data.guilds ?? []);
   let members: Character[] = $state(data.characters ?? []);
-  const gameVersion = getContext<GameVersionName>("gameVersion");
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  
 
   function handleGoBack() {
-    goto(`/${gameVersion}/guilds`);
+    goto(`/${gameVersionFactory.gameVersion.getName()}/guilds`);
   }
   function handleDelete() {
     goto(`${id}/delete`);
@@ -44,14 +45,14 @@
       (guild) =>
         guild.realm.trim().toLowerCase() === realm.trim().toLowerCase() &&
         guild.name.trim().toLowerCase() === name.trim().toLowerCase() &&
-        guild.version === gameVersion
+        guild.version === gameVersionFactory.gameVersion.getName()
     )
       ? `"${name}" already exists on "${realm}".`
       : null;
   }
 </script>
 
-<h1>Test - {t(`version.${gameVersion}`)}</h1>
+<h1>Test - {t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
 {#if guild}
   {#if edit}
     <h2>Edit</h2>
@@ -103,6 +104,7 @@
         value={new Date(guild.created_timestamp).toISOString().split("T")[0]}
         placeholder={new Date().toISOString().split("T")[0]}
       />
+      
       <button type="submit">Save</button>
       <button type="reset" onclick={() => handleEdit()}>Cancel</button>
     </form>
