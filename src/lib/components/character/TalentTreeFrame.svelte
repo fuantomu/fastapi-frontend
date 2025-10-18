@@ -9,18 +9,27 @@
   import { t } from "$lib/i18n/index.svelte";
   import type { PlayerClass } from "$lib/consts";
   import TalentTreeCellFrame from "./TalentTreeCellFrame.svelte";
-  import type { Talent } from "$lib/types";
+  import type { CharacterSpec, Talent } from "$lib/types";
   import TalentArrow from "../talent/TalentArrow.svelte";
+  import { getMaxTalentPoints, getSpentPoints } from "$lib/helper/talents";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  const {
+  let {
     talents,
     character_class,
+    character_specialization,
     character_talents = [],
+    edit = false,
+    level = 1,
+    onUpdate,
   } = $props<{
     talents: TalentTreeRow | null;
     character_class: PlayerClass;
-    character_talents: Talent;
+    character_specialization: CharacterSpec;
+    character_talents: Talent[];
+    edit: boolean;
+    level: number;
+    onUpdate: (talents: Talent[]) => void;
   }>();
 
   const versionRows = {
@@ -32,6 +41,31 @@
     wod: 0,
   };
 
+  let trees = $state([
+    generateTree(talents[1]),
+    generateTree(talents[2]),
+    generateTree(talents[3]),
+  ]);
+
+  let active_spec_tree = $state(
+    Object.entries(talents.names).find(
+      (name) =>
+        name[1] === character_specialization?.replace(character_class, "")
+    ) ?? [2, ""]
+  );
+
+  $effect(() => {
+    trees = [
+      generateTree(talents[1]),
+      generateTree(talents[2]),
+      generateTree(talents[3]),
+    ];
+    active_spec_tree = Object.entries(talents.names).find(
+      (name) =>
+        name[1] === character_specialization?.replace(character_class, "")
+    ) ?? [2, ""];
+  });
+
   function generateTree(talents: TalentTreeCell[]) {
     const items: TalentTreeCell[] = Array.from(
       { length: versionRows[gameVersionFactory.gameVersion.getName()] * 4 },
@@ -42,15 +76,14 @@
       items[Number(cells[0]) * 4 + Number(cells[1])] = talent;
     });
 
-    return items;
+    return items ?? [];
   }
   function findTalentRank(currentTalent: TalentTreeCell) {
     const found = character_talents?.find((ctalent: Talent) =>
       currentTalent.ranks.includes(ctalent.id)
     );
-
     if (found) {
-      return currentTalent.ranks.indexOf(found.id) + 1;
+      return found.rank;
     }
     return 0;
   }
@@ -61,23 +94,182 @@
         (_talent: TalentTreeCell) => _talent.cell === connection
       );
       if (connection_id) {
-        return findTalentRank(connection_id) > 0;
+        return (
+          findTalentRank(connection_id) ===
+          connection_id.ranks.indexOf(
+            connection_id.ranks[connection_id.ranks.length - 1]
+          ) +
+            1
+        );
       }
     }
     return false;
   }
 
-  function getSpentPoints(tree: TalentTreeCell[]) {
-    const totalTreeRank = tree.reduce((total, cell) => {
+  function getSpentTreePoints(
+    tree: TalentTreeCell[]
+  ): [number, { [k: number]: any }] {
+    const pointsPerRow: { [k: number]: any } = {};
+    for (
+      let index = 0;
+      index < versionRows[gameVersionFactory.gameVersion.getName()];
+      index++
+    ) {
+      pointsPerRow[index] = 0;
+    }
+
+    tree.map((cell) => {
       const cellRank = character_talents
         .filter((ctalent: Talent) => cell.ranks.includes(ctalent.id))
         .map((ctalent: Talent) => ctalent.rank)
         .reduce((sum: number, rank: number) => sum + rank, 0);
+      pointsPerRow[Number(cell.cell?.split(",")[0])] += cellRank;
 
-      return total + cellRank;
-    }, 0);
+      return cellRank;
+    });
 
-    return totalTreeRank;
+    return [
+      Object.values(pointsPerRow).reduce((a, b) => a + b, 0),
+      pointsPerRow,
+    ];
+  }
+
+  function getCellUnlocked(
+    cell: TalentTreeCell,
+    tree: number,
+    learn: boolean,
+    current_rank: number
+  ) {
+    if (learn && gameVersionFactory.gameVersion.getName() === "cata") {
+      if (character_specialization === "") {
+        return false;
+      }
+      if (
+        tree !== Number(active_spec_tree[0]) + 1 &&
+        getSpentTreePoints(talents[Number(active_spec_tree[0]) + 1])[0] < 31
+      ) {
+        return false;
+      }
+    }
+    if (
+      learn &&
+      getSpentPoints(character_talents) ===
+        getMaxTalentPoints(gameVersionFactory.gameVersion.getName(), level)
+    ) {
+      return false;
+    }
+    const row: number = Number(cell.cell?.split(",")[0]) ?? 0;
+    const spentPoints = getSpentTreePoints(talents[tree]);
+    const requiredPoints = row * 5;
+    const maxTalent = character_talents
+      .map((ctalent: Talent) => {
+        const found = talents[tree].find((ttalent: TalentTreeCell) =>
+          ttalent.ranks.includes(ctalent.id)
+        );
+        if (found) {
+          return [ctalent.rank, Number(found.cell.split(",")[0])];
+        }
+        return [-1, -1];
+      })
+      .reduce(
+        (a: [number, number], b: [number, number]) => (a[1] > b[1] ? a : b),
+        0
+      );
+
+    if (!learn) {
+      if (maxTalent[1] === row) {
+        return true;
+      }
+      if (spentPoints[1][row] - 1 < Math.max(1, row) * 5) {
+        return false;
+      }
+
+      const found_connection = talents[tree].find((ct: TalentTreeCell) =>
+        ct.required.includes(cell.cell ?? "")
+      );
+      if (found_connection) {
+        const out = character_talents.filter((ct: Talent) => {
+          return found_connection.ranks.includes(ct.id);
+        });
+        if (out && out.length > 0) {
+          if (out.some((e: Talent) => e.rank > 0)) {
+            return false;
+          }
+        }
+      }
+
+      const pointsToCurrentRow = Object.entries(spentPoints[1])
+        .filter((e) => Number(e[0]) <= row)
+        .reduce((a, b) => a + b[1], 0);
+      if (pointsToCurrentRow - current_rank < requiredPoints) {
+        return false;
+      }
+      const pointsToMaxRow = Object.entries(spentPoints[1])
+        .filter((e) => Number(e[0]) <= maxTalent[1])
+        .reduce((a, b) => a + b[1], 0);
+      if (Math.max(pointsToMaxRow - 1 - maxTalent[0], 0) < maxTalent[1] * 5) {
+        return false;
+      }
+    } else {
+      if (requiredPoints > spentPoints[0]) {
+        return false;
+      }
+
+      if (cell.required.length > 0) {
+        if (isConnectionActive(cell.required[0], tree)) {
+          return requiredPoints <= spentPoints[0];
+        } else {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function handleCellClick(
+    e: PointerEvent,
+    cell: TalentTreeCell,
+    tree: number
+  ) {
+    const found: Talent = character_talents?.find((ctalent: Talent) =>
+      cell.ranks.includes(ctalent.id)
+    );
+    if (!found) {
+      if (getCellUnlocked(cell, tree, e.type === "click" ? true : false, 0)) {
+        if (e.type === "click") {
+          character_talents.push({
+            icon: cell.icon,
+            name: cell.name,
+            id: cell.ranks[0],
+            rank: 1,
+          });
+        }
+      }
+    } else {
+      if (
+        getCellUnlocked(
+          cell,
+          tree,
+          e.type === "click" ? true : false,
+          found.rank
+        )
+      ) {
+        if (e.type === "click" && found.rank !== cell.ranks.length) {
+          found.id = cell.ranks[found.rank];
+          found.rank += 1;
+        } else if (e.type === "contextmenu") {
+          if (found.rank - 1 !== 0) {
+            found.rank -= 1;
+            found.id = cell.ranks[found.rank];
+          } else {
+            const filtered = character_talents.filter((e: Talent) => {
+              return e.id !== found.id;
+            });
+            onUpdate(filtered);
+          }
+        }
+      }
+    }
   }
 </script>
 
@@ -91,30 +283,40 @@
         30}px;"
     >
       <div style="display: flex; justify-content: center;">
-        {t(`specs.${character_class}${talents.names?.at(0)}`)} ({getSpentPoints(
-          talents[1]
-        )})
+        {t(`specs.${character_class}${talents.names?.at(0)}`)} ({getSpentTreePoints(
+          talents[1] ?? []
+        )[0]})
       </div>
 
       <div class="tree-wrapper">
         <div class="arrow-overlay">
-          {#each talents[1] as talent}
-            {#if talent.connection.length > 0}
-              {#each talent.connection as conn}
-                <TalentArrow
-                  startCell={talent.cell}
-                  endCell={conn}
-                  isSet={isConnectionActive(conn, 1)}
-                />
-              {/each}
-            {/if}
+          {#each talents[1] as talent (talent.name)}
+            <div id={`${talent.name}-${talents.names?.at(0)}`}>
+              {#if talent.required.length > 0}
+                {#each talent.required as required ((talent.name, talent.required))}
+                  <div id={`${talent.name}-${talents.names?.at(0)}`}>
+                    <TalentArrow
+                      startCell={required}
+                      endCell={talent.cell}
+                      isSet={isConnectionActive(required, 1) &&
+                        findTalentRank(talent) > 0}
+                    />
+                  </div>
+                {/each}
+              {/if}
+            </div>
           {/each}
 
           <div class="talent-grid">
-            {#each generateTree(talents[1]) as talent}
-              <div class="cell">
+            {#each trees[0] as talent}
+              <div class="cell" id={`${talent.name}-${talents.names?.at(0)}`}>
                 {#if talent.name}
-                  <TalentTreeCellFrame {talent} rank={findTalentRank(talent)}
+                  <TalentTreeCellFrame
+                    {talent}
+                    rank={findTalentRank(talent)}
+                    onClick={handleCellClick}
+                    {edit}
+                    tree={1}
                   ></TalentTreeCellFrame>
                 {/if}
               </div>
@@ -123,30 +325,38 @@
         </div>
       </div>
     </Content>
+
     <Content style="width: 30%; border: 1px solid black; padding: 10px">
       <div style="display: flex; justify-content: center; margin-bottom: 8px">
         {t(`specs.${character_class}${talents.names?.at(1)}`)}
-        ({getSpentPoints(talents[2])})
+        ({getSpentTreePoints(talents[2])[0]})
       </div>
       <div class="tree-wrapper">
         <div class="arrow-overlay">
           {#each talents[2] as talent}
-            {#if talent.connection}
-              {#each talent.connection as conn}
-                <TalentArrow
-                  startCell={talent.cell}
-                  endCell={conn}
-                  isSet={isConnectionActive(conn, 2)}
-                />
-              {/each}
-            {/if}
+            <div id={`${talent.name}-${talents.names?.at(1)}`}>
+              {#if talent.required.length > 0}
+                {#each talent.required as required}
+                  <TalentArrow
+                    startCell={required}
+                    endCell={talent.cell}
+                    isSet={isConnectionActive(required, 2) &&
+                      findTalentRank(talent) > 0}
+                  />
+                {/each}
+              {/if}
+            </div>
           {/each}
-
           <div class="talent-grid">
-            {#each generateTree(talents[2]) as talent}
-              <div class="cell">
+            {#each trees[1] as talent}
+              <div class="cell" id={`${talent.name}-${talents.names?.at(1)}`}>
                 {#if talent.name}
-                  <TalentTreeCellFrame {talent} rank={findTalentRank(talent)}
+                  <TalentTreeCellFrame
+                    {talent}
+                    rank={findTalentRank(talent)}
+                    onClick={handleCellClick}
+                    {edit}
+                    tree={2}
                   ></TalentTreeCellFrame>
                 {/if}
               </div>
@@ -158,27 +368,37 @@
     <Content style="width: 30%; border: 1px solid black; padding: 10px">
       <div style="display: flex; justify-content: center; margin-bottom: 8px">
         {t(`specs.${character_class}${talents.names?.at(2)}`)}
-        ({getSpentPoints(talents[3])})
+        ({getSpentTreePoints(talents[3])[0]})
       </div>
       <div class="tree-wrapper">
         <div class="arrow-overlay">
           {#each talents[3] as talent}
-            {#if talent.connection}
-              {#each talent.connection as conn}
-                <TalentArrow
-                  startCell={talent.cell}
-                  endCell={conn}
-                  isSet={isConnectionActive(conn, 3)}
-                />
-              {/each}
-            {/if}
+            <div id={`${talent.name}-${talents.names?.at(2)}`}>
+              {#if talent.required.length > 0}
+                {#each talent.required as required}
+                  <div id={`${talent.name}-${talents.names?.at(2)}`}>
+                    <TalentArrow
+                      startCell={required}
+                      endCell={talent.cell}
+                      isSet={isConnectionActive(required, 3) &&
+                        findTalentRank(talent) > 0}
+                    />
+                  </div>
+                {/each}
+              {/if}
+            </div>
           {/each}
 
           <div class="talent-grid">
-            {#each generateTree(talents[3]) as talent}
-              <div class="cell">
+            {#each trees[2] as talent}
+              <div class="cell" id={`${talent.name}-${talents.names?.at(2)}`}>
                 {#if talent.name}
-                  <TalentTreeCellFrame {talent} rank={findTalentRank(talent)}
+                  <TalentTreeCellFrame
+                    {talent}
+                    rank={findTalentRank(talent)}
+                    onClick={handleCellClick}
+                    {edit}
+                    tree={3}
                   ></TalentTreeCellFrame>
                 {/if}
               </div>

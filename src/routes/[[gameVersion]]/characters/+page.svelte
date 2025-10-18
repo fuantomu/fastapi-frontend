@@ -39,7 +39,7 @@
       <li>
         <a
           href="/{gameVersion}/characters/{character.id}"
-          data-sveltekit-preload-data="off">{character.name}</a
+          data-sveltekit-preload-data="off">{character.name} - {character.character_class}</a
         >
       </li>
     {/each}

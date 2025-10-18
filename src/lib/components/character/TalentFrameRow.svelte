@@ -6,12 +6,30 @@
   import type { Talent } from "$lib/versions/GameVersionTypes";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  const { talents, active_talent, row, inactive } = $props<{
+  let {
+    talents,
+    active_talent,
+    row,
+    inactive,
+    edit = false,
+    onUpdate
+  } = $props<{
     talents: Talent[] | null;
     active_talent: Talent | undefined;
     row: number;
     inactive: boolean;
+    edit: boolean;
+    onUpdate : (talent: Talent, key: string) => void;
   }>();
+
+
+  function handleSelect(talent: Talent) {
+    if (active_talent?.id === talent.id) {
+      onUpdate({name: active_talent?.name, id: -1, icon: active_talent?.icon}, row)
+    } else {
+      onUpdate(talent, row)
+    }
+  }
 </script>
 
 {#if talents}
@@ -42,6 +60,23 @@
         {#each talents as talent}
           {#if talent.id}
             <div
+              role="button"
+              tabindex="0"
+              onclick={(e: MouseEvent) => {
+                if (edit) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  if (inactive) {
+                    handleSelect(talent);
+                  }
+                }
+              }}
+              onkeyup={(e: KeyboardEvent) => {
+                if (edit) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }}
               style={active_talent?.id === talent.id
                 ? "position: relative; height: 50px; border: 1px solid var(--ui-colour-talent-tree-full);"
                 : "position: relative; height: 50px;"}

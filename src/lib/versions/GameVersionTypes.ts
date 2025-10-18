@@ -51,7 +51,7 @@ export type TalentTreeCell = {
 	icon: string;
 	cell: string | null;
 	ranks: number[]
-	connection : string[] | null;
+	required : string[];
 }
 
 export type TalentTreeRow = {

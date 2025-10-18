@@ -6,37 +6,66 @@
   import { getWowheadLink } from "$lib/helper/wowhead";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
-  const { talent, rank } = $props<{
+  let {
+    talent,
+    rank,
+    tree,
+    edit = false,
+    onClick,
+  } = $props<{
     talent: TalentTreeCell;
     rank: number;
+    tree: number;
+    edit: boolean;
+    onClick: (e: PointerEvent, cell: TalentTreeCell, tree: number) => void;
   }>();
 </script>
 
-<a
-  href={`${getWowheadLink("spell", gameVersionFactory.gameVersion.getName())}${talent.ranks[Math.min(Math.max(0,rank-1), talent.ranks.length-1)]}`}
-  style="text-decoration:none"
+<div
+  role="button"
+  tabindex="0"
+  oncontextmenu={(e) => {
+    if (edit) {
+      e.stopPropagation();
+      e.preventDefault();
+      onClick(e, talent, tree);
+    }
+  }}
+  onclick={(e) => {
+    if (edit) {
+      e.stopPropagation();
+      e.preventDefault();
+      onClick(e, talent, tree);
+    }
+  }}
+  onkeyup={() => {}}
 >
-  <div
-    class="icon-container"
-    style={rank === 0
-      ? "border: 1px solid var(--ui-colour-talent-tree-disabled)"
-      : rank === talent.ranks.length
-        ? "border: 1px solid var(--ui-colour-talent-tree-full)"
-        : "border: 1px solid var(--ui-colour-talent-tree-set)"}
+  <a
+    href={`${getWowheadLink("spell", gameVersionFactory.gameVersion.getName())}${talent.ranks[Math.min(Math.max(0, rank - 1), talent.ranks.length - 1)]}`}
+    style="text-decoration:none"
   >
-    <WarcraftIcon src={talent.icon} grayscale={rank == 0} />
     <div
-      class="overlay-text"
+      class="icon-container"
       style={rank === 0
-        ? "color: var(--ui-colour-talent-tree-disabled)"
+        ? "border: 1px solid var(--ui-colour-talent-tree-disabled)"
         : rank === talent.ranks.length
-          ? "color: var(--ui-colour-talent-tree-full)"
-          : "color: var(--ui-colour-talent-tree-set)"}
+          ? "border: 1px solid var(--ui-colour-talent-tree-full)"
+          : "border: 1px solid var(--ui-colour-talent-tree-set)"}
     >
-      {rank}/{talent.ranks.length}
+      <WarcraftIcon src={talent.icon} grayscale={rank == 0} />
+      <div
+        class="overlay-text"
+        style={rank === 0
+          ? "color: var(--ui-colour-talent-tree-disabled)"
+          : rank === talent.ranks.length
+            ? "color: var(--ui-colour-talent-tree-full)"
+            : "color: var(--ui-colour-talent-tree-set)"}
+      >
+        {rank}/{talent.ranks.length}
+      </div>
     </div>
-  </div>
-</a>
+  </a>
+</div>
 
 <style>
   .icon-container {

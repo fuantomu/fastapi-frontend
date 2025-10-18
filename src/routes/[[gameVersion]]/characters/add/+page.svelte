@@ -4,7 +4,8 @@
   import type { PageProps } from "./$types";
   import { t } from "$lib/i18n/index.svelte";
   import type { VersionContext } from "$lib/versions/VersionContext";
-  import CharacterEditFrame from "$lib/components/character/add/CharacterEditFrame.svelte";
+  import CharacterEditFrame from "$lib/components/character/CharacterEditFrame.svelte";
+  import ArmoryFrame from "$lib/components/character/ArmoryFrame.svelte";
   let { data }: PageProps = $props();
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
@@ -16,8 +17,7 @@
 
 <h1>Test {t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
 {#if data.characters && data.guilds}
-  <CharacterEditFrame character={undefined} character_guild={undefined} characters={data.characters} guilds={data.guilds}
-  ></CharacterEditFrame>
+  <ArmoryFrame id={0}></ArmoryFrame>
 {/if}
 
 <button onclick={() => handleGoBack()}> Go back </button>

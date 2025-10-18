@@ -184,7 +184,7 @@ export const versionType: GameVersionType = {
                 { name: "Ice Barrier", icon: "spell_ice_lament", id: 11426 }
             ],
             45: [
-                { name: "Ring of Frost", icon: "spell_frost_ring-of-frost", id: 113724 },
+                { name: "Ring of Frost", icon: "spell_frost_ringoffrost", id: 113724 },
                 { name: "Ice Ward", icon: "spell_frost_frostward", id: 111264 },
                 { name: "Frostjaw", icon: "ability_mage_frostjaw", id: 102051 }
             ],
@@ -241,7 +241,7 @@ export const versionType: GameVersionType = {
         },
         monk: {
             15: [
-                { name: "Celerity", icon: "ability_monk_quipunch", id: 108359 },
+                { name: "Celerity", icon: "ability_monk_quipunch", id: 115173 },
                 { name: "Tiger's Lust", icon: "ability_monk_tigerslust", id: 116841 },
                 { name: "Momentum", icon: "ability_monk_standingkick", id: 115174 }
             ],

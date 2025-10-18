@@ -14,7 +14,6 @@ export type Character = {
     level: number;
     achievement_points: number;
     last_login_timestamp: number;
-    average_item_level: number;
     equipped_item_level: number;
     active_title: string;
     region: Region;
@@ -61,7 +60,7 @@ export type CharacterSpec = {
     name: string;
     talents: Talent[];
     glyphs: Glyph[];
-    active: boolean;
+    spec_id: number;
     version: GameVersionName;
 }
 

@@ -1,21 +1,27 @@
 <script lang="ts">
   import type { CharacterItem } from "$lib/types";
-  import type { GameVersionName } from "$lib/versions/GameVersion";
   import { getWowheadLink } from "$lib/helper/wowhead";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
   import { t } from "$lib/i18n/index.svelte";
-  export let equipment: CharacterItem | null;
-  export let slot: string;
-  export let reverse: boolean = false;
+  import type { VersionContext } from "$lib/versions/VersionContext";
+  let {
+    equipment = $bindable(),
+    slot,
+    reverse = false,
+  } = $props<{
+    equipment: CharacterItem | null;
+    slot: string;
+    reverse: boolean;
+  }>();
 
-  const gameVersion = getContext<GameVersionName>("gameVersion");
+  const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 </script>
 
 <div style="height: 32px;">
   {#if equipment}
     <a
-      href={`${getWowheadLink("item", gameVersion)}${equipment.id}`}
+      href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
       data-wowhead={`${equipment.wowhead_link}`}
       class="equipment-link"
     >

@@ -10,17 +10,12 @@
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
-  const { character, character_guild } = $props<{
+  let { character, character_guild } = $props<{
     character: Character;
     character_guild: Guild;
   }>();
 
-  let player_class = $state(
-    gameVersionFactory.gameVersion
-      .getClasses()
-      .find((_class) => _class.name == character.character_class)
-  );
-  let player_spec =
+  let character_spec =
     gameVersionFactory.gameVersion
       .getSpecs()
       .find(
@@ -31,10 +26,10 @@
       { name: "Adventurer", class: "Adventurer", icon: ICON_QUESTIONMARK },
       [PlayerClass.fromSource({ name: "Adventurer", icon: ICON_QUESTIONMARK })]
     );
-  const player_race = gameVersionFactory.gameVersion
+  let character_race = gameVersionFactory.gameVersion
     .getRaces()
     .find((_race) => _race.name == character.race);
-  const player_faction = gameVersionFactory.gameVersion
+  let character_faction = gameVersionFactory.gameVersion
     .getFactions()
     .find((_faction) => _faction.name == character.faction);
 </script>
@@ -45,25 +40,25 @@
       <WarcraftIcon
         label={t(`faction.${character.faction}`)}
         src={gameVersionFactory.iconProvider.getFromSource(
-          player_faction?.icon ?? ICON_QUESTIONMARK
+          character_faction?.icon ?? ICON_QUESTIONMARK
         )}
       />
       <WarcraftIcon
         label={t(`race.${character.gender}.${character.race}`)}
         src={gameVersionFactory.iconProvider.getFromSource(
           (character.gender == "Female"
-            ? player_race?.icon_female
-            : player_race?.icon_male) ?? ICON_QUESTIONMARK
+            ? character_race?.icon_female
+            : character_race?.icon_male) ?? ICON_QUESTIONMARK
         )}
       />
       <WarcraftIcon
         label={t(
-          player_spec?.name
-            ? `specs.${player_spec?.name}`
+          character.active_spec
+            ? `specs.${character.active_spec}`
             : `classes.${character.character_class}`
         )}
         src={gameVersionFactory.iconProvider.getFromSource(
-          player_spec?.icon ?? player_class?.icon ?? ICON_QUESTIONMARK
+          character_spec?.icon ?? character_spec?.icon ?? ICON_QUESTIONMARK
         )}
       />
     </div>
@@ -75,7 +70,7 @@
         >
           {character.name}
           <span class="realm"
-            >{character.realm}-{character.region.toUpperCase()}</span
+            >{character.realm}-{character.region?.toUpperCase()}</span
           >
         </span>
 

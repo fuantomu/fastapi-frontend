@@ -17,25 +17,43 @@
   import StatisticFrame from "./StatisticFrame.svelte";
   import GlyphFrame from "$lib/components/character/GlyphFrame.svelte";
   import TalentFrame from "$lib/components/character/TalentFrame.svelte";
-  import CharacterEditFrame from "./add/CharacterEditFrame.svelte";
+  import CharacterEditFrame from "./CharacterEditFrame.svelte";
 
   const { id } = $props<{ id: number }>();
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
-  let edit: Boolean = $state(false);
-  let character: Character = $state({} as Character);
+  let edit: boolean = $state(id == 0 ? true : false);
   let other_characters: Character[] = $state([]);
   let guilds: Guild[] = $state([]);
-  let character_equipment: CharacterEquipment = $state(
-    {} as CharacterEquipment
-  );
   let character_guild: Guild = $state({} as Guild);
-  let active_spec: CharacterSpec = $state({} as CharacterSpec);
-  let off_spec: CharacterSpec = $state({} as CharacterSpec);
   let character_statistics: CharacterStatistic = $state(
     {} as CharacterStatistic
   );
+  let nameError: string | null = $state(null);
+  let formData = $state({
+    equipment: {} as CharacterEquipment,
+    character: {} as Character,
+    active_spec: {
+      talents: [],
+      glyphs: [],
+      id: -1,
+      name: "",
+      spec_id: 0,
+      version: gameVersionFactory.gameVersion.getName(),
+    } as CharacterSpec,
+    off_spec: {
+      talents: [],
+      glyphs: [],
+      id: -1,
+      name: "",
+      spec_id: 1,
+      version: gameVersionFactory.gameVersion.getName(),
+    } as CharacterSpec,
+  });
+  let baseCharacter: Character = $state({} as Character);
+  let baseActiveSpec: CharacterSpec = $state({} as CharacterSpec);
+  let baseOffSpec: CharacterSpec = $state({} as CharacterSpec);
 
   const fetchCharacter = async () => {
     const res = await fetch(
@@ -45,7 +63,8 @@
     if (data.Result.length == 0) {
       window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
     }
-    character = data.Result[0];
+    formData.character = data.Result[0];
+    baseCharacter = data.Result[0];
   };
 
   const fetchOtherCharacters = async () => {
@@ -54,7 +73,8 @@
     );
     const data = await res.json();
     other_characters = data.Result.filter(
-      (other_character: Character) => character?.name !== other_character.name
+      (other_character: Character) =>
+        formData.character?.name !== other_character.name
     );
   };
 
@@ -68,7 +88,7 @@
         guild.version === gameVersionFactory.gameVersion.getName()
     );
     character_guild =
-      guilds.find((guild: Guild) => guild.id === character?.guild) ??
+      guilds.find((guild: Guild) => guild.id === formData.character?.guild) ??
       ({} as Guild);
   };
 
@@ -77,7 +97,7 @@
       `${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
     );
     const data = await res.json();
-    character_equipment = data.Result;
+    formData.equipment = data.Result;
   };
 
   const fetchSpecialization = async () => {
@@ -88,16 +108,58 @@
     let character_specializations = data.Result;
 
     if (character_specializations.length == 1) {
-      active_spec = character_specializations[0];
-      off_spec = {} as CharacterSpec;
+      Object.assign(formData.active_spec, character_specializations[0]);
+      baseActiveSpec = character_specializations[0];
+      formData.off_spec = {} as CharacterSpec;
     } else {
-      active_spec =
-        character_specializations?.find((spec: CharacterSpec) => spec.active) ??
-        ({} as CharacterSpec);
-      off_spec =
+      formData.active_spec =
         character_specializations?.find(
-          (spec: CharacterSpec) => !spec.active
-        ) ?? ({} as CharacterSpec);
+          (spec: CharacterSpec) => spec.spec_id === 0
+        ) ??
+        ({
+          talents: [],
+          glyphs: [],
+          id: -1,
+          name: "",
+          spec_id: 0,
+          version: gameVersionFactory.gameVersion.getName(),
+        } as CharacterSpec);
+      baseActiveSpec =
+        character_specializations?.find(
+          (spec: CharacterSpec) => spec.spec_id === 0
+        ) ??
+        ({
+          talents: [],
+          glyphs: [],
+          id: -1,
+          name: "",
+          spec_id: 0,
+          version: gameVersionFactory.gameVersion.getName(),
+        } as CharacterSpec);
+      formData.off_spec =
+        character_specializations?.find(
+          (spec: CharacterSpec) => spec.spec_id === 1
+        ) ??
+        ({
+          talents: [],
+          glyphs: [],
+          id: -1,
+          name: "",
+          spec_id: 1,
+          version: gameVersionFactory.gameVersion.getName(),
+        } as CharacterSpec);
+      baseOffSpec =
+        character_specializations?.find(
+          (spec: CharacterSpec) => spec.spec_id === 1
+        ) ??
+        ({
+          talents: [],
+          glyphs: [],
+          id: -1,
+          name: "",
+          spec_id: 1,
+          version: gameVersionFactory.gameVersion.getName(),
+        } as CharacterSpec);
     }
   };
 
@@ -110,12 +172,14 @@
   };
 
   let fetchData = async () => {
-    await fetchCharacter();
-    await fetchGuilds();
-    await fetchOtherCharacters();
-    await fetchEquipment();
-    await fetchSpecialization();
-    await fetchStatistic();
+    if (id != 0) {
+      await fetchCharacter();
+      await fetchGuilds();
+      await fetchOtherCharacters();
+      await fetchEquipment();
+      await fetchSpecialization();
+      await fetchStatistic();
+    }
   };
 
   let equipment_updated: string | null = $state(null);
@@ -133,8 +197,8 @@
     let response = await fetch(`${PUBLIC_API_URL}/Character/Parse/`, {
       method: "POST",
       body: JSON.stringify({
-        players: [[character?.name, character?.realm]],
-        region: character.region,
+        players: [[formData.character?.name, formData.character?.realm]],
+        region: formData.character.region,
         version: gameVersionFactory.gameVersion.getName(),
       }),
       headers: {
@@ -156,45 +220,92 @@
       equipment_updated = t("ui.errorFetchingData");
     }
   }
+  async function handleSubmit() {
+    baseCharacter = JSON.parse(JSON.stringify(formData.character));
+    const response = await fetch(`./${formData.character.id}`, {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    const result = await response.json();
+    if (result["new_character"]) {
+      window.location.href = `/${gameVersionFactory.gameVersion.getName()}${result["url"]}`;
+    }
+    edit = false;
+  }
 </script>
 
 <div>
   {#await fetchData()}
     <p>Loading...</p>
   {:then}
-    {#if character}
+    {#if formData.character}
       {#if equipment_updated}
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
+
       <Paper
         style={`border: 1px solid black; display: grid; grid-template-columns: ${edit ? "40% 50%" : "25% 40% 35%"}`}
       >
         <Content>
           {#if edit}
             <CharacterEditFrame
-              {character}
-              {character_guild}
+              bind:data={formData}
               characters={other_characters}
               {guilds}
+              bind:nameError
             ></CharacterEditFrame>
           {:else}
-            <CharacterFrame {character} {character_guild} />
+            <CharacterFrame character={formData.character} {character_guild} />
           {/if}
           <br />
           <button
             type="button"
             onclick={() => {
-              edit = !edit;
+              if (window.location.href.includes("/characters/add")) {
+                window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
+              } else {
+                if (edit) {
+                  formData.character = JSON.parse(
+                    JSON.stringify(baseCharacter)
+                  );
+                  formData.active_spec = JSON.parse(
+                    JSON.stringify(baseActiveSpec)
+                  );
+                  formData.off_spec = JSON.parse(JSON.stringify(baseOffSpec));
+                  edit = false;
+                } else {
+                  edit = true;
+                }
+              }
             }}>{t(edit ? `ui.cancel` : `ui.edit`)}</button
           >
+          {#if edit}
+            <button
+              type="submit"
+              onclick={() => handleSubmit()}
+              disabled={nameError ||
+              !formData.character.name ||
+              !formData.character.realm ||
+              formData.character.name === "" ||
+              formData.character.realm === ""
+                ? true
+                : false}>{t("ui.save")}</button
+            >
+          {/if}
           <button
+            type="button"
             disabled={equipment_updated ? true : false}
-            onclick={() => handleRefresh()}>Refresh</button
+            onclick={() => handleRefresh()}>{t("ui.refreshCharacter")}</button
           >
-          <button onclick={() => handleDelete()}>Delete Character </button>
+          <button type="button" onclick={() => handleDelete()}
+            >{t("ui.deleteCharacter")}
+          </button>
         </Content>
         <Content style={"width: 100%"}>
-          <EquipmentFrame equipment={character_equipment} />
+          <EquipmentFrame bind:equipment={formData.equipment} {edit} />
         </Content>
         {#if !edit}
           <Content style={"width: 100%"}>
@@ -202,7 +313,7 @@
           </Content>
         {/if}
       </Paper>
-      {#if active_spec}
+      {#if formData.active_spec}
         <Paper
           style={["wotlk", "cata", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
@@ -212,20 +323,20 @@
         >
           <Content>
             <TalentFrame
-              specialization={active_spec}
-              character_class={character.character_class}
-              level={character.level}
-              active={true}
+              specialization={formData.active_spec}
+              character_class={formData.character.character_class}
+              level={formData.character.level}
+              {edit}
             />
           </Content>
           {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
-              <GlyphFrame glyphs={active_spec.glyphs} />
+              <GlyphFrame bind:glyphs={formData.active_spec.glyphs} />
             </Content>
           {/if}
         </Paper>
       {/if}
-      {#if off_spec}
+      {#if formData.off_spec}
         <Paper
           style={["wotlk", "cata", "mop"].includes(
             gameVersionFactory.gameVersion.getName()
@@ -235,15 +346,15 @@
         >
           <Content>
             <TalentFrame
-              specialization={off_spec}
-              character_class={character.character_class}
-              level={character.level}
-              active={false}
+              specialization={formData.off_spec}
+              character_class={formData.character.character_class}
+              level={formData.character.level}
+              {edit}
             />
           </Content>
           {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
-              <GlyphFrame glyphs={off_spec.glyphs} />
+              <GlyphFrame glyphs={formData.off_spec.glyphs} />
             </Content>
           {/if}
         </Paper>
@@ -251,6 +362,7 @@
     {/if}
 
     <br />
-    <button onclick={() => handleGoBack()}> Go back </button>
+
+    <button onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button>
   {/await}
 </div>

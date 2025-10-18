@@ -23,7 +23,7 @@
       />
       <StatFrame
         stat={statistics.power ? statistics.power : "0"}
-        statName={statistics.power_type.toLowerCase()}
+        statName={statistics.power_type?.toLowerCase()}
       />
       <br />
       <StatFrame

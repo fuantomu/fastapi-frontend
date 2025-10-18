@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ICON_QUESTIONMARK } from "$lib/consts";
-  import Tooltip, { Wrapper } from "@smui/tooltip";
+  import { Wrapper } from "@smui/tooltip";
 
   export let src: string;
   export let label: string = "";
@@ -30,9 +30,6 @@
     {/key}
   {/if}
 
-  {#if label}
-    <Tooltip>{label}</Tooltip>
-  {/if}
 </Wrapper>
 
 <style>

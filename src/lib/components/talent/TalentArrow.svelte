@@ -1,7 +1,11 @@
 <script lang="ts">
-  export let startCell: string;
-  export let endCell: string;
-  export let isSet: boolean = false;
+  import { v4 } from "uuid";
+  import { v4 as uuidv4 } from "uuid";
+  const { startCell, endCell, isSet } = $props<{
+    startCell: string;
+    endCell: string;
+    isSet: boolean;
+  }>();
 
   const CELL_SIZE = 32;
   const GAP = 20;
@@ -36,7 +40,7 @@
       route.push({
         type: "line_horizontal",
         top: row * STEP,
-        left: horizontalDir > 0 ? col * STEP : GAP ,
+        left: horizontalDir > 0 ? col * STEP : GAP,
       });
       col += horizontalDir;
     }
@@ -60,7 +64,9 @@
         left: col * STEP,
       });
       if (
-        ["line_left_down", "line_right_down"].includes(route[route.length - 2]?.type) ||
+        ["line_left_down", "line_right_down"].includes(
+          route[route.length - 2]?.type
+        ) ||
         route[route.length - 2]?.style?.includes("margin-top")
       ) {
         route[route.length - 1].style = "margin-top: -23px;";
@@ -71,7 +77,12 @@
       row += verticalDir;
     }
 
-    const arrowType = rowDiff > 0 ? "arrow_down" : horizontalDir > 0 ? "arrow_right" : "arrow_left";
+    const arrowType =
+      rowDiff > 0
+        ? "arrow_down"
+        : horizontalDir > 0
+          ? "arrow_right"
+          : "arrow_left";
 
     route.push({
       type: arrowType,
@@ -80,7 +91,9 @@
     });
 
     if (
-      ["line_left_down", "line_right_down"].includes(route[route.length - 2]?.type) ||
+      ["line_left_down", "line_right_down"].includes(
+        route[route.length - 2]?.type
+      ) ||
       route[route.length - 2]?.style?.includes("margin-top")
     ) {
       route[route.length - 1].style = "margin-top: -73px;";
@@ -90,17 +103,19 @@
 
   let start_cell = startCell.split(",").map(Number) as [number, number];
   let end_cell = endCell.split(",").map(Number) as [number, number];
-
-  const segments = generateRoute(start_cell, end_cell);
+  let routes = $state(generateRoute(start_cell, end_cell));
 </script>
 
-{#each segments as seg}
-  <img
-    src={asset(seg.type)}
-    alt={seg.type}
-    class="arrow-segment {seg.type}"
-    style="top: {seg.top}px; left: {seg.left}px; {seg.style}"
-  />
+{#each routes as seg}
+  <div id={`${v4()}`}>
+    <img
+      src={asset(seg.type)}
+      alt={seg.type}
+      class="arrow-segment {seg.type}"
+      style="top: {seg.top}px; left: {seg.left}px; {seg.style}"
+      id={`${v4()}`}
+    />
+  </div>
 {/each}
 
 <style>
