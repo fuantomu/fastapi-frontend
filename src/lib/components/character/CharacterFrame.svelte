@@ -68,7 +68,12 @@
           class="name"
           style={`color: var(--player-class-colour-${character.character_class})`}
         >
-          {character.name}
+          {#if character.active_title}
+            {character.active_title.replace("%s",character.name)}
+          {:else}
+            {character.name}
+          {/if}
+          
           <span class="realm"
             >{character.realm}-{character.region?.toUpperCase()}</span
           >
