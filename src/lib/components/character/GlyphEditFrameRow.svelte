@@ -237,12 +237,12 @@
           <p style="color: yellow;">{t("ui.fetchingItem")}</p>
         </div>
       {/if}
-      {#if versionGlyphs.filter((glyph: Glyph) => glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || (glyph.id.toString() === selectedGlyph && glyph.id !== glyphs.find((other_glyph: Glyph) => other_glyph.id === glyph.id)?.id)).length === 0 && foundGlyphs.length == 0 && !fetching}
+      {#if versionGlyphs.filter((glyph: Glyph) => (glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || glyph.id.toString() === selectedGlyph) && glyph.id !== glyphs.find((other_glyph: Glyph) => other_glyph.id === glyph.id)?.id).length === 0 && foundGlyphs.length == 0 && !fetching}
         <div style="display: flex; flex-direction: column; padding: 20px;">
           <p style="color: grey;">{t("ui.noResults")}</p>
         </div>
       {:else if foundGlyphs.length > 0}
-        {#each foundGlyphs.filter((glyph: Glyph) => glyph.type === glyph_type && (glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || (glyph.id.toString() === selectedGlyph))) as fglyph}
+        {#each foundGlyphs.filter((glyph: Glyph) => (glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || glyph.id.toString() === selectedGlyph) && glyph.id !== glyphs.find((other_glyph: Glyph) => other_glyph.id === glyph.id)?.id) as fglyph}
           <Item
             onclick={(e: MouseEvent) => {
               e.stopPropagation();
@@ -279,7 +279,7 @@
           </Item>
         {/each}
       {:else}
-        {#each versionGlyphs.filter((glyph: Glyph) => glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || (glyph.id.toString() === selectedGlyph && glyph.id !== glyphs.find((other_glyph: Glyph) => other_glyph.id === glyph.id)?.id)) as vglyph}
+        {#each versionGlyphs.filter((glyph: Glyph) => (glyph.name.toLowerCase().includes(selectedGlyph.toLowerCase()) || glyph.id.toString() === selectedGlyph) && glyph.id !== glyphs.find((other_glyph: Glyph) => other_glyph.id === glyph.id)?.id) as vglyph}
           <Item
             onclick={(e: MouseEvent) => {
               e.stopPropagation();
