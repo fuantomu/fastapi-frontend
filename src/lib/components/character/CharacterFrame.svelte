@@ -69,23 +69,25 @@
           style={`color: var(--player-class-colour-${character.character_class})`}
         >
           {#if character.active_title}
-            {character.active_title.replace("%s",character.name)}
+            {character.active_title.replace("%s", character.name)}
           {:else}
             {character.name}
           {/if}
-          
+
           <span class="realm"
             >{character.realm}-{character.region?.toUpperCase()}</span
           >
         </span>
 
-        <a
-          class="guild"
-          href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
-          style={`color: var(--faction-colour-${character_guild.faction})`}
-        >
-          {character_guild.name}
-        </a>
+        <div>
+          <a
+            class="guild"
+            href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
+            style={`color: var(--faction-colour-${character_guild.faction})`}
+          >
+            {character_guild.name}
+          </a>
+        </div>
       </div>
       <div class="class-line">
         <span class="class-spec">
@@ -121,8 +123,19 @@
         })}
       </div>
     </div>
+    
   </div>
+  <div style="display: flex; align-items: end; height: 300px">
+    <a href="https://{character.realm_version}.warcraftlogs.com/character/{character.region.toLowerCase()}/{character.realm.toLowerCase().replace(" ","-")}/{character.name.toLowerCase()}">
+      <img
+        style="height: 32px; width: 32px"
+        src="/image/external/wcl.png"
+        alt="Warcraftlogs"
+      />
+    </a>
+    </div>
 </div>
+
 
 <style>
   .player-grid {
@@ -153,6 +166,7 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    align-content: center;
   }
 
   .name {

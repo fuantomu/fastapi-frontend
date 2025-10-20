@@ -9,6 +9,7 @@
     PlayerClass as PlayerClassType,
     RaceFaction,
     ICON_QUESTIONMARK,
+    RealmVersion,
   } from "$lib/consts";
   import { t } from "$lib/i18n/index.svelte";
   import type { Character, CharacterSpec, Guild } from "$lib/types";
@@ -615,6 +616,23 @@
           >
             {#each Object.values(GameVersionName) as version}
               <option value={version}>{t(`version.${version}`)}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+      <div style="grid-template-columns: 20% 30%" class="row">
+        <span>{t("ui.realmVersion")}</span>
+        <div>
+          <select
+            id="realm_version"
+            name="realm_version"
+            class="select"
+            bind:value={data.character.realm_version}
+            required
+            title={t("ui.realmVersion")}
+          >
+            {#each Object.values(RealmVersion) as realm_version}
+              <option value={realm_version}>{t(`realm_version.${realm_version}`)}</option>
             {/each}
           </select>
         </div>

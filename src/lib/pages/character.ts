@@ -1,5 +1,5 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import { type Faction, type Gender, type PlayerClass, type PlayerSpec, type Race, type Region } from '$lib/consts';
+import { RealmVersion, type Faction, type Gender, type PlayerClass, type PlayerSpec, type Race, type Region } from '$lib/consts';
 import type { Character, CharacterItem, CharacterSpec } from '$lib/types';
 import type { GameVersionName } from '$lib/versions/GameVersion';
 
@@ -21,6 +21,7 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     const active_title = formData.get('active_title') as string
     const version = formData.get('version') as GameVersionName
     const region = formData.get('region') as Region
+    const realm_version = formData.get('realm_version') as RealmVersion
 
     const character: Character = {
         id,
@@ -38,7 +39,8 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
         equipped_item_level: Number(equipped_item_level),
         active_title,
         region,
-        version
+        version,
+        realm_version
     };
 
     if (!character.last_login_timestamp) {

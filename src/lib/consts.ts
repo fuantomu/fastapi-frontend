@@ -122,3 +122,11 @@ export enum Region {
   KR = "kr",
   TW = "tw"
 }
+
+export enum RealmVersion {
+  SOD = "sod",
+  CLASSIC = "classic",
+  FRESH = "fresh",
+  ERA = "era",
+  WWW = "retail"
+}

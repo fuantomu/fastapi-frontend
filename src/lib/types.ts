@@ -1,4 +1,4 @@
-import type { Faction, Gender, PlayerClass, PlayerSpec, Race, Region } from "./consts";
+import type { Faction, Gender, PlayerClass, PlayerSpec, Race, RealmVersion, Region } from "./consts";
 import type { GameVersionName } from "./versions/GameVersion";
 
 export type Character = {
@@ -18,6 +18,7 @@ export type Character = {
     active_title: string;
     region: Region;
     version: GameVersionName;
+    realm_version: RealmVersion;
 };
 
 export type CharacterEquipment = {
