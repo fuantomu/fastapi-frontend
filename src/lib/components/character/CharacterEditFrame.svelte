@@ -11,7 +11,7 @@
     ICON_QUESTIONMARK,
   } from "$lib/consts";
   import { t } from "$lib/i18n/index.svelte";
-  import type { Character, Guild } from "$lib/types";
+  import type { Character, CharacterSpec, Guild } from "$lib/types";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { PlayerClass } from "$lib/versions/PlayerClass";
@@ -28,7 +28,7 @@
     data = $bindable(),
     guilds,
     characters,
-    nameError = $bindable(),
+    nameError = $bindable()
   } = $props<{
     data: Object | undefined;
     guilds: Guild[];
@@ -174,6 +174,14 @@
           icon: ICON_QUESTIONMARK,
         } as PlayerSpec)
     );
+    //data.active_spec = Object.assign(data.active_spec, baseSpecs[0])
+    console.log(data)
+    data.active_spec.talents = JSON.parse(JSON.stringify(data.baseActiveSpec.talents))
+    console.log(data.active_spec.talents)
+    data.active_spec.name = JSON.parse(JSON.stringify(data.baseActiveSpec.name))
+    data.active_spec.glyphs = JSON.parse(JSON.stringify(data.baseActiveSpec.glyphs))
+    //data.active_spec = JSON.parse(JSON.stringify(baseSpecs[0]))
+    data.off_spec = JSON.parse(JSON.stringify(data.baseOffSpec))
     nameError = null;
   }
 

@@ -51,10 +51,24 @@
       spec_id: 1,
       version: gameVersionFactory.gameVersion.getName(),
     } as CharacterSpec,
+    baseActiveSpec: {
+      talents: [],
+      glyphs: [],
+      id: -1,
+      name: "",
+      spec_id: 0,
+      version: gameVersionFactory.gameVersion.getName(),
+    } as CharacterSpec,
+    baseOffSpec: {
+      talents: [],
+      glyphs: [],
+      id: -1,
+      name: "",
+      spec_id: 1,
+      version: gameVersionFactory.gameVersion.getName(),
+    } as CharacterSpec,
   });
   let baseCharacter: Character = $state({} as Character);
-  let baseActiveSpec: CharacterSpec = $state({} as CharacterSpec);
-  let baseOffSpec: CharacterSpec = $state({} as CharacterSpec);
 
   const fetchCharacter = async () => {
     const res = await fetch(
@@ -109,9 +123,30 @@
     let character_specializations = data.Result;
 
     if (character_specializations.length == 1) {
-      Object.assign(formData.active_spec, character_specializations[0]);
-      baseActiveSpec = character_specializations[0];
+      formData.active_spec = character_specializations?.find(
+        (spec: CharacterSpec) => spec.spec_id === 0
+      ) ?? {
+        talents: [],
+        glyphs: [],
+        id: -1,
+        name: "",
+        spec_id: 0,
+        version: gameVersionFactory.gameVersion.getName(),
+      };
+      formData.baseActiveSpec =
+        character_specializations?.find(
+          (spec: CharacterSpec) => spec.spec_id === 0
+        ) ??
+        ({
+          talents: [],
+          glyphs: [],
+          id: -1,
+          name: "",
+          spec_id: 0,
+          version: gameVersionFactory.gameVersion.getName(),
+        } as CharacterSpec);
       formData.off_spec = {} as CharacterSpec;
+      formData.baseOffSpec = {} as CharacterSpec;
     } else {
       formData.active_spec =
         character_specializations?.find(
@@ -125,7 +160,7 @@
           spec_id: 0,
           version: gameVersionFactory.gameVersion.getName(),
         } as CharacterSpec);
-      baseActiveSpec =
+      formData.baseActiveSpec =
         character_specializations?.find(
           (spec: CharacterSpec) => spec.spec_id === 0
         ) ??
@@ -149,7 +184,7 @@
           spec_id: 1,
           version: gameVersionFactory.gameVersion.getName(),
         } as CharacterSpec);
-      baseOffSpec =
+      formData.baseOffSpec =
         character_specializations?.find(
           (spec: CharacterSpec) => spec.spec_id === 1
         ) ??
@@ -202,6 +237,7 @@
     );
 
     formData.active_spec.glyphs = new_glyphs.concat([]);
+    formData.baseActiveSpec.glyphs = new_glyphs.concat([]);
 
     new_glyphs = [];
     if (formData.off_spec.glyphs) {
@@ -236,6 +272,7 @@
       );
 
       formData.off_spec.glyphs = new_glyphs.concat([]);
+      formData.baseOffSpec.glyphs = new_glyphs.concat([]);
     }
   }
 
@@ -348,9 +385,11 @@
                     JSON.stringify(baseCharacter)
                   );
                   formData.active_spec = JSON.parse(
-                    JSON.stringify(baseActiveSpec)
+                    JSON.stringify(formData.baseActiveSpec)
                   );
-                  formData.off_spec = JSON.parse(JSON.stringify(baseOffSpec));
+                  formData.off_spec = JSON.parse(
+                    JSON.stringify(formData.baseOffSpec)
+                  );
                   edit = false;
                 } else {
                   edit = true;

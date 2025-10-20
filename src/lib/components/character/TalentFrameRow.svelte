@@ -24,11 +24,7 @@
 
 
   function handleSelect(talent: Talent) {
-    if (active_talent?.id === talent.id) {
-      onUpdate({name: active_talent?.name, id: -1, icon: active_talent?.icon}, row)
-    } else {
-      onUpdate(talent, row)
-    }
+    onUpdate(talent, row)
   }
 </script>
 

@@ -100,45 +100,19 @@
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
 
   function updateActiveTalent(talent: Talent, key: string) {
-    const previous_id = active_talents[Number(key) as TalentLevel] ?? talent.id;
-    const result = specialization.talents?.find(
-      (_talent: TalentType) => _talent.id === previous_id
-    );
-    if (result) {
-      active_talents[Number(key) as TalentLevel] = talent?.id;
-      if (talent.id) {
-        result.id = talent?.id;
-        result.name = talent?.name;
-        result.icon = talent?.icon;
-      }
-    } else {
-      const baserow = Object.values(talents).find((_talent) => {
-        if (_talent) {
-          _talent = _talent as Talent[];
-          return (
-            _talent[0].id === talent.id ||
-            _talent[1].id === talent.id ||
-            _talent[2].id === talent.id
-          );
-        }
-        return false;
-      });
-      const row = Object.values(baserow as Talent[]).find(
-        (e) => e.id === talent.id
-      );
-      specialization.talents.push({
-        id: row?.id,
-        name: row?.name,
-        icon: row?.icon,
-      });
-      active_talents[Number(key) as TalentLevel] = row?.id;
+    const isActive = specialization.talents?.find((_talent: Talent) => talent.id === _talent.id)
+    if (isActive){
+      specialization.talents[Number(key)/15-1] = {id: -1, name: "Unknown", icon: null, rank: 0}
     }
-    specialization.version = gameVersionFactory.gameVersion.getName();
+    else{
+      specialization.talents[Number(key)/15-1] = talent
+    }
   }
 
   function updateActiveCell(talents: Talent[]) {
     specialization.talents = talents;
   }
+
 </script>
 
 <div
@@ -205,13 +179,14 @@
   </div>
   {#if Object.keys(talents ?? []).length !== 0}
     {#if gameVersionFactory.gameVersion.getName() === "mop"}
-      {#each [15, 30, 45, 60, 75, 90] as tier}
+      {#each [15, 30, 45, 60, 75, 90] as tier (tier)}
         <TalentFrameRow
           talents={talents[tier as TalentLevel]}
           row={tier}
-          active_talent={specialization.talents?.find(
-            (talent: TalentType) =>
-              talent.id === active_talents[tier as TalentLevel]
+          active_talent={specialization.talents?.find((talent: TalentType) =>
+            talents[tier as TalentLevel]?.find(
+              (_talent) => _talent.id === talent.id
+            )
           )}
           inactive={tier <= level}
           {edit}
