@@ -91,13 +91,15 @@
 
         <span class="ilvl">{character.equipped_item_level} ILVL</span>
 
-        <span class="achievement">
-          <img
-            alt={t("ui.achievement")}
-            src="/image/achievement_shield_icon.png"
-          />
-          <span>{character.achievement_points}</span>
-        </span>
+        {#if !["classic", "tbc"].includes(gameVersionFactory.gameVersion.getName())}
+          <span class="achievement">
+            <img
+              alt={t("ui.achievement")}
+              src="/image/achievement_shield_icon.png"
+            />
+            <span>{character.achievement_points}</span>
+          </span>
+        {/if}
       </div>
 
       <div class="last-login">
