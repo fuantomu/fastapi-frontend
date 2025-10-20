@@ -174,14 +174,12 @@
           icon: ICON_QUESTIONMARK,
         } as PlayerSpec)
     );
-    //data.active_spec = Object.assign(data.active_spec, baseSpecs[0])
-    console.log(data)
     data.active_spec.talents = JSON.parse(JSON.stringify(data.baseActiveSpec.talents))
-    console.log(data.active_spec.talents)
     data.active_spec.name = JSON.parse(JSON.stringify(data.baseActiveSpec.name))
     data.active_spec.glyphs = JSON.parse(JSON.stringify(data.baseActiveSpec.glyphs))
-    //data.active_spec = JSON.parse(JSON.stringify(baseSpecs[0]))
-    data.off_spec = JSON.parse(JSON.stringify(data.baseOffSpec))
+    data.off_spec.talents = JSON.parse(JSON.stringify(data.baseOffSpec.talents))
+    data.off_spec.name = JSON.parse(JSON.stringify(data.baseOffSpec.name))
+    data.off_spec.glyphs = JSON.parse(JSON.stringify(data.baseOffSpec.glyphs))
     nameError = null;
   }
 
