@@ -89,6 +89,16 @@ export type Glyph = {
     name: string;
     icon: string;
     type: string;
+    character_class: string;
+}
+
+export type Enchantment = {
+    id: number;
+    name: string;
+    display_string: string | null;
+    slot: string | null;
+    source_id: number | null;
+    type: number | null;
 }
 
 export type Guild = {

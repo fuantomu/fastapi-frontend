@@ -5,6 +5,7 @@
     CharacterEquipment,
     CharacterSpec,
     CharacterStatistic,
+    Glyph,
     Guild,
   } from "$lib/types";
   import { PUBLIC_API_URL } from "$env/static/public";
@@ -161,7 +162,82 @@
           version: gameVersionFactory.gameVersion.getName(),
         } as CharacterSpec);
     }
+    initializeGlyphs();
   };
+
+  function initializeGlyphs() {
+    let new_glyphs: Glyph[] = [];
+    let primeGlyphs = [];
+    let majorGlyphs = [];
+    let minorGlyphs = [];
+
+    if (gameVersionFactory.gameVersion.getName() === "cata") {
+      primeGlyphs = formData.active_spec.glyphs.filter(
+        (glyph: Glyph) => glyph.type === "Prime"
+      );
+      new_glyphs.push(
+        ...primeGlyphs,
+        ...Array(3)
+          .fill({ type: "Prime" })
+          .slice(0, 3 - primeGlyphs.length)
+      );
+    }
+    majorGlyphs = formData.active_spec.glyphs.filter(
+      (glyph: Glyph) => glyph.type === "Major"
+    );
+    new_glyphs.push(
+      ...majorGlyphs,
+      ...Array(3)
+        .fill({ type: "Major" })
+        .slice(0, 3 - majorGlyphs.length)
+    );
+    minorGlyphs = formData.active_spec.glyphs.filter(
+      (glyph: Glyph) => glyph.type === "Minor"
+    );
+    new_glyphs.push(
+      ...minorGlyphs,
+      ...Array(3)
+        .fill({ type: "Minor" })
+        .slice(0, 3 - minorGlyphs.length)
+    );
+
+    formData.active_spec.glyphs = new_glyphs.concat([]);
+
+    new_glyphs = [];
+    if (formData.off_spec.glyphs) {
+      if (gameVersionFactory.gameVersion.getName() === "cata") {
+        primeGlyphs = formData.off_spec.glyphs.filter(
+          (glyph: Glyph) => glyph.type === "Prime"
+        );
+        new_glyphs.push(
+          ...primeGlyphs,
+          ...Array(3)
+            .fill({ type: "Prime" })
+            .slice(0, 3 - primeGlyphs.length)
+        );
+      }
+      majorGlyphs = formData.off_spec.glyphs.filter(
+        (glyph: Glyph) => glyph.type === "Major"
+      );
+      new_glyphs.push(
+        ...majorGlyphs,
+        ...Array(3)
+          .fill({ type: "Major" })
+          .slice(0, 3 - majorGlyphs.length)
+      );
+      minorGlyphs = formData.off_spec.glyphs.filter(
+        (glyph: Glyph) => glyph.type === "Minor"
+      );
+      new_glyphs.push(
+        ...minorGlyphs,
+        ...Array(3)
+          .fill({ type: "Minor" })
+          .slice(0, 3 - minorGlyphs.length)
+      );
+
+      formData.off_spec.glyphs = new_glyphs.concat([]);
+    }
+  }
 
   const fetchStatistic = async () => {
     const res = await fetch(
@@ -331,7 +407,11 @@
           </Content>
           {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
-              <GlyphFrame bind:glyphs={formData.active_spec.glyphs} />
+              <GlyphFrame
+                glyphs={formData.active_spec.glyphs}
+                character_class={formData.character.character_class}
+                {edit}
+              />
             </Content>
           {/if}
         </Paper>
@@ -354,7 +434,11 @@
           </Content>
           {#if ["wotlk", "cata", "mop"].includes(gameVersionFactory.gameVersion.getName())}
             <Content>
-              <GlyphFrame glyphs={formData.off_spec.glyphs} />
+              <GlyphFrame
+                glyphs={formData.off_spec.glyphs}
+                character_class={formData.character.character_class}
+                {edit}
+              />
             </Content>
           {/if}
         </Paper>
