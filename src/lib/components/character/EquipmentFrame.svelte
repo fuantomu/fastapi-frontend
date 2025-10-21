@@ -82,7 +82,7 @@
       {/if}
     </div>
     <div
-      style="display: flex; flex-direction: column; gap: 6px; align-items: end"
+      style="display: flex; flex-direction: column; gap: 6px; align-items: end; justify-items: end"
     >
       {#if edit}
         <ItemEditFrame

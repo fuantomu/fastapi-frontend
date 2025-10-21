@@ -25,6 +25,7 @@
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 
   let edit: boolean = $state(id == 0 ? true : false);
+  let fetching: boolean = $state(false);
   let other_characters: Character[] = $state([]);
   let guilds: Guild[] = $state([]);
   let character_guild: Guild = $state({} as Guild);
@@ -306,7 +307,7 @@
 
   async function handleRefresh() {
     equipment_updated = t("ui.updatingCharacter");
-
+    fetching = true
     let response = await fetch(`${PUBLIC_API_URL}/Character/Parse/`, {
       method: "POST",
       body: JSON.stringify({
@@ -332,8 +333,10 @@
     } else {
       equipment_updated = t("ui.errorFetchingData");
     }
+    fetching = false;
   }
   async function handleSubmit() {
+    fetching = true
     baseCharacter = JSON.parse(JSON.stringify(formData.character));
     const response = await fetch(`./${formData.character.id}`, {
       method: "POST",
@@ -347,6 +350,7 @@
       window.location.href = `/${gameVersionFactory.gameVersion.getName()}${result["url"]}`;
     }
     edit = false;
+    fetching = false
   }
 </script>
 
@@ -355,7 +359,7 @@
     <p>Loading...</p>
   {:then}
     {#if formData.character}
-      {#if equipment_updated}
+      {#if fetching}
         <p style="color: yellow;">{equipment_updated}</p>
       {/if}
 

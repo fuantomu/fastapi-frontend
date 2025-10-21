@@ -18,7 +18,7 @@
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 </script>
 
-<div style="height: 32px;">
+<div style="padding-bottom: 10px; ">
   {#if equipment}
     <a
       href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
@@ -26,19 +26,43 @@
       class="equipment-link"
     >
       {#if reverse}
-        <span
-          class="equipment-text"
-          style="color: var(--item-quality-colour-{equipment.quality});"
-          >{equipment.name}</span
-        >
-        <WarcraftIcon src={equipment.icon} />
+        <div style={"display: flex; align-items: start; min-height: 40px"}>
+          <div style={"display: grid; justify-items: end; margin-right: 10px"}>
+            <span
+              class="equipment-text"
+              style="color: var(--item-quality-colour-{equipment.quality});"
+              >{equipment.name}</span
+            >
+            {#each equipment.enchantment?.split("##") as enchant}
+              <span
+                style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
+                >{enchant}</span
+              >
+            {/each}
+          </div>
+          <div style="display: grid; align-content: center; height: 40px">
+            <WarcraftIcon src={equipment.icon} />
+          </div>
+        </div>
       {:else}
-        <WarcraftIcon src={equipment.icon} />
-        <span
-          class="equipment-text"
-          style="color: var(--item-quality-colour-{equipment.quality});"
-          >{equipment.name}</span
-        >
+        <div style={"display: flex; align-items: start; min-height: 40px"}>
+          <div style="display: grid; align-content: center; height: 40px">
+            <WarcraftIcon src={equipment.icon} />
+          </div>
+          <div style={"display: grid; justify-items: start; margin-left: 10px;"}>
+            <span
+              class="equipment-text"
+              style="color: var(--item-quality-colour-{equipment.quality});"
+              >{equipment.name}</span
+            >
+            {#each equipment.enchantment?.split("##") as enchant}
+              <span
+                style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
+                >{enchant}</span
+              >
+            {/each}
+          </div>
+        </div>
       {/if}
     </a>
   {:else if reverse}
@@ -69,16 +93,11 @@
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    gap: 10px;
-    max-width: 100%;
   }
 
   .equipment-text {
     color: var(--palette-secondary-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    display: inline-block;
+    font-size: 1.1em;
+    align-items: center;
   }
 </style>
