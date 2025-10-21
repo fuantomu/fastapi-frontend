@@ -66,7 +66,7 @@
   };
 </script>
 
-<div>
+<div style="height: 95%;">
   <div class="player-grid">
     <div class="icons">
       <WarcraftIcon
@@ -156,7 +156,7 @@
       </div>
     </div>
   </div>
-  <div style="display: flex; align-items: end; height: 300px">
+  <div style="display: flex; align-items: end; height: 80%">
     <div
       style="display: flex; justify-content: end; align-items: center; border: 1px solid black; padding: 20px"
     >

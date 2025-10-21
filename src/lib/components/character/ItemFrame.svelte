@@ -36,7 +36,7 @@
             {#each equipment.enchantment?.split("##") as enchant}
               <span
                 style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
-                >{enchant}</span
+                >{enchant.replace("Enchanted: ","")}</span
               >
             {/each}
           </div>
@@ -58,7 +58,7 @@
             {#each equipment.enchantment?.split("##") as enchant}
               <span
                 style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
-                >{enchant}</span
+                >{enchant.replace("Enchanted: ","")}</span
               >
             {/each}
           </div>

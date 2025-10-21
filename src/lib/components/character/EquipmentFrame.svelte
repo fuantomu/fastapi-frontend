@@ -158,7 +158,6 @@
       align-items: center;
       flex-direction: row;
       gap: 16px;
-      padding: 32px;
     "
   >
     {#if edit}

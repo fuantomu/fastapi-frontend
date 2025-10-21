@@ -354,7 +354,7 @@
   }
 </script>
 
-<div>
+<div style="border: 1px solid black">
   {#await fetchData()}
     <p>Loading...</p>
   {:then}
@@ -364,7 +364,7 @@
       {/if}
 
       <Paper
-        style={`border: 1px solid black; display: grid; grid-template-columns: ${edit ? "40% 50%" : "25% 40% 35%"}`}
+        style={`display: grid; grid-template-columns: ${edit ? "40% 50%" : "30% 40% 30%"};`}
       >
         <Content>
           {#if edit}
@@ -377,7 +377,6 @@
           {:else}
             <CharacterFrame character={formData.character} {character_guild} />
           {/if}
-          <br />
           <button
             type="button"
             style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
@@ -429,11 +428,11 @@
             >{t("ui.deleteCharacter")}
           </button>
         </Content>
-        <Content style={"width: 100%"}>
+        <Content style={"width: 97%"}>
           <EquipmentFrame bind:equipment={formData.equipment} {edit} />
         </Content>
         {#if !edit}
-          <Content style={"width: 100%"}>
+          <Content style={"width: 97%"}>
             <StatisticFrame statistics={character_statistics} />
           </Content>
         {/if}
