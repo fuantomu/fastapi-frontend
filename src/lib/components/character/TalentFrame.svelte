@@ -100,12 +100,18 @@
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
 
   function updateActiveTalent(talent: Talent, key: string) {
-    const isActive = specialization.talents?.find((_talent: Talent) => talent.id === _talent.id)
-    if (isActive){
-      specialization.talents[Number(key)/15-1] = {id: -1, name: "Unknown", icon: null, rank: 0}
-    }
-    else{
-      specialization.talents[Number(key)/15-1] = talent
+    const isActive = specialization.talents?.find(
+      (_talent: Talent) => talent.id === _talent.id
+    );
+    if (isActive) {
+      specialization.talents[Number(key) / 15 - 1] = {
+        id: -1,
+        name: "Unknown",
+        icon: null,
+        rank: 0,
+      };
+    } else {
+      specialization.talents[Number(key) / 15 - 1] = talent;
     }
   }
 
@@ -113,13 +119,24 @@
     specialization.talents = talents;
   }
 
+  function handleReset() {
+    console.log("reset", specialization.talents);
+    for (let index = 0; index < specialization.talents.length; index++) {
+      specialization.talents[index] = {
+        id: -1,
+        name: "Unknown",
+        icon: null,
+        rank: 0,
+      };
+    }
+  }
 </script>
 
 <div
   style="background-color: #111111; border: 1px solid black; padding: 20px; display: flex; flex-direction: column; min-height: 400px;"
 >
   <div
-    style="display: flex; align-items: center; justify-content: center; gap: 120px"
+    style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; justify-content: center; gap: 120px"
   >
     <span>
       {specialization.spec_id == 0
@@ -177,6 +194,13 @@
       >
     {/if}
   </div>
+  {#if edit}
+    <button
+      type="button"
+      style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer; width: fit-content; align-self: center"
+      onclick={() => handleReset()}>{t(`ui.reset`)}</button
+    >
+  {/if}
   {#if Object.keys(talents ?? []).length !== 0}
     {#if gameVersionFactory.gameVersion.getName() === "mop"}
       {#each [15, 30, 45, 60, 75, 90] as tier (tier)}

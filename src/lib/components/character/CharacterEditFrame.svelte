@@ -29,7 +29,7 @@
     data = $bindable(),
     guilds,
     characters,
-    nameError = $bindable()
+    nameError = $bindable(),
   } = $props<{
     data: Object | undefined;
     guilds: Guild[];
@@ -175,12 +175,25 @@
           icon: ICON_QUESTIONMARK,
         } as PlayerSpec)
     );
-    data.active_spec.talents = JSON.parse(JSON.stringify(data.baseActiveSpec.talents))
-    data.active_spec.name = JSON.parse(JSON.stringify(data.baseActiveSpec.name))
-    data.active_spec.glyphs = JSON.parse(JSON.stringify(data.baseActiveSpec.glyphs))
-    data.off_spec.talents = JSON.parse(JSON.stringify(data.baseOffSpec.talents))
-    data.off_spec.name = JSON.parse(JSON.stringify(data.baseOffSpec.name))
-    data.off_spec.glyphs = JSON.parse(JSON.stringify(data.baseOffSpec.glyphs))
+    data.active_spec.talents = JSON.parse(
+      JSON.stringify(data.baseActiveSpec.talents)
+    );
+    data.active_spec.name = JSON.parse(
+      JSON.stringify(data.baseActiveSpec.name)
+    );
+    data.active_spec.glyphs = JSON.parse(
+      JSON.stringify(data.baseActiveSpec.glyphs)
+    );
+    if (data.baseOffSpec.talents) {
+      data.off_spec.talents = JSON.parse(
+        JSON.stringify(data.baseOffSpec?.talents)
+      );
+      data.off_spec.name = JSON.parse(JSON.stringify(data.baseOffSpec?.name));
+      data.off_spec.glyphs = JSON.parse(
+        JSON.stringify(data.baseOffSpec?.glyphs)
+      );
+    }
+
     nameError = null;
   }
 
@@ -632,13 +645,19 @@
             title={t("ui.realmVersion")}
           >
             {#each Object.values(RealmVersion) as realm_version}
-              <option value={realm_version}>{t(`realm_version.${realm_version}`)}</option>
+              <option value={realm_version}
+                >{t(`realm_version.${realm_version}`)}</option
+              >
             {/each}
           </select>
         </div>
       </div>
     </div>
-    <button type="button" style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer" onclick={() => handleReset()}>{t(`ui.reset`)}</button>
+    <button
+      type="button"
+      style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+      onclick={() => handleReset()}>{t(`ui.reset`)}</button
+    >
   </Content>
 </Paper>
 
