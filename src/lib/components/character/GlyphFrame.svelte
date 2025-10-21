@@ -33,10 +33,18 @@
     versionGlyphs = [...data["Result"]];
   }
 
-  function updateGlyphs(new_glyph: Glyph, slot: number){
-    glyphs[slot] = new_glyph
+  function updateGlyphs(new_glyph: Glyph, slot: number) {
+    glyphs[slot] = new_glyph;
   }
-  
+
+  function handleReset() {
+    glyphs = [];
+    if (gameVersionFactory.gameVersion.getName() === "cata") {
+      glyphs.push(...Array(3).fill({ type: "Prime" }));
+    }
+    glyphs.push(...Array(3).fill({ type: "Major" }));
+    glyphs.push(...Array(3).fill({ type: "Minor" }));
+  }
 </script>
 
 <div
@@ -48,6 +56,14 @@
     <span style="align-self: center; margin-bottom: 15px">
       {t("ui.glyphs")}
     </span>
+    {#if edit}
+      <button
+        type="button"
+        style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer; width: fit-content; align-self: center"
+        onclick={() => handleReset()}>{t(`ui.reset`)}</button
+      >
+    {/if}
+
     {#if ["mop", "wotlk"].includes(gameVersionFactory.gameVersion.getName())}
       <div style="display: flex; justify-content: space-between; width: 100%;">
         <Content style="width: 50%">

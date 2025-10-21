@@ -120,7 +120,6 @@
   }
 
   function handleReset() {
-    console.log("reset", specialization.talents);
     for (let index = 0; index < specialization.talents.length; index++) {
       specialization.talents[index] = {
         id: -1,
