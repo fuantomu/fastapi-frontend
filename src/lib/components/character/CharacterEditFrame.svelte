@@ -638,7 +638,7 @@
         </div>
       </div>
     </div>
-    <button type="button" onclick={() => handleReset()}>{t(`ui.reset`)}</button>
+    <button type="button" style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer" onclick={() => handleReset()}>{t(`ui.reset`)}</button>
   </Content>
 </Paper>
 

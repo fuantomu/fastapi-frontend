@@ -376,6 +376,7 @@
           <br />
           <button
             type="button"
+            style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
             onclick={() => {
               if (window.location.href.includes("/characters/add")) {
                 window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
@@ -400,6 +401,7 @@
           {#if edit}
             <button
               type="submit"
+              style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
               onclick={() => handleSubmit()}
               disabled={nameError ||
               !formData.character.name ||
@@ -412,10 +414,14 @@
           {/if}
           <button
             type="button"
+            style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
             disabled={equipment_updated ? true : false}
             onclick={() => handleRefresh()}>{t("ui.refreshCharacter")}</button
           >
-          <button type="button" onclick={() => handleDelete()}
+          <button
+            style="height: 34px; border: 1px solid black; background: var(--palette-primary-dark); cursor: pointer"
+            type="button"
+            onclick={() => handleDelete()}
             >{t("ui.deleteCharacter")}
           </button>
         </Content>
