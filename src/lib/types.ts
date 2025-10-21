@@ -113,3 +113,104 @@ export type Guild = {
     region: Region,
     version: GameVersionName;
 }
+
+export type WCLName = {
+    id: number;
+    name: string;
+    journalID: number | null
+}
+
+export type WCLSlug = {
+    slug: string;
+    name: string | null;
+}
+
+export type WCLServer = {
+    region: WCLSlug;
+} & WCLSlug
+
+export type WCLGuild = {
+    server: WCLServer
+} & WCLName
+
+export type WCLRank = {
+    rank_id : number;
+    class: number;
+    spec: number;
+    per_second_amount: number;
+    ilvl: number;
+    fight_metadata: number;
+}
+
+export type WCLAllStars = {
+    partition: number;
+    spec: string | null
+    points: number;
+    possiblePoints: number;
+    rank: number;
+    regionRank: number;
+    serverRank: number;
+    rankPercent: number | null
+    total: number;
+    rankTooltip: string | null
+}
+
+export type WCLEncounterRanking = {
+    encounter: WCLName;
+    rankPercent: number | null;
+    medianPercent: number | null;
+    lockedIn: boolean;
+    totalKills: number;
+    fastestKill: number;
+    allStars: WCLAllStars | null;
+    spec: string | null;
+    bestSpec : string | null;
+    bestAmount: number;
+    rankTooltip: string | null;
+    bestRank: WCLRank | null;
+}
+
+export type WCLZoneRanking = {
+    bestPerformanceAverage: number | null;
+    medianPerformanceAverage: number | null;
+    difficulty: number;
+    metric: string;
+    partition: number;
+    zone: number;
+    size: number;
+    allStars: [WCLAllStars];
+    rankings: [WCLEncounterRanking];
+}
+
+export type WCLRanking = {
+    name: string
+    id: number
+    classID: number
+    gameData: Object
+    faction: WCLName
+    level: number
+    hidden: string | boolean
+    guilds: [WCLGuild]
+    guildRank: number
+    zoneRankings: WCLZoneRanking
+}
+
+export type WCLBracket ={
+    min: number
+    max: number;
+    bucket: number;
+    type: string
+}
+
+export type WCLDifficulty = {
+    sizes: [number]
+} & WCLName
+
+export type WCLZone = {
+    brackets: WCLBracket | null
+    difficulties: [WCLDifficulty]
+    encounters: [WCLName]
+    expansion: WCLName
+    frozen: boolean
+    name: string
+}

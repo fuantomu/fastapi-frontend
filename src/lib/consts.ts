@@ -127,6 +127,6 @@ export enum RealmVersion {
   SOD = "sod",
   CLASSIC = "classic",
   FRESH = "fresh",
-  ERA = "era",
-  WWW = "retail"
+  VANILLA = "vanilla",
+  RETAIL = "retail"
 }
