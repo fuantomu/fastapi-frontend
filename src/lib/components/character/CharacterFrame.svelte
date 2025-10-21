@@ -220,10 +220,10 @@
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
-                    ranking.zoneRankings?.allStars[0].rank /
-                      ranking.zoneRankings?.allStars[0].total) *
+                    ranking.zoneRankings?.allStars[0]?.rank /
+                      ranking.zoneRankings?.allStars[0]?.total) *
                     100
-                )});">{ranking.zoneRankings?.allStars[0].rank}</span
+                )});">{ranking.zoneRankings?.allStars[0]?.rank}</span
               >
             </div>
             <div
@@ -233,10 +233,10 @@
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
-                    ranking.zoneRankings?.allStars[0].serverRank /
-                      ranking.zoneRankings?.allStars[0].total) *
+                    ranking.zoneRankings?.allStars[0]?.serverRank /
+                      ranking.zoneRankings?.allStars[0]?.total) *
                     100
-                )});">{ranking.zoneRankings?.allStars[0].serverRank}</span
+                )});">{ranking.zoneRankings?.allStars[0]?.serverRank}</span
               >
             </div>
           </div>
@@ -244,7 +244,7 @@
             style="display: flex; align-content: center; justify-content: center; gap: 20px"
           >
             <span>{t(`ui.allStarPoints`)}</span>
-            <span>{ranking.zoneRankings?.allStars[0].points}</span>
+            <span>{ranking.zoneRankings?.allStars[0]?.points}</span>
           </div>
         </div>
       {/await}

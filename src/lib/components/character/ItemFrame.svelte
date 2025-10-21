@@ -18,7 +18,7 @@
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
 </script>
 
-<div style="padding-bottom: 10px; ">
+<div style="height: 42px">
   {#if equipment}
     <a
       href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
@@ -26,7 +26,7 @@
       class="equipment-link"
     >
       {#if reverse}
-        <div style={"display: flex; align-items: start; min-height: 40px"}>
+        <div style={"display: flex; align-items: start;"}>
           <div style={"display: grid; justify-items: end; margin-right: 10px"}>
             <span
               class="equipment-text"
@@ -36,7 +36,7 @@
             {#each equipment.enchantment?.split("##") as enchant}
               <span
                 style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
-                >{enchant.replace("Enchanted: ","")}</span
+                >{enchant.replace("Enchanted: ", "")}</span
               >
             {/each}
           </div>
@@ -45,11 +45,13 @@
           </div>
         </div>
       {:else}
-        <div style={"display: flex; align-items: start; min-height: 40px"}>
+        <div style={"display: flex; align-items: start;"}>
           <div style="display: grid; align-content: center; height: 40px">
             <WarcraftIcon src={equipment.icon} />
           </div>
-          <div style={"display: grid; justify-items: start; margin-left: 10px;"}>
+          <div
+            style={"display: grid; justify-items: start; margin-left: 10px;"}
+          >
             <span
               class="equipment-text"
               style="color: var(--item-quality-colour-{equipment.quality});"
@@ -58,7 +60,7 @@
             {#each equipment.enchantment?.split("##") as enchant}
               <span
                 style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
-                >{enchant.replace("Enchanted: ","")}</span
+                >{enchant.replace("Enchanted: ", "")}</span
               >
             {/each}
           </div>
@@ -66,21 +68,30 @@
       {/if}
     </a>
   {:else if reverse}
-    <div class="equipment-link">
-      <span class="equipment-text">{t("equipment.empty")}</span>
-      <img
-        src={`/image/paperdoll/empty_${slot}.png`}
-        alt={t(`equipment.${slot}`)}
-        style="width: 32px; height: 32px"
-      />
+    <div style={"display: flex; align-items: start;"}>
+      <div style={"display: grid; justify-items: end; margin-right: 10px"}>
+        <span class="equipment-text">{t("equipment.empty")}</span>
+      </div>
+      <div style="display: grid; align-content: center; height: 40px">
+        <img
+          src={`/image/paperdoll/empty_${slot}.png`}
+          alt={t(`equipment.${slot}`)}
+          style="width: 34px; height: 32px"
+        />
+      </div>
     </div>
   {:else}
-    <div class="equipment-link">
-      <img
-        src={`/image/paperdoll/empty_${slot}.png`}
-        alt={t(`equipment.${slot}`)}
-        style="width: 32px; height: 32px"
-      /><span class="equipment-text">{t("equipment.empty")}</span>
+    <div style={"display: flex; align-items: start;"}>
+      <div style="display: grid; align-content: center; height: 40px">
+        <img
+          src={`/image/paperdoll/empty_${slot}.png`}
+          alt={t(`equipment.${slot}`)}
+          style="width: 32px; height: 34px"
+        />
+      </div>
+      <div style={"display: grid; justify-items: start; margin-left: 10px;"}>
+        <span class="equipment-text">{t("equipment.empty")}</span>
+      </div>
     </div>
   {/if}
 </div>
@@ -97,7 +108,5 @@
 
   .equipment-text {
     color: var(--palette-secondary-main);
-    font-size: 1.1em;
-    align-items: center;
   }
 </style>

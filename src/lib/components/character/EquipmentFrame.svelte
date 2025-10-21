@@ -14,10 +14,10 @@
 </script>
 
 <div
-  style="background-color: #111111; border: 1px solid black; padding: 20px; min-height: 400px;"
+  style="background-color: #111111; border: 1px solid black; padding: 10px; min-height: 400px; padding-bottom: 20px"
 >
   <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex; flex-direction: column; gap: 6px;">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: start; justify-items: start">
       {#if edit}
         <ItemEditFrame
           bind:equipment={equipment.head}
@@ -82,7 +82,7 @@
       {/if}
     </div>
     <div
-      style="display: flex; flex-direction: column; gap: 6px; align-items: end; justify-items: end"
+      style="display: flex; flex-direction: column; gap: 6px; align-items: end;"
     >
       {#if edit}
         <ItemEditFrame
