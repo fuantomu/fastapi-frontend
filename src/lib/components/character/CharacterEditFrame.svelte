@@ -273,7 +273,6 @@
       data.character.character_class,
       ""
     );
-    data.active_spec.name = data.character.active_spec;
   }
 
   function getFaction() {
