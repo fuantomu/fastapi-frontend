@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { CharacterItem } from "$lib/types";
+  import type { CharacterItem, Enchantment } from "$lib/types";
   import { getWowheadLink } from "$lib/helper/wowhead";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
@@ -9,6 +9,7 @@
   import Menu from "@smui/menu";
   import List, { Item } from "@smui/list";
   import { ICON_QUESTIONMARK } from "$lib/consts";
+  import ItemEditEnchantmentFrame from "./ItemEditEnchantmentFrame.svelte";
   let {
     equipment = $bindable(),
     slot,
@@ -21,54 +22,156 @@
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   let openMenu: boolean = $state(false);
-  let selectedId: number = $state(equipment?.id ?? 0);
-  let previousId: number = $state(-1);
+  let selectedSearch: string = $state("");
+  let foundEquipment: CharacterItem[] = $state([]);
   let selectedEquipment: CharacterItem = $state(
-    JSON.parse(JSON.stringify(equipment ?? {}))
+    JSON.parse(JSON.stringify(equipment?? {}))
   );
   let fetching: boolean = $state(false);
+  let baseEnchants: Enchantment[] = $state([]);
+  let baseGems: Enchantment[] = $state([]);
+  let baseUpgrades: number = $state(0);
+  let currentEnchants: Enchantment[] = $state([]);
+  let currentGems: Enchantment[] = $state([]);
+  let currentUpgrades: number = $state(0);
+  let enchantmentPromise = getEnchantments();
 
-  async function fetchItem(itemid: number) {
+  async function searchItem(itemidOrString: string) {
+    foundEquipment = [];
     fetching = true;
-    const res = await fetch(
-      `${PUBLIC_API_URL}/Item/?id=${itemid}&version=${gameVersionFactory.gameVersion.getName()}`
-    );
+    let res = null;
+    if (Number.isSafeInteger(Number(itemidOrString))) {
+      res = await fetch(
+        `${PUBLIC_API_URL}/Item/?id=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
+      );
+    } else {
+      res = await fetch(
+        `${PUBLIC_API_URL}/Item/?search=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
+      );
+    }
     let data = await res.json();
 
     fetching = false;
-    data = JSON.parse(data["Result"]) as CharacterItem;
-    if (!data.name) {
-      selectedEquipment.icon = ICON_QUESTIONMARK;
-      selectedEquipment.name = "Could not find item";
-      selectedEquipment.quality = "Poor";
-      selectedEquipment.id = 0;
+    data = data["Result"] as CharacterItem[];
+    if (data.length === 0) {
+      foundEquipment.push({
+        icon: ICON_QUESTIONMARK,
+        name: t("ui.itemNotFound"),
+        quality: "Poor",
+        id: 0,
+      } as CharacterItem);
     } else {
-      selectedEquipment.icon = data.icon;
-      selectedEquipment.id = data.id;
-      selectedEquipment.enchantment = "";
-      selectedEquipment.inventory_type = data.inventory_type;
-      selectedEquipment.name = data.name;
-      selectedEquipment.quality = data.quality;
-      selectedEquipment.wowhead_link = "";
-      selectedEquipment.slot = `${slot.charAt(0).toUpperCase()}${slot.slice(1)}`;
-      selectedEquipment.character_id = Number(
-        window.location.href.split("/").at(-1)
-      );
+      data.forEach((element: CharacterItem) => {
+        element.character_id = Number(window.location.href.split("/").at(-1));
+        foundEquipment.push(element);
+      });
     }
   }
+
+  async function getEnchantments() {
+    if (equipment?.wowhead_link) {
+      const enchantments = equipment.wowhead_link.split("&");
+      let enchants: string[] = [];
+      let gems: string[] = [];
+      enchantments.forEach((etype: string) => {
+        let current_type = etype.split("=");
+        if (current_type[0] === "upgd") {
+          currentUpgrades = Number(current_type[1]);
+          baseUpgrades = Number(current_type[1]);
+        } else if (current_type[0] === "ench") {
+          enchants = current_type[1].split(":");
+        } else if (current_type[0] === "gems") {
+          gems = current_type[1].split(":");
+        }
+      });
+      for (const id of enchants) {
+        let res = await fetch(
+          `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
+        );
+        let data = await res.json();
+        if (data["Result"]) {
+          currentEnchants.push(data["Result"][0]);
+          baseEnchants.push(data["Result"][0]);
+        }
+      }
+      for (const id of gems) {
+        let res = await fetch(
+          `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
+        );
+        let data = await res.json();
+        if (data["Result"]) {
+          currentGems.push(data["Result"][0]);
+          baseGems.push(data["Result"][0]);
+        }
+      }
+    }
+  }
+
+  function handleItemClick(item: CharacterItem) {
+    console.log("press on item", item);
+    item.wowhead_link = ""
+    item.enchantment = ""
+    selectedEquipment = JSON.parse(JSON.stringify(item));
+    console.log(selectedEquipment)
+  }
+
+  function handleSaveItem() {
+    selectedEquipment.enchantment = currentEnchants.map((enchant: Enchantment) => enchant.display_string? enchant.display_string : enchant.name).join("##")
+    equipment = JSON.parse(JSON.stringify(selectedEquipment))
+    baseEnchants = JSON.parse(JSON.stringify(currentEnchants))
+    baseGems = JSON.parse(JSON.stringify(currentGems))
+    baseUpgrades = JSON.parse(JSON.stringify(currentUpgrades))
+    openMenu = !openMenu;
+  }
+
 
   function handleButtonClick(e: Event) {
     e.stopPropagation();
     e.preventDefault();
+    selectedEquipment = JSON.parse(JSON.stringify(equipment??{}));
     openMenu = !openMenu;
   }
 
-  function checkUpdateDisabled() {
-    return selectedEquipment?.id == undefined || selectedEquipment?.id == 0;
+  function handleUpdateEnchantLink(enchants: Enchantment[]){
+    if (enchants){
+      currentEnchants = enchants
+      updateLinks()
+    }
+  }
+
+  function handleUpdateGemLink(gems: Enchantment[]){
+    if (gems){
+      currentGems = gems
+      updateLinks()
+    }
+  }
+
+  function updateLinks(){
+    if (!equipment){
+      return
+    }
+    let new_link = "";
+    if (currentEnchants.length > 0){
+      new_link += "ench=" + currentEnchants.map((e) => e.id).join(":")
+    }
+    if (currentGems.length > 0){
+      if (new_link.length > 0){
+        new_link += "&"
+      }
+      new_link += "gems=" + currentGems.map((e) => e.source_id).join(":")
+    }
+    if (currentUpgrades > 0){
+      if (new_link.length > 0){
+        new_link += "&"
+      }
+      new_link += "upgd=" + currentUpgrades
+    }
+    equipment.wowhead_link = new_link
+    selectedEquipment = JSON.parse(JSON.stringify(equipment))
   }
 </script>
 
-<div style="height: 32px;">
+<div>
   {#if equipment?.name}
     <a
       href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
@@ -77,6 +180,7 @@
     >
       {#if reverse}
         <div
+          style={"display: flex; align-items: start;"}
           role="button"
           tabindex="0"
           onclick={(e: MouseEvent) => {
@@ -88,15 +192,26 @@
             }
           }}
         >
-          <span
-            class="equipment-text"
-            style="color: var(--item-quality-colour-{equipment.quality});"
-            >{equipment.name}</span
-          >
-          <WarcraftIcon src={equipment.icon} />
+          <div style={"display: grid; justify-items: end; margin-right: 10px"}>
+            <span
+              class="equipment-text"
+              style="color: var(--item-quality-colour-{equipment.quality});"
+              >{equipment.name}</span
+            >
+            {#each equipment.enchantment?.split("##") as enchant}
+              <span
+                style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
+                >{enchant.replace("Enchanted: ", "")}</span
+              >
+            {/each}
+          </div>
+          <div style="display: grid; align-content: center; height: 40px">
+            <WarcraftIcon src={equipment.icon} />
+          </div>
         </div>
       {:else}
         <div
+          style={"display: flex; align-items: start;"}
           role="button"
           tabindex="0"
           onclick={(e: MouseEvent) => {
@@ -108,12 +223,24 @@
             }
           }}
         >
-          <WarcraftIcon src={equipment.icon} />
-          <span
-            class="equipment-text"
-            style="color: var(--item-quality-colour-{equipment.quality});"
-            >{equipment.name}</span
+          <div style="display: grid; align-content: center; height: 40px">
+            <WarcraftIcon src={equipment.icon} />
+          </div>
+          <div
+            style={"display: grid; justify-items: start; margin-left: 10px;"}
           >
+            <span
+              class="equipment-text"
+              style="color: var(--item-quality-colour-{equipment.quality});"
+              >{equipment.name}</span
+            >
+            {#each equipment.enchantment?.split("##") as enchant}
+              <span
+                style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
+                >{enchant.replace("Enchanted: ", "")}</span
+              >
+            {/each}
+          </div>
         </div>
       {/if}
     </a>
@@ -163,7 +290,12 @@
   {/if}
   <Menu
     onSMUIMenuSurfaceClosed={() => {
-      selectedEquipment = JSON.parse(JSON.stringify(equipment ?? {}));
+      selectedEquipment = JSON.parse(JSON.stringify(equipment??{})) as CharacterItem;
+      selectedSearch = "";
+      currentEnchants = JSON.parse(JSON.stringify(baseEnchants))
+      currentGems = JSON.parse(JSON.stringify(baseGems))
+      currentUpgrades = baseUpgrades
+      updateLinks()
     }}
     bind:open={openMenu}
   >
@@ -173,97 +305,159 @@
           e.stopPropagation();
         }}
         disabled={true}
-        style="height:fit-content"
+        style="display: flex; flex-direction: column; align-content: center; justify-content: center;"
       >
-        <div style="display: flex; flex-direction: column; gap: 10px">
-          <span>{t(`ui.itemSlot.${slot}`)}</span>
-
-          <div
-            style="display: flex; flex-direction: row; gap: 20px; align-items: center"
-          >
-            <span>{t("ui.ItemId")}</span>
-            <input
-              class="textinput"
-              type="number"
-              onkeypress={(e: KeyboardEvent) => {
-                if (
-                  e.key === "Enter" &&
-                  selectedId &&
-                  selectedId !== previousId
-                ) {
-                  previousId = selectedId;
-                  fetchItem(selectedId);
-                }
-              }}
-              bind:value={selectedId}
-            />
-            <button
-              type="button"
-              style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
-              onclick={() => {
-                if (selectedId && selectedId !== previousId) {
-                  previousId = selectedId;
-                  fetchItem(selectedId);
-                }
-              }}>{t("ui.loadItem")}</button
-            >
-          </div>
-        </div>
+        <span>
+          {t(`ui.item`)}
+        </span>
       </Item>
+      {#if selectedEquipment}
+        <Item
+          onclick={(e: MouseEvent) => {
+            e.stopPropagation();
+          }}
+          disabled={true}
+          style="display: flex; flex-direction: column; align-content: center; justify-content: center; border-top: 1px solid black"
+        >
+          <span>
+            {t(`ui.currentItem`)}
+          </span>
+        </Item>
+        <Item
+          onclick={(e: MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleItemClick(selectedEquipment);
+          }}
+          disabled={true}
+          style="height:fit-content;"
+        >
+          <a
+            href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${selectedEquipment?.id}`}
+            data-wowhead={`${selectedEquipment?.wowhead_link}`}
+            style="
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            gap: 20px;
+            padding: 8px;
+            "
+          >
+            <div style="display: grid; align-content: center; height: 40px">
+              <WarcraftIcon src={selectedEquipment?.icon} />
+            </div>
+            <div
+              style={"display: grid; justify-items: start; margin-left: 10px;"}
+            >
+              <span
+                class="equipment-text"
+                style="color: var(--item-quality-colour-{selectedEquipment?.quality});"
+                >{selectedEquipment?.name}</span
+              >
+              {#each currentEnchants as enchant}
+                <span
+                  style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
+                  >{enchant?.display_string? enchant?.display_string?.replace("Enchanted: ", "") : enchant?.name}</span
+                >
+              {/each}
+            </div>
+          </a>
+        </Item>
+        {#await enchantmentPromise then}
+            <ItemEditEnchantmentFrame enchantments={currentEnchants} handleUpdateLink={handleUpdateEnchantLink} type="Enchant" {slot}
+            ></ItemEditEnchantmentFrame>
+            <ItemEditEnchantmentFrame enchantments={currentGems} handleUpdateLink={handleUpdateGemLink} type="Gem" {slot}
+            ></ItemEditEnchantmentFrame>
+        {/await}
+      {/if}
+      <div
+        style="display: flex; flex-direction: row; gap: 20px; align-items: center; padding: 20px"
+      >
+        <span>{t("ui.searchItem")}</span>
+        <input
+          class="textinput"
+          type="text"
+          spellcheck="false"
+          onkeypress={(e: KeyboardEvent) => {
+            if (e.key === "Enter" && selectedSearch) {
+              searchItem(selectedSearch);
+            }
+          }}
+          bind:value={selectedSearch}
+        />
+        <button
+          type="button"
+          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
+          onclick={() => {
+            if (selectedSearch) {
+              searchItem(selectedSearch);
+            }
+          }}>{t("ui.searchItem")}</button
+        >
+      </div>
+
       {#if fetching}
         <div style="display: flex; flex-direction: column; padding: 20px;">
           <p style="color: yellow;">{t("ui.fetchingItem")}</p>
         </div>
-      {:else if selectedEquipment?.name}
-        <div style="display: flex; flex-direction: column; padding: 20px;">
-          <span style="font-size: smaller; font-weight: 100"
-            >{t("ui.itemPreview")} (ID: {selectedEquipment?.id ??
-              t("ui.itemNoId")})</span
-          >
-          <a
-            href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${selectedEquipment.id}`}
-            data-wowhead={`${selectedEquipment.wowhead_link}`}
-            class="equipment-link"
-            onclick={(e) => e.preventDefault()}
-            ><WarcraftIcon src={selectedEquipment.icon} />
-            <span
-              class="equipment-text"
-              style="color: var(--item-quality-colour-{selectedEquipment.quality});"
-              >{selectedEquipment.name}</span
-            ></a
-          >
-        </div>
-      {:else}
-        <div style="display: flex; flex-direction: column; padding: 20px;">
-          <span style="font-size: smaller; font-weight: 100"
-            >{t("ui.itemPreview")} (ID: {selectedEquipment?.id ??
-              t("ui.itemNoId")})</span
-          >
-          <div class="equipment-link">
-            <img
-              src={`/image/paperdoll/empty_${slot}.png`}
-              alt={t(`equipment.${slot}`)}
-              style="width: 32px; height: 32px"
-            /><span class="equipment-text">{t("equipment.empty")}</span>
-          </div>
-        </div>
       {/if}
-      <Item
-        onclick={(e: MouseEvent) => {
-          if (checkUpdateDisabled()) {
-            e.stopPropagation();
-          } else {
-            equipment = selectedEquipment;
-            openMenu = false;
-          }
-        }}
-        style={checkUpdateDisabled()
-          ? "background-color: #111111; border: 1px solid black"
-          : "background-color: var(--palette-secondary-dark);border: 1px solid black; cursor: pointer"}
-        disabled={checkUpdateDisabled()}
-      >
-        {t("ui.updateItem")}
-      </Item>
+      {#if foundEquipment.length === 0 && !selectedEquipment?.id && !fetching}
+        <div style="display: flex; flex-direction: column; padding: 20px;">
+          <p style="color: grey;">{t("ui.noResults")}</p>
+        </div>
+      {:else if foundEquipment.length > 0}
+        {#each foundEquipment as fitem (fitem.id)}
+          <Item
+            onclick={(e: MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleItemClick(fitem);
+            }}
+            disabled={true}
+            style="height:fit-content; border-top: 1px solid black"
+          >
+            <a
+              href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${fitem.id}`}
+              data-wowhead={`${fitem?.wowhead_link}`}
+              style="
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            gap: 20px;
+            padding: 8px;
+            "
+            >
+              <div>
+                <WarcraftIcon src={fitem.icon} />
+              </div>
+              <span
+                style="width: 100%; color: var(--item-quality-colour-{fitem.quality})"
+              >
+                {fitem.name}
+              </span>
+            </a>
+          </Item>
+        {/each}
+      {/if}
+      
+      <div style="display: flex; align-content: center; justify-content: center">
+        <button
+          onclick={() => handleSaveItem()}
+          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+          type="button"
+          title={t("ui.saveItem")}>{t("ui.saveItem")}</button
+        >
+      </div>
     </List>
   </Menu>
 </div>

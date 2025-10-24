@@ -61,8 +61,12 @@
   }
 
   let fetchData = async () => {
-    await fetchRanking();
-    await fetchZone();
+    if (!ranking?.name) {
+      await fetchRanking();
+    }
+    if (!zone?.name) {
+      await fetchZone();
+    }
   };
 </script>
 
@@ -156,7 +160,7 @@
       </div>
     </div>
   </div>
-  <div style="display: flex; align-items: end; height: 80%">
+  <div style="display: flex; align-items: end; height: 75%">
     <div
       style="display: flex; justify-content: end; align-items: center; border: 1px solid black; padding: 20px"
     >

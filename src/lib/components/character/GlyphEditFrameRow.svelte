@@ -229,7 +229,7 @@
           style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
           onclick={() => {
             searchGlyphs(selectedGlyph);
-          }}>{t("ui.loadItem")}</button
+          }}>{t("ui.saveItem")}</button
         >
       </div>
       {#if fetching}

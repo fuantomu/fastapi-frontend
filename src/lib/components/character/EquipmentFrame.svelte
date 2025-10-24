@@ -36,7 +36,7 @@
         ></ItemEditFrame>
         <ItemEditFrame
           bind:equipment={equipment.back}
-          slot={"chest"}
+          slot={"back"}
           reverse={false}
         ></ItemEditFrame>
         <ItemEditFrame
@@ -69,7 +69,7 @@
           slot={"shoulders"}
           reverse={false}
         ></ItemFrame>
-        <ItemFrame equipment={equipment.back} slot={"chest"} reverse={false}
+        <ItemFrame equipment={equipment.back} slot={"back"} reverse={false}
         ></ItemFrame>
         <ItemFrame equipment={equipment.chest} slot={"chest"} reverse={false}
         ></ItemFrame>

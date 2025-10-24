@@ -495,6 +495,6 @@
 
     <br />
 
-    <button onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button>
+    <button type="button" style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer" onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button>
   {/await}
 </div>
