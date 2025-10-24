@@ -12,7 +12,7 @@
     RealmVersion,
   } from "$lib/consts";
   import { t } from "$lib/i18n/index.svelte";
-  import type { Character, CharacterSpec, Guild } from "$lib/types";
+  import type { Character, Guild } from "$lib/types";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { GameVersionFactory } from "$lib/versions/GameVersionFactory";
   import { PlayerClass } from "$lib/versions/PlayerClass";
@@ -346,9 +346,9 @@
         >
           <WarcraftIcon
             src={gameVersionFactory.iconProvider.getFromSource(
-              data.character.gender === Gender.Male
-                ? (character_race.icon_male ?? ICON_QUESTIONMARK)
-                : (character_race.icon_female ?? ICON_QUESTIONMARK)
+              data.character.gender === Gender.Female
+                ? (character_race.icon_female ?? ICON_QUESTIONMARK)
+                : (character_race.icon_male ?? ICON_QUESTIONMARK)
             )}
             label={t(`ui.changeRace`)}
           />
@@ -373,9 +373,9 @@
               >
                 <WarcraftIcon
                   src={gameVersionFactory.iconProvider.getFromSource(
-                    data.character.gender === Gender.Male
-                      ? race.icon_male
-                      : race.icon_female
+                    data.character.gender === Gender.Female
+                      ? race.icon_female
+                      : race.icon_male
                   )}
                   label={t(`race.${race.name}`)}
                 />
