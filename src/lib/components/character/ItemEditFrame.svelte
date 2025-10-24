@@ -161,13 +161,13 @@
     }
     let new_link = "";
     if (currentEnchants.length > 0) {
-      new_link += "ench=" + currentEnchants.map((e) => e.id).join(":");
+      new_link += "ench=" + currentEnchants.map((e) => e?.id).join(":");
     }
     if (currentGems.length > 0) {
       if (new_link.length > 0) {
         new_link += "&";
       }
-      new_link += "gems=" + currentGems.map((e) => e.source_id).join(":");
+      new_link += "gems=" + currentGems.map((e) => e?.source_id).join(":");
     }
     if (currentUpgrades > 0) {
       if (new_link.length > 0) {

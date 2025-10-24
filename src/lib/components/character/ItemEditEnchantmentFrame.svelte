@@ -67,7 +67,7 @@
 
   function handleDeleteEnchantment(enchant: Enchantment) {
     const index = enchantments.findIndex(
-      (item: Enchantment) => item.id === enchant.id
+      (item: Enchantment) => item?.id === enchant?.id
     );
     enchantments.splice(index, 1);
     handleUpdateLink(enchantments);
