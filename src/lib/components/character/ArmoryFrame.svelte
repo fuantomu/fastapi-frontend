@@ -288,12 +288,12 @@
   let fetchData = async () => {
     if (id != 0) {
       await fetchCharacter();
-      await fetchGuilds();
-      await fetchOtherCharacters();
       await fetchEquipment();
       await fetchSpecialization();
       await fetchStatistic();
     }
+    await fetchGuilds();
+    await fetchOtherCharacters();
   };
 
   let equipment_updated: string | null = $state(null);

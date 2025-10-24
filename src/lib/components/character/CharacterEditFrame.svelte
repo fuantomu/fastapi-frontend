@@ -131,7 +131,7 @@
     nameError = characters.some(
       (other_character: Character) =>
         other_character.realm.trim().toLowerCase() ===
-          realm.trim().toLowerCase() &&
+          realm?.trim().toLowerCase() &&
         other_character.name.trim().toLowerCase() ===
           name.trim().toLowerCase() &&
         data.character.region.trim().toLowerCase() ===
