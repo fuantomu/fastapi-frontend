@@ -10,6 +10,7 @@
   import List, { Item } from "@smui/list";
   import { ICON_QUESTIONMARK } from "$lib/consts";
   import ItemEditEnchantmentFrame from "./ItemEditEnchantmentFrame.svelte";
+  import { preventDefault } from "svelte/legacy";
   let {
     equipment = $bindable(),
     slot,
@@ -25,7 +26,7 @@
   let selectedSearch: string = $state("");
   let foundEquipment: CharacterItem[] = $state([]);
   let selectedEquipment: CharacterItem = $state(
-    JSON.parse(JSON.stringify(equipment?? {}))
+    JSON.parse(JSON.stringify(equipment ?? {}))
   );
   let fetching: boolean = $state(false);
   let baseEnchants: Enchantment[] = $state([]);
@@ -109,65 +110,73 @@
 
   function handleItemClick(item: CharacterItem) {
     console.log("press on item", item);
-    item.wowhead_link = ""
-    item.enchantment = ""
+    item.wowhead_link = "";
+    item.enchantment = "";
     selectedEquipment = JSON.parse(JSON.stringify(item));
-    console.log(selectedEquipment)
+    console.log(selectedEquipment);
   }
 
   function handleSaveItem() {
-    selectedEquipment.enchantment = currentEnchants.map((enchant: Enchantment) => enchant.display_string? enchant.display_string : enchant.name).join("##")
-    equipment = JSON.parse(JSON.stringify(selectedEquipment))
-    baseEnchants = JSON.parse(JSON.stringify(currentEnchants))
-    baseGems = JSON.parse(JSON.stringify(currentGems))
-    baseUpgrades = JSON.parse(JSON.stringify(currentUpgrades))
+    selectedEquipment.enchantment = currentEnchants
+      .map((enchant: Enchantment) =>
+        enchant.display_string ? enchant.display_string : enchant.name
+      )
+      .join("##");
+    equipment = JSON.parse(JSON.stringify(selectedEquipment));
+    baseEnchants = JSON.parse(JSON.stringify(currentEnchants));
+    baseGems = JSON.parse(JSON.stringify(currentGems));
+    baseUpgrades = JSON.parse(JSON.stringify(currentUpgrades));
     openMenu = !openMenu;
   }
-
 
   function handleButtonClick(e: Event) {
     e.stopPropagation();
     e.preventDefault();
-    selectedEquipment = JSON.parse(JSON.stringify(equipment??{}));
+    selectedEquipment = JSON.parse(JSON.stringify(equipment ?? {}));
     openMenu = !openMenu;
   }
 
-  function handleUpdateEnchantLink(enchants: Enchantment[]){
-    if (enchants){
-      currentEnchants = enchants
-      updateLinks()
+  function handleUpdateEnchantLink(enchants: Enchantment[]) {
+    if (enchants) {
+      currentEnchants = enchants;
+      updateLinks();
     }
   }
 
-  function handleUpdateGemLink(gems: Enchantment[]){
-    if (gems){
-      currentGems = gems
-      updateLinks()
+  function handleUpdateGemLink(gems: Enchantment[]) {
+    if (gems) {
+      currentGems = gems;
+      updateLinks();
     }
   }
 
-  function updateLinks(){
-    if (!equipment){
-      return
+  function handleUpgradeChange(upgrade: number){
+    currentUpgrades = Math.max(Math.min(currentUpgrades + upgrade, 2), 0)
+    updateLinks()
+  }
+
+  function updateLinks() {
+    if (!equipment) {
+      return;
     }
     let new_link = "";
-    if (currentEnchants.length > 0){
-      new_link += "ench=" + currentEnchants.map((e) => e.id).join(":")
+    if (currentEnchants.length > 0) {
+      new_link += "ench=" + currentEnchants.map((e) => e.id).join(":");
     }
-    if (currentGems.length > 0){
-      if (new_link.length > 0){
-        new_link += "&"
+    if (currentGems.length > 0) {
+      if (new_link.length > 0) {
+        new_link += "&";
       }
-      new_link += "gems=" + currentGems.map((e) => e.source_id).join(":")
+      new_link += "gems=" + currentGems.map((e) => e.source_id).join(":");
     }
-    if (currentUpgrades > 0){
-      if (new_link.length > 0){
-        new_link += "&"
+    if (currentUpgrades > 0) {
+      if (new_link.length > 0) {
+        new_link += "&";
       }
-      new_link += "upgd=" + currentUpgrades
+      new_link += "upgd=" + currentUpgrades;
     }
-    equipment.wowhead_link = new_link
-    selectedEquipment = JSON.parse(JSON.stringify(equipment))
+    equipment.wowhead_link = new_link;
+    selectedEquipment = JSON.parse(JSON.stringify(equipment));
   }
 </script>
 
@@ -290,12 +299,14 @@
   {/if}
   <Menu
     onSMUIMenuSurfaceClosed={() => {
-      selectedEquipment = JSON.parse(JSON.stringify(equipment??{})) as CharacterItem;
+      selectedEquipment = JSON.parse(
+        JSON.stringify(equipment ?? {})
+      ) as CharacterItem;
       selectedSearch = "";
-      currentEnchants = JSON.parse(JSON.stringify(baseEnchants))
-      currentGems = JSON.parse(JSON.stringify(baseGems))
-      currentUpgrades = baseUpgrades
-      updateLinks()
+      currentEnchants = JSON.parse(JSON.stringify(baseEnchants));
+      currentGems = JSON.parse(JSON.stringify(baseGems));
+      currentUpgrades = baseUpgrades;
+      updateLinks();
     }}
     bind:open={openMenu}
   >
@@ -327,10 +338,9 @@
           onclick={(e: MouseEvent) => {
             e.stopPropagation();
             e.preventDefault();
-            handleItemClick(selectedEquipment);
           }}
           disabled={true}
-          style="height:fit-content;"
+          style="height:fit-content"
         >
           <a
             href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${selectedEquipment?.id}`}
@@ -346,6 +356,7 @@
             position: relative;
             gap: 20px;
             padding: 8px;
+            cursor: default;
             "
           >
             <div style="display: grid; align-content: center; height: 40px">
@@ -362,17 +373,63 @@
               {#each currentEnchants as enchant}
                 <span
                   style="color: var(--item-quality-colour-Uncommon); font-size: 0.75em; margin-top: -4px; margin-bottom: -4px"
-                  >{enchant?.display_string? enchant?.display_string?.replace("Enchanted: ", "") : enchant?.name}</span
+                  >{enchant?.display_string
+                    ? enchant?.display_string?.replace("Enchanted: ", "")
+                    : enchant?.name}</span
                 >
               {/each}
             </div>
           </a>
+          <div style="display: flex; flex-direction: column; justify-items: center; align-items: center; width: 200px">
+            <span>{t('ui.upgradeLevel')}: {currentUpgrades}/2</span>
+            <span
+              onclick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleUpgradeChange(1)
+              }}
+              onkeypress={() => {}}
+              role="button"
+              tabindex="0"
+              style="cursor: pointer; height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+              ><img
+                style="width: 32px; height: 32px"
+                src="/image/icon_arrow_up.png"
+                alt={t("ui.addUpgradeLevel")}
+              /></span
+            >
+            <span
+              onclick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleUpgradeChange(-1)
+              }}
+              onkeypress={() => {}}
+              role="button"
+              tabindex="0"
+              style="cursor: pointer;  height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+              ><img
+                style="width: 32px; height: 32px"
+                src="/image/icon_arrow_down.png"
+                alt={t("ui.removeUpgradeLevel")}
+              /></span
+            >
+          </div>
         </Item>
+
         {#await enchantmentPromise then}
-            <ItemEditEnchantmentFrame enchantments={currentEnchants} handleUpdateLink={handleUpdateEnchantLink} type="Enchant" {slot}
-            ></ItemEditEnchantmentFrame>
-            <ItemEditEnchantmentFrame enchantments={currentGems} handleUpdateLink={handleUpdateGemLink} type="Gem" {slot}
-            ></ItemEditEnchantmentFrame>
+          <ItemEditEnchantmentFrame
+            enchantments={currentEnchants}
+            handleUpdateLink={handleUpdateEnchantLink}
+            type="Enchant"
+            {slot}
+          ></ItemEditEnchantmentFrame>
+          <ItemEditEnchantmentFrame
+            enchantments={currentGems}
+            handleUpdateLink={handleUpdateGemLink}
+            type="Gem"
+            {slot}
+          ></ItemEditEnchantmentFrame>
         {/await}
       {/if}
       <div
@@ -449,8 +506,10 @@
           </Item>
         {/each}
       {/if}
-      
-      <div style="display: flex; align-content: center; justify-content: center">
+
+      <div
+        style="display: flex; align-content: center; justify-content: center"
+      >
         <button
           onclick={() => handleSaveItem()}
           style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"

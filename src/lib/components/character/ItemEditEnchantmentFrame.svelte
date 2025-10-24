@@ -36,15 +36,6 @@
     }
     
     let data = await res.json();
-    console.log(data["Result"])
-    // if (type === "Gem") {
-    //   data["Result"] = data["Result"].filter((enchant: Enchantment) =>
-    //     enchant["inventory_type"] === type)
-    // } else if (type === "Enchant") {
-    //   data["Result"] = data["Result"].filter((enchant: Enchantment) =>
-    //     enchant.slot?.includes(slot)
-    //   );
-    // }
 
     data = data["Result"] as Enchantment[];
     if (data.length === 0) {
@@ -59,7 +50,6 @@
 
   function handleEnchantClick(enchant: Enchantment) {
     searching = false;
-    console.log("click on enchant",enchant)
     foundEnchantment = [];
     selectedEnchantment = enchant;
     enchantments[enchantments.length - 1] = enchant;
@@ -76,11 +66,9 @@
   }
 
   function handleDeleteEnchantment(enchant: Enchantment) {
-    console.log("deleteEnchant", enchant);
     const index = enchantments.findIndex(
       (item: Enchantment) => item.id === enchant.id
     );
-    console.log("index", index);
     enchantments.splice(index, 1);
     handleUpdateLink(enchantments);
   }
