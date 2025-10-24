@@ -1,6 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
 import { RealmVersion, type Faction, type Gender, type PlayerClass, type PlayerSpec, type Race, type Region } from '$lib/consts';
-import type { Character, CharacterItem, CharacterSpec } from '$lib/types';
+import type { Character, CharacterEquipment, CharacterSpec } from '$lib/types';
 import type { GameVersionName } from '$lib/versions/GameVersion';
 
 export async function handleCharacterSubmit(formData: FormData): Promise<string> {
@@ -90,7 +90,14 @@ export async function handleDirectCharacterSubmit(character: Character): Promise
     return `/characters/${character.id}`
 }
 
-export async function handleDirectEquipmentSubmit(equipment: CharacterItem, id: number, version: string) {
+export async function handleDirectEquipmentSubmit(equipment: CharacterEquipment, id: number, version: string) {
+    Object.keys(equipment).forEach((key) => {
+        const typedKey = key as keyof CharacterEquipment;
+        if (equipment[typedKey]){
+            equipment[typedKey].character_id = equipment[typedKey]?.character_id === null? id : equipment[typedKey].character_id
+        }
+        
+    })
     await fetch(`${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${version}`, {
         method: 'POST', body: JSON.stringify(equipment), headers: {
             'Content-Type': 'application/json'
