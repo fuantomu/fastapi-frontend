@@ -150,9 +150,9 @@
     }
   }
 
-  function handleUpgradeChange(upgrade: number){
-    currentUpgrades = Math.max(Math.min(currentUpgrades + upgrade, 2), 0)
-    updateLinks()
+  function handleUpgradeChange(upgrade: number) {
+    currentUpgrades = Math.max(Math.min(currentUpgrades + upgrade, 2), 0);
+    updateLinks();
   }
 
   function updateLinks() {
@@ -380,41 +380,45 @@
               {/each}
             </div>
           </a>
-          <div style="display: flex; flex-direction: column; justify-items: center; align-items: center; width: 200px">
-            <span>{t('ui.upgradeLevel')}: {currentUpgrades}/2</span>
-            <span
-              onclick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                handleUpgradeChange(1)
-              }}
-              onkeypress={() => {}}
-              role="button"
-              tabindex="0"
-              style="cursor: pointer; height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
-              ><img
-                style="width: 32px; height: 32px"
-                src="/image/icon_arrow_up.png"
-                alt={t("ui.addUpgradeLevel")}
-              /></span
+          {#if gameVersionFactory.gameVersion.getName() == "mop" && slot !== "tabard" && slot !== "shirt"}
+            <div
+              style="display: flex; flex-direction: column; justify-items: center; align-items: center; width: 200px"
             >
-            <span
-              onclick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                handleUpgradeChange(-1)
-              }}
-              onkeypress={() => {}}
-              role="button"
-              tabindex="0"
-              style="cursor: pointer;  height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
-              ><img
-                style="width: 32px; height: 32px"
-                src="/image/icon_arrow_down.png"
-                alt={t("ui.removeUpgradeLevel")}
-              /></span
-            >
-          </div>
+              <span>{t("ui.upgradeLevel")}: {currentUpgrades}/2</span>
+              <span
+                onclick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleUpgradeChange(1);
+                }}
+                onkeypress={() => {}}
+                role="button"
+                tabindex="0"
+                style="cursor: pointer; height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+                ><img
+                  style="width: 32px; height: 32px"
+                  src="/image/icon_arrow_up.png"
+                  alt={t("ui.addUpgradeLevel")}
+                /></span
+              >
+              <span
+                onclick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleUpgradeChange(-1);
+                }}
+                onkeypress={() => {}}
+                role="button"
+                tabindex="0"
+                style="cursor: pointer;  height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+                ><img
+                  style="width: 32px; height: 32px"
+                  src="/image/icon_arrow_down.png"
+                  alt={t("ui.removeUpgradeLevel")}
+                /></span
+              >
+            </div>
+          {/if}
         </Item>
 
         {#await enchantmentPromise then}
