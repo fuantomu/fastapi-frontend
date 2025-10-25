@@ -140,10 +140,12 @@
     learn: boolean,
     current_rank: number
   ) {
+    
     if (learn && gameVersionFactory.gameVersion.getName() === "cata") {
       if (character_specialization === "") {
         return false;
       }
+      // Cannot learn talent in other specialization if main specialization has less than 31 points
       if (
         tree !== Number(active_spec_tree[0]) + 1 &&
         getSpentTreePoints(talents[Number(active_spec_tree[0]) + 1])[0] < 31
@@ -151,6 +153,7 @@
         return false;
       }
     }
+    // Cannot learn new talents if spent points are at max
     if (
       learn &&
       getSpentPoints(character_talents) ===
@@ -160,6 +163,7 @@
     }
     const row: number = Number(cell.cell?.split(",")[0]) ?? 0;
     const spentPoints = getSpentTreePoints(talents[tree]);
+    spentPoints[1][row] = spentPoints[1][row] -1
     const requiredPoints = row * 5;
     const maxTalent = character_talents
       .map((ctalent: Talent) => {
@@ -177,12 +181,21 @@
       );
 
     if (!learn) {
+      // Can unlearn if current talent is in the highest row
       if (maxTalent[1] === row) {
         return true;
       }
-      if (spentPoints[1][row] - 1 < Math.max(1, row) * 5) {
-        return false;
+
+      // Cannot unlearn if any row has less than required points in total
+      const maxRow : number = Number(Object.keys(spentPoints[1])[Object.keys(spentPoints[1]).length-1])
+      for (let index = 0; index <= Math.min(maxTalent[1], maxRow); index++) {
+        
+        const newPointsTotal = Object.values(spentPoints[1]).slice(0, index).reduce((a,b) => a + b,0);
+        if (Math.max(0,newPointsTotal)  < index * 5) {
+          return false
+        }
       }
+      
 
       const found_connection = talents[tree].find((ct: TalentTreeCell) =>
         ct.required.includes(cell.cell ?? "")
@@ -192,23 +205,12 @@
           return found_connection.ranks.includes(ct.id);
         });
         if (out && out.length > 0) {
+          // Cannot unlearn if current talent has an active connection
           if (out.some((e: Talent) => e.rank > 0)) {
+            console.log("out.some((e: Talent) => e.rank > 0)",out.some((e: Talent) => e.rank > 0))
             return false;
           }
         }
-      }
-
-      const pointsToCurrentRow = Object.entries(spentPoints[1])
-        .filter((e) => Number(e[0]) <= row)
-        .reduce((a, b) => a + b[1], 0);
-      if (pointsToCurrentRow - current_rank < requiredPoints) {
-        return false;
-      }
-      const pointsToMaxRow = Object.entries(spentPoints[1])
-        .filter((e) => Number(e[0]) <= maxTalent[1])
-        .reduce((a, b) => a + b[1], 0);
-      if (Math.max(pointsToMaxRow - 1 - maxTalent[0], 0) < maxTalent[1] * 5) {
-        return false;
       }
     } else {
       if (requiredPoints > spentPoints[0]) {
