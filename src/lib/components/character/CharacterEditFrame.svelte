@@ -564,6 +564,7 @@
           </select>
         </div>
       </div>
+      {#if !["classic","tbc"].includes(gameVersionFactory.gameVersion.getName())}
       <div style="grid-template-columns: 20% 30%" class="row">
         <span>{t("ui.characterAchievementPoints")}</span>
         <div>
@@ -579,6 +580,7 @@
           />
         </div>
       </div>
+      {/if}
       <div style="grid-template-columns: 20% 30%" class="row">
         <span>{t("ui.characterItemLevel")}</span>
         <div>
