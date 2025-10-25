@@ -90,8 +90,8 @@
       <WarcraftIcon
         label={t(
           character.active_spec
-            ? `specs.${character.active_spec}`
-            : `classes.${character.character_class}`
+            ? t(`specs.${character.active_spec}`)
+            : t(`classes.${character.character_class}`)
         )}
         src={gameVersionFactory.iconProvider.getFromSource(
           character_spec?.icon ?? character_spec?.icon ?? ICON_QUESTIONMARK

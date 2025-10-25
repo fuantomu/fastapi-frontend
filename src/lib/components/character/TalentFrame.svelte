@@ -173,10 +173,10 @@
             >
               <WarcraftIcon
                 src={gameVersionFactory.iconProvider.getFromSource(_spec.icon)}
-                label={`spec.${_spec.name}`}
+                label={`specs.${_spec.name}`}
               />
               <Text style={`margin: 20px; color: ${character_class?.colour}`}
-                >{t(`spec.${_spec.name}`)}</Text
+                >{t(`specs.${_spec.name}`)}</Text
               >
             </Item>
           {/each}

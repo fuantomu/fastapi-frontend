@@ -436,10 +436,10 @@
                   src={gameVersionFactory.iconProvider.getFromSource(
                     _class.icon
                   )}
-                  label={`class.${_class.name}`}
+                  label={`classes.${_class.name}`}
                 />
                 <Text style={`margin: 20px; color: ${_class.colour}`}
-                  >{t(`class.${_class.name}`)}</Text
+                  >{t(`classes.${_class.name}`)}</Text
                 >
               </Item>
             {/each}
@@ -478,10 +478,10 @@
                   src={gameVersionFactory.iconProvider.getFromSource(
                     _spec.icon
                   )}
-                  label={`spec.${_spec.name}`}
+                  label={`specs.${_spec.name}`}
                 />
                 <Text style={`margin: 20px; color: ${character_class.colour}`}
-                  >{t(`spec.${_spec.name}`)}</Text
+                  >{t(`specs.${_spec.name}`)}</Text
                 >
               </Item>
             {/each}
