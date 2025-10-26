@@ -27,11 +27,11 @@
     let res = null;
     if (Number.isSafeInteger(Number(enchantidOrString))) {
       res = await fetch(
-        `${PUBLIC_API_URL}/Enchantment?id=${enchantidOrString}&slot=${type}&version=${gameVersionFactory.gameVersion.getName()}`
+        `${PUBLIC_API_URL}/Enchantment/?id=${enchantidOrString}&slot=${type}&version=${gameVersionFactory.gameVersion.getName()}`
       );
     } else {
       res = await fetch(
-        `${PUBLIC_API_URL}/Enchantment?search=${enchantidOrString}&slot=${type}&version=${gameVersionFactory.gameVersion.getName()}`
+        `${PUBLIC_API_URL}/Enchantment/?search=${enchantidOrString}&slot=${type}&version=${gameVersionFactory.gameVersion.getName()}`
       );
     }
     

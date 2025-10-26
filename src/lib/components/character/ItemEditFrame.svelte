@@ -99,7 +99,7 @@
           baseEnchants.push(existingEnchantState);
         } else {
           let res = await fetch(
-            `${PUBLIC_API_URL}/Enchantment?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
+            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
           );
           let data = await res.json();
           if (data["Result"]) {
@@ -118,7 +118,7 @@
           baseGems.push(existingGemState);
         } else {
           let res = await fetch(
-            `${PUBLIC_API_URL}/Enchantment?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
+            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
           );
           let data = await res.json();
           if (data["Result"]) {
