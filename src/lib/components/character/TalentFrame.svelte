@@ -100,19 +100,13 @@
   type TalentLevel = 15 | 30 | 45 | 60 | 75 | 90;
 
   function updateActiveTalent(talent: Talent, key: string) {
-    const isActive = specialization.talents?.find(
-      (_talent: Talent) => talent.id === _talent.id
-    );
-    if (isActive) {
-      specialization.talents[Number(key) / 15 - 1] = {
-        id: -1,
-        name: "Unknown",
-        icon: null,
-        rank: 0,
-      };
-    } else {
-      specialization.talents[Number(key) / 15 - 1] = talent;
-    }
+    const activeId = active_talents[Number(key) as TalentLevel]
+    specialization.talents?.map((_talent: Talent) => {
+      if (_talent.id === activeId){
+        _talent.id = talent.id
+      }
+    })
+    active_talents[Number(key) as TalentLevel] = talent.id
   }
 
   function updateActiveCell(talents: Talent[]) {
