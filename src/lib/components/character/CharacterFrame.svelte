@@ -11,6 +11,7 @@
   import { getRankColor } from "$lib/helper/wcl";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  let expandRanking: boolean = $state(false);
 
   let { character, character_guild } = $props<{
     character: Character;
@@ -175,11 +176,12 @@
         />
       </a>
       {#await fetchData() then}
+        {console.log(wcl.ranking)}
         <div
           style="display: flex; flex-direction: column; margin-left: 20px; font-size: 0.9em;"
         >
           <div
-            style="display: flex; align-content: center; justify-content: center; gap: 20px"
+            style="display: flex; align-content: center; justify-content: center;"
           >
             <span
               >{wcl.zone.name} - {wcl.ranking?.zoneRankings?.size}
@@ -189,11 +191,11 @@
               )?.name}</span
             >
           </div>
-          <div style="display: flex; flex-direction: row; gap: 10px; ">
+          <div style="display: flex; flex-direction: row; gap: 40px; ">
             <div
               style="display: flex; flex-direction: column; align-items: center;"
             >
-              <span>{t(`ui.bestPerformance`)}</span>
+              <span>{t(`ui.ranking.bestPerformance`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   wcl.ranking?.zoneRankings?.bestPerformanceAverage ?? 0
@@ -206,7 +208,7 @@
             <div
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <span>{t(`ui.medianPerformance`)}</span>
+              <span>{t(`ui.ranking.medianPerformance`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   wcl.ranking?.zoneRankings?.medianPerformanceAverage ?? 0
@@ -219,7 +221,7 @@
             <div
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <span>{t(`ui.globalRank`)}</span>
+              <span>{t(`ui.ranking.globalRank`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
@@ -232,7 +234,7 @@
             <div
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <span>{t(`ui.serverRank`)}</span>
+              <span>{t(`ui.ranking.serverRank`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
@@ -246,8 +248,78 @@
           <div
             style="display: flex; align-content: center; justify-content: center; gap: 20px"
           >
-            <span>{t(`ui.allStarPoints`)}</span>
+            <span>{t(`ui.ranking.allStarPoints`)}</span>
             <span>{wcl.ranking?.zoneRankings?.allStars[0]?.points}</span>
+          </div>
+          <div style="width: 100%;">
+            <div
+              onclick={() => (expandRanking = !expandRanking)}
+              onkeypress={() => {}}
+              role="button"
+              tabindex="0"
+              style="padding: 5px; display: flex; border: 1px solid black; justify-content: space-between; background-color: var(--palette-secondary-dark); cursor: pointer;"
+            >
+              <span>{t("ui.ranking.individual")}</span>
+              <img
+                style="width: 24px; height: 24px;"
+                src="/image/icon_expand.png"
+                alt={t("ui.ranking.Expand")}
+              />
+            </div>
+            {#if expandRanking}
+              <div
+                style="display: grid; grid-template-columns:56% 45px 100px 60px; gap: 10px; padding-left: 8px; padding-right: 8px; border-left: 1px solid black; border-bottom: 1px solid black; border-right: 1px solid black;"
+              >
+                <span>{t("ui.ranking.encounter")}</span>
+                <span>{t("ui.ranking.best")}</span>
+                <span>{t("ui.ranking.allStars")}</span>
+                <span>{t("ui.ranking.rank")}</span>
+              </div>
+              {#each wcl.ranking?.zoneRankings?.rankings as encounter}
+                <div
+                  style="display: grid; grid-template-columns:50% 50px 40px 60px; gap: 30px; padding-left: 8px; padding-right: 8px; border-left: 1px solid black; border-right: 1px solid black;"
+                >
+                  <span style="border-right: 1px solid black;"
+                    >{encounter.encounter.name}</span
+                  >
+                  <div
+                    style="display: flex; justify-content: end; align-items: center; gap: 2px; border-right: 1px solid black; padding-right: 8px; color: var(--ui-colour-wcl-{getRankColor(
+                      encounter.rankPercent ?? 0
+                    )})"
+                  >
+                    {Math.floor(encounter.rankPercent ?? 0)}
+                    <WarcraftIcon
+                      mini={true}
+                      label={t(`specs.${encounter.spec}`)}
+                      src={gameVersionFactory.iconProvider.getFromSource(
+                        gameVersionFactory.gameVersion
+                          .getSpecs()
+                          .find(
+                            (_spec) =>
+                              _spec.name ===
+                              `${character.character_class}${encounter.spec}`
+                          )?.icon ?? ICON_QUESTIONMARK
+                      )}
+                    />
+                  </div>
+                  <span
+                    style="display: flex; justify-content: end; border-right: 1px solid black; padding-right: 8px;"
+                    >{encounter.allStars?.points}</span
+                  >
+                  {#if encounter.allStars}
+                    <span
+                      style="display: flex; justify-content: end; color: var(--ui-colour-wcl-{getRankColor(
+                        (1 -
+                          encounter.allStars?.rank /
+                            encounter.allStars?.total) *
+                          100
+                      )})">{encounter.allStars?.rank}</span
+                    >
+                  {/if}
+                </div>
+              {/each}
+              <div style="border-top: 1px solid black"></div>
+            {/if}
           </div>
         </div>
       {/await}

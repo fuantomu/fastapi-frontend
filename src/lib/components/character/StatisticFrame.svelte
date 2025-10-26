@@ -13,7 +13,7 @@
 </script>
 
 <div
-  style="background-color: #111111; border: 1px solid black; padding: 20px; min-height: 400px"
+  style="background-color: #111111; border: 1px solid black; padding: 20px; height: 500px;"
 >
   <div style="display: flex; justify-content: space-between;">
     <div style="display: flex; flex-direction: column;">

@@ -370,7 +370,7 @@
   }
 </script>
 
-<div style="border: 1px solid black">
+<div >
   {#await fetchData()}
     <p>Loading...</p>
   {:then}
@@ -380,7 +380,7 @@
       {/if}
 
       <Paper
-        style={`display: grid; grid-template-columns: ${edit ? "40% 50%" : "30% 40% 30%"};`}
+        style={`display: grid; min-height:600px; grid-template-columns: ${edit ? "40% 50%" : "30% 40% 30%"};`}
       >
         <Content>
           {#if edit}

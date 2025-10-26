@@ -1,9 +1,4 @@
 {
-  "ui": {
-    "reportBug": "Report a bug",
-    "changeVersion": "Change game version",
-    "checkingForCharacter": "Searching for existing character..."
-  },
   "version": {
     "mop": "Mists of Pandaria Classic"
   },
@@ -62,5 +57,22 @@
     "WarriorFury": "Fury",
     "WarriorProtection": "Protection",
     "Unknown": "Unknown"
+  },
+  "ui":{
+    "ranking":{
+      "encounter": "Encounter",
+      "best": "Best",
+      "allStars": "All Stars",
+      "rank": "Rank",
+      "individual": "Individual encounter ranking",
+      "allStarPoints": "All Stars points",
+      "bestPerformance": "Best Performance",
+      "medianPerformance": "Median Performance",
+      "globalRank": "Rank global",
+      "serverRank": "Rank server"
+    },
+    "reportBug": "Report a bug",
+    "changeVersion": "Change game version",
+    "checkingForCharacter": "Searching for existing character..."
   }
 }

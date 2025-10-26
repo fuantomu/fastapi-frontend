@@ -5,6 +5,7 @@
   export let src: string;
   export let label: string = "";
   export let grayscale: boolean = false;
+  export let mini : boolean = false;
 
   let checkSource = () => {
     if (src) {
@@ -26,7 +27,7 @@
     />
   {:else}
     {#key src}
-      <img src={checkSource()} alt={label} class="warcraft-icon {grayscale ? 'grayscale' : ''}" onerror={() => src=checkSource().replace("classic1x","classic")} />
+      <img style={mini? "width: 16px; height: 16px;" : ""} src={checkSource()} alt={label} class="warcraft-icon {grayscale ? 'grayscale' : ''}" onerror={() => src=checkSource().replace("classic1x","classic")} />
     {/key}
   {/if}
 

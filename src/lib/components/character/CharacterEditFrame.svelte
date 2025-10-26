@@ -306,265 +306,257 @@
   }
 </script>
 
-<Paper>
-  <Content>
-    <div
-      style="display: flex; flex-direction: column; width: 100%; padding: 20px; gap: 20px"
-    >
-      <div style="grid-template-columns: 20% 40%" class="row">
-        <span>{t("ui.characterName")}</span>
+<div>
+  <div style="display: flex; flex-direction: column; width: 100%; padding: 10px; gap: 5px;">
+    <div style="grid-template-columns: 20% 40%" class="row">
+      <span>{t("ui.characterName")}</span>
+      <input
+        id="name"
+        name="name"
+        type="text"
+        placeholder="Name"
+        maxlength="12"
+        minlength="2"
+        bind:value={data.character.name}
+        onbeforeinput={handleValidInput}
+        oninput={() => handleNameInput(data.character.name)}
+        spellcheck="false"
+        autocomplete="off"
+        pattern="[A-Za-z]*"
+        class="textinput"
+        required
+        title={t("ui.characterName")}
+      />
+    </div>
+    {#if nameError}
+      <div style="grid-template-columns: 100%" class="row">
+        <p style="color: red;">{nameError}</p>
+      </div>
+    {/if}
+    <div style="grid-template-columns: 20% 5% 5%" class="row">
+      <span>{t("ui.characterRace")}</span>
+      <IconButton
+        type="button"
+        aria-label={t(`ui.changeRace`)}
+        onclick={() => (openRace = !openRace)}
+        style={"height: 36px; width: 36px;"}
+      >
+        <WarcraftIcon
+          src={gameVersionFactory.iconProvider.getFromSource(
+            data.character.gender === Gender.Female
+              ? (character_race.icon_female ?? ICON_QUESTIONMARK)
+              : (character_race.icon_male ?? ICON_QUESTIONMARK)
+          )}
+          label={t(`ui.changeRace`)}
+        />
+      </IconButton>
+
+      {#if data.character.race?.name === "Pandaren"}
+        <img
+          src="/image/icon_{data.character.faction.toLowerCase()}.png"
+          alt={t(`faction.${data.character.faction}`)}
+        />
+      {/if}
+      <Menu bind:open={openRace}>
+        <List>
+          {#each versionRaces as race}
+            <Item
+              onclick={() => {
+                handleChangeRace(race);
+              }}
+              style={character_race?.name === race.name
+                ? "background-color: var(--palette-success-dark);"
+                : ""}
+            >
+              <WarcraftIcon
+                src={gameVersionFactory.iconProvider.getFromSource(
+                  data.character.gender === Gender.Female
+                    ? race.icon_female
+                    : race.icon_male
+                )}
+                label={t(`race.${race.name}`)}
+              />
+              {#if race.name === "Pandaren"}
+                <IconButton
+                  type="button"
+                  aria-label={t(`ui.changeFaction`)}
+                  onclick={(e: Event) => handleChangeFaction(e)}
+                >
+                  <WarcraftIcon
+                    src={gameVersionFactory.iconProvider.getFromSource(
+                      gameVersionFactory.gameVersion
+                        .getFactions()
+                        .find(
+                          (_faction) => _faction.name === data.character.faction
+                        )?.icon ?? ICON_QUESTIONMARK
+                    )}
+                    label={t(`faction.${data.character.faction}`)}
+                  />
+                </IconButton>
+              {/if}
+              <Text style={"margin: 20px"}>{t(`race.${race.name}`)}</Text>
+            </Item>
+          {/each}
+        </List>
+      </Menu>
+    </div>
+    <div style="grid-template-columns: 20% 5% 5%;" class="row">
+      <span>{t("ui.characterClass")}</span>
+      <IconButton
+        type="button"
+        aria-label={t(`ui.changeClass`)}
+        onclick={() => (openClass = !openClass)}
+        disabled={character_race.name === Race.Alien}
+        style={"height: 36px; width: 36px;"}
+      >
+        <WarcraftIcon
+          src={gameVersionFactory.iconProvider.getFromSource(
+            character_class.icon ?? ICON_QUESTIONMARK
+          )}
+          label={t(`ui.changeClass`)}
+          grayscale={character_race.name === Race.Alien}
+        />
+      </IconButton>
+      <Menu bind:open={openClass}>
+        <List>
+          {#each versionClasses as _class}
+            <Item
+              onclick={() => {
+                handleChangeClass(_class);
+              }}
+              style={data.character.character_class === _class.name
+                ? "background-color: var(--palette-success-dark);"
+                : ""}
+            >
+              <WarcraftIcon
+                src={gameVersionFactory.iconProvider.getFromSource(_class.icon)}
+                label={`classes.${_class.name}`}
+              />
+              <Text style={`margin: 20px; color: ${_class.colour}`}
+                >{t(`classes.${_class.name}`)}</Text
+              >
+            </Item>
+          {/each}
+        </List>
+      </Menu>
+    </div>
+    <div style="grid-template-columns: 20% 5% 5%" class="row">
+      <span>{t("ui.characterSpecialization")}</span>
+      <IconButton
+        type="button"
+        aria-label={t(`ui.changeSpecialization`)}
+        disabled={character_class.name === PlayerClassType.Adventurer}
+        onclick={() => (openSpec = !openSpec)}
+        style={"height: 36px; width: 36px;"}
+      >
+        <WarcraftIcon
+          src={gameVersionFactory.iconProvider.getFromSource(
+            character_spec.icon ?? ICON_QUESTIONMARK
+          )}
+          label={t(`ui.changeSpecialization`)}
+          grayscale={character_class.name === PlayerClassType.Adventurer}
+        />
+      </IconButton>
+      <Menu bind:open={openSpec}>
+        <List>
+          {#each class_specs as _spec}
+            <Item
+              onclick={() => {
+                handleChangeSpec(_spec);
+              }}
+              style={data.character.active_spec === _spec.name
+                ? "background-color: var(--palette-success-dark);"
+                : ""}
+            >
+              <WarcraftIcon
+                src={gameVersionFactory.iconProvider.getFromSource(_spec.icon)}
+                label={`specs.${_spec.name}`}
+              />
+              <Text style={`margin: 20px; color: ${character_class.colour}`}
+                >{t(`specs.${_spec.name}`)}</Text
+              >
+            </Item>
+          {/each}
+        </List>
+      </Menu>
+    </div>
+    <div style="grid-template-columns: 20% 5% 5%" class="row">
+      <span>{t("ui.characterGender")}</span>
+      <IconButton
+        type="button"
+        aria-label={t(`ui.changeGender`)}
+        onclick={() => handleChangeGender()}
+        ripple={false}
+        style={"height: 36px; width: 36px;"}
+      >
+        <img
+          style={"height: 36px; width: 36px;"}
+          src={getGenderIcon(data.character.gender)}
+          alt={t(`ui.changeGender`)}
+        />
+      </IconButton>
+    </div>
+    <div style="grid-template-columns: 20% 30%;" class="row">
+      <span>{t("ui.characterRealm")}</span>
+      <div>
         <input
-          id="name"
-          name="name"
+          id="realm"
+          name="realm"
           type="text"
-          placeholder="Name"
-          maxlength="12"
-          minlength="2"
-          bind:value={data.character.name}
+          placeholder="Realm"
+          bind:value={data.character.realm}
           onbeforeinput={handleValidInput}
-          oninput={() => handleNameInput(data.character.name)}
-          spellcheck="false"
-          autocomplete="off"
-          pattern="[A-Za-z]*"
+          oninput={() => handleRealmInput(data.character.realm)}
           class="textinput"
           required
-          title={t("ui.characterName")}
+          title={t("ui.characterRealm")}
         />
       </div>
-      {#if nameError}
-        <div style="grid-template-columns: 100%" class="row">
-          <p style="color: red;">{nameError}</p>
-        </div>
-      {/if}
-      <div style="grid-template-columns: 20% 5% 5%" class="row">
-        <span>{t("ui.characterRace")}</span>
-        <IconButton
-          type="button"
-          aria-label={t(`ui.changeRace`)}
-          onclick={() => (openRace = !openRace)}
-          style={"height: 36px; width: 36px;"}
+    </div>
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.characterLevel")}</span>
+      <div>
+        <input
+          id="level"
+          name="level"
+          type="number"
+          class="textinput"
+          bind:value={data.character.level}
+          oninput={() => handleLevelInput(data.character.level)}
+          onfocusoutcapture={() => {
+            data.character.level == 0
+              ? (data.character.level = 1)
+              : data.character.level;
+          }}
+          placeholder="1"
+          min="1"
+          max={gameVersionFactory.gameVersion.getMaxLevel()}
+          title={t("ui.characterLevel")}
+        />
+      </div>
+    </div>
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.characterGuild")}</span>
+      <div>
+        <select
+          id="guild"
+          name="guild"
+          class="select"
+          bind:value={data.character.guild}
+          title={t("ui.characterGuild")}
+          required
         >
-          <WarcraftIcon
-            src={gameVersionFactory.iconProvider.getFromSource(
-              data.character.gender === Gender.Female
-                ? (character_race.icon_female ?? ICON_QUESTIONMARK)
-                : (character_race.icon_male ?? ICON_QUESTIONMARK)
-            )}
-            label={t(`ui.changeRace`)}
-          />
-        </IconButton>
-
-        {#if data.character.race?.name === "Pandaren"}
-          <img
-            src="/image/icon_{data.character.faction.toLowerCase()}.png"
-            alt={t(`faction.${data.character.faction}`)}
-          />
-        {/if}
-        <Menu bind:open={openRace}>
-          <List>
-            {#each versionRaces as race}
-              <Item
-                onclick={() => {
-                  handleChangeRace(race);
-                }}
-                style={character_race?.name === race.name
-                  ? "background-color: var(--palette-success-dark);"
-                  : ""}
-              >
-                <WarcraftIcon
-                  src={gameVersionFactory.iconProvider.getFromSource(
-                    data.character.gender === Gender.Female
-                      ? race.icon_female
-                      : race.icon_male
-                  )}
-                  label={t(`race.${race.name}`)}
-                />
-                {#if race.name === "Pandaren"}
-                  <IconButton
-                    type="button"
-                    aria-label={t(`ui.changeFaction`)}
-                    onclick={(e: Event) => handleChangeFaction(e)}
-                  >
-                    <WarcraftIcon
-                      src={gameVersionFactory.iconProvider.getFromSource(
-                        gameVersionFactory.gameVersion
-                          .getFactions()
-                          .find(
-                            (_faction) =>
-                              _faction.name === data.character.faction
-                          )?.icon ?? ICON_QUESTIONMARK
-                      )}
-                      label={t(`faction.${data.character.faction}`)}
-                    />
-                  </IconButton>
-                {/if}
-                <Text style={"margin: 20px"}>{t(`race.${race.name}`)}</Text>
-              </Item>
-            {/each}
-          </List>
-        </Menu>
+          <option value={-1}>{"None"}</option>
+          {#each guilds.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName()) as guild}
+            <option
+              style={`color: var(--faction-colour-${guild.faction});`}
+              value={guild.id}>{guild.name}</option
+            >
+          {/each}
+        </select>
       </div>
-      <div style="grid-template-columns: 20% 5% 5%;" class="row">
-        <span>{t("ui.characterClass")}</span>
-        <IconButton
-          type="button"
-          aria-label={t(`ui.changeClass`)}
-          onclick={() => (openClass = !openClass)}
-          disabled={character_race.name === Race.Alien}
-          style={"height: 36px; width: 36px;"}
-        >
-          <WarcraftIcon
-            src={gameVersionFactory.iconProvider.getFromSource(
-              character_class.icon ?? ICON_QUESTIONMARK
-            )}
-            label={t(`ui.changeClass`)}
-            grayscale={character_race.name === Race.Alien}
-          />
-        </IconButton>
-        <Menu bind:open={openClass}>
-          <List>
-            {#each versionClasses as _class}
-              <Item
-                onclick={() => {
-                  handleChangeClass(_class);
-                }}
-                style={data.character.character_class === _class.name
-                  ? "background-color: var(--palette-success-dark);"
-                  : ""}
-              >
-                <WarcraftIcon
-                  src={gameVersionFactory.iconProvider.getFromSource(
-                    _class.icon
-                  )}
-                  label={`classes.${_class.name}`}
-                />
-                <Text style={`margin: 20px; color: ${_class.colour}`}
-                  >{t(`classes.${_class.name}`)}</Text
-                >
-              </Item>
-            {/each}
-          </List>
-        </Menu>
-      </div>
-      <div style="grid-template-columns: 20% 5% 5%" class="row">
-        <span>{t("ui.characterSpecialization")}</span>
-        <IconButton
-          type="button"
-          aria-label={t(`ui.changeSpecialization`)}
-          disabled={character_class.name === PlayerClassType.Adventurer}
-          onclick={() => (openSpec = !openSpec)}
-          style={"height: 36px; width: 36px;"}
-        >
-          <WarcraftIcon
-            src={gameVersionFactory.iconProvider.getFromSource(
-              character_spec.icon ?? ICON_QUESTIONMARK
-            )}
-            label={t(`ui.changeSpecialization`)}
-            grayscale={character_class.name === PlayerClassType.Adventurer}
-          />
-        </IconButton>
-        <Menu bind:open={openSpec}>
-          <List>
-            {#each class_specs as _spec}
-              <Item
-                onclick={() => {
-                  handleChangeSpec(_spec);
-                }}
-                style={data.character.active_spec === _spec.name
-                  ? "background-color: var(--palette-success-dark);"
-                  : ""}
-              >
-                <WarcraftIcon
-                  src={gameVersionFactory.iconProvider.getFromSource(
-                    _spec.icon
-                  )}
-                  label={`specs.${_spec.name}`}
-                />
-                <Text style={`margin: 20px; color: ${character_class.colour}`}
-                  >{t(`specs.${_spec.name}`)}</Text
-                >
-              </Item>
-            {/each}
-          </List>
-        </Menu>
-      </div>
-      <div style="grid-template-columns: 20% 5% 5%" class="row">
-        <span>{t("ui.characterGender")}</span>
-        <IconButton
-          type="button"
-          aria-label={t(`ui.changeGender`)}
-          onclick={() => handleChangeGender()}
-          ripple={false}
-          style={"height: 36px; width: 36px;"}
-        >
-          <img
-            style={"height: 36px; width: 36px;"}
-            src={getGenderIcon(data.character.gender)}
-            alt={t(`ui.changeGender`)}
-          />
-        </IconButton>
-      </div>
-      <div style="grid-template-columns: 20% 30%;" class="row">
-        <span>{t("ui.characterRealm")}</span>
-        <div>
-          <input
-            id="realm"
-            name="realm"
-            type="text"
-            placeholder="Realm"
-            bind:value={data.character.realm}
-            onbeforeinput={handleValidInput}
-            oninput={() => handleRealmInput(data.character.realm)}
-            class="textinput"
-            required
-            title={t("ui.characterRealm")}
-          />
-        </div>
-      </div>
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.characterLevel")}</span>
-        <div>
-          <input
-            id="level"
-            name="level"
-            type="number"
-            class="textinput"
-            bind:value={data.character.level}
-            oninput={() => handleLevelInput(data.character.level)}
-            onfocusoutcapture={() => {
-              data.character.level == 0
-                ? (data.character.level = 1)
-                : data.character.level;
-            }}
-            placeholder="1"
-            min="1"
-            max={gameVersionFactory.gameVersion.getMaxLevel()}
-            title={t("ui.characterLevel")}
-          />
-        </div>
-      </div>
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.characterGuild")}</span>
-        <div>
-          <select
-            id="guild"
-            name="guild"
-            class="select"
-            bind:value={data.character.guild}
-            title={t("ui.characterGuild")}
-            required
-          >
-            <option value={-1}>{"None"}</option>
-            {#each guilds.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName()) as guild}
-              <option
-                style={`color: var(--faction-colour-${guild.faction});`}
-                value={guild.id}>{guild.name}</option
-              >
-            {/each}
-          </select>
-        </div>
-      </div>
-      {#if !["classic","tbc"].includes(gameVersionFactory.gameVersion.getName())}
+    </div>
+    {#if !["classic", "tbc"].includes(gameVersionFactory.gameVersion.getName())}
       <div style="grid-template-columns: 20% 30%" class="row">
         <span>{t("ui.characterAchievementPoints")}</span>
         <div>
@@ -580,87 +572,86 @@
           />
         </div>
       </div>
-      {/if}
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.characterItemLevel")}</span>
-        <div>
-          <input
-            id="equipped_item_level"
-            name="equipped_item_level"
-            type="number"
-            class="textinput"
-            bind:value={data.character.equipped_item_level}
-            placeholder="0"
-            min="0"
-            title={t("ui.characterItemLevel")}
-          />
-        </div>
-      </div>
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.characterRegion")}</span>
-        <div>
-          <select
-            onchange={() =>
-              checkDuplicate(data.character.name, data.character.realm)}
-            id="region"
-            name="region"
-            class="select"
-            bind:value={data.character.region}
-            required
-            title={t("ui.characterRegion")}
-          >
-            {#each Object.values(Region) as region}
-              <option value={region}>{t(`region.${region}`)}</option>
-            {/each}
-          </select>
-        </div>
-      </div>
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.characterVersion")}</span>
-        <div>
-          <select
-            onchange={() =>
-              checkDuplicate(data.character.name, data.character.realm)}
-            id="version"
-            name="version"
-            class="select"
-            bind:value={data.character.version}
-            required
-            title={t("ui.characterVersion")}
-          >
-            {#each Object.values(GameVersionName) as version}
-              <option value={version}>{t(`version.${version}`)}</option>
-            {/each}
-          </select>
-        </div>
-      </div>
-      <div style="grid-template-columns: 20% 30%" class="row">
-        <span>{t("ui.realmVersion")}</span>
-        <div>
-          <select
-            id="realm_version"
-            name="realm_version"
-            class="select"
-            bind:value={data.character.realm_version}
-            required
-            title={t("ui.realmVersion")}
-          >
-            {#each Object.values(RealmVersion) as realm_version}
-              <option value={realm_version}
-                >{t(`realm_version.${realm_version}`)}</option
-              >
-            {/each}
-          </select>
-        </div>
+    {/if}
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.characterItemLevel")}</span>
+      <div>
+        <input
+          id="equipped_item_level"
+          name="equipped_item_level"
+          type="number"
+          class="textinput"
+          bind:value={data.character.equipped_item_level}
+          placeholder="0"
+          min="0"
+          title={t("ui.characterItemLevel")}
+        />
       </div>
     </div>
-    <button
-      type="button"
-      style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
-      onclick={() => handleReset()}>{t(`ui.reset`)}</button
-    >
-  </Content>
-</Paper>
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.characterRegion")}</span>
+      <div>
+        <select
+          onchange={() =>
+            checkDuplicate(data.character.name, data.character.realm)}
+          id="region"
+          name="region"
+          class="select"
+          bind:value={data.character.region}
+          required
+          title={t("ui.characterRegion")}
+        >
+          {#each Object.values(Region) as region}
+            <option value={region}>{t(`region.${region}`)}</option>
+          {/each}
+        </select>
+      </div>
+    </div>
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.characterVersion")}</span>
+      <div>
+        <select
+          onchange={() =>
+            checkDuplicate(data.character.name, data.character.realm)}
+          id="version"
+          name="version"
+          class="select"
+          bind:value={data.character.version}
+          required
+          title={t("ui.characterVersion")}
+        >
+          {#each Object.values(GameVersionName) as version}
+            <option value={version}>{t(`version.${version}`)}</option>
+          {/each}
+        </select>
+      </div>
+    </div>
+    <div style="grid-template-columns: 20% 30%" class="row">
+      <span>{t("ui.realmVersion")}</span>
+      <div>
+        <select
+          id="realm_version"
+          name="realm_version"
+          class="select"
+          bind:value={data.character.realm_version}
+          required
+          title={t("ui.realmVersion")}
+        >
+          {#each Object.values(RealmVersion) as realm_version}
+            <option value={realm_version}
+              >{t(`realm_version.${realm_version}`)}</option
+            >
+          {/each}
+        </select>
+      </div>
+    </div>
+  </div>
+  <button
+    type="button"
+    style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+    onclick={() => handleReset()}>{t(`ui.reset`)}</button
+  >
+</div>
 
 <style>
   .textinput {

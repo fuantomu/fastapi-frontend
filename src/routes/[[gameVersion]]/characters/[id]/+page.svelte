@@ -9,7 +9,7 @@
   let { data }: PageProps = $props();
 </script>
 
-<h1>Test - {t(`version.${gameVersion}`)}</h1>
+<h1>{t(`version.${gameVersion}`)}</h1>
 {#if data.id}
   <ArmoryFrame id={Number(data?.id)} />
 {/if}
