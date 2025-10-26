@@ -176,7 +176,6 @@
         />
       </a>
       {#await fetchData() then}
-        {console.log(wcl.ranking)}
         <div
           style="display: flex; flex-direction: column; margin-left: 20px; font-size: 0.9em;"
         >
@@ -297,7 +296,7 @@
                           .find(
                             (_spec) =>
                               _spec.name ===
-                              `${character.character_class}${encounter.spec}`
+                              `${character.character_class}${encounter?.spec?.charAt(0).toUpperCase()}${encounter?.spec?.slice(1).toLowerCase()}`
                           )?.icon ?? ICON_QUESTIONMARK
                       )}
                     />
