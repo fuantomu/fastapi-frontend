@@ -21,16 +21,23 @@
     character_class: PlayerClass;
     edit: boolean;
   }>();
-
-  let versionGlyphs: Glyph[] = $state([]);
+  let glyphState = getContext<Glyph[]>("glyphState")
+  let versionGlyphs: Glyph[] = $state(glyphState);
 
   async function fetchGlyphs() {
-    const res = await fetch(
+    if (glyphState.length > 0){
+      return
+    }
+    else{
+      const res = await fetch(
       `${PUBLIC_API_URL}/Glyph/?version=${gameVersionFactory.gameVersion.getName()}&class_name=${character_class}&limit=-1`
     );
     let data = await res.json();
 
     versionGlyphs = [...data["Result"]];
+    glyphState = [...data["Result"]]
+    }
+    
   }
 
   function updateGlyphs(new_glyph: Glyph, slot: number) {

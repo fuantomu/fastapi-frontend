@@ -1,5 +1,9 @@
 <script lang="ts">
-  import type { CharacterItem, Enchantment } from "$lib/types";
+  import type {
+    CharacterItem,
+    Enchantment,
+    EnchantmentState,
+  } from "$lib/types";
   import { getWowheadLink } from "$lib/helper/wowhead";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
@@ -10,7 +14,6 @@
   import List, { Item } from "@smui/list";
   import { ICON_QUESTIONMARK } from "$lib/consts";
   import ItemEditEnchantmentFrame from "./ItemEditEnchantmentFrame.svelte";
-  import { preventDefault } from "svelte/legacy";
   let {
     equipment = $bindable(),
     slot,
@@ -22,6 +25,8 @@
   }>();
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  const enchantmentState = getContext<EnchantmentState>("enchantmentState");
+  const gemState = getContext<EnchantmentState>("gemState");
   let openMenu: boolean = $state(false);
   let selectedSearch: string = $state("");
   let foundEquipment: CharacterItem[] = $state([]);
@@ -43,11 +48,11 @@
     let res = null;
     if (Number.isSafeInteger(Number(itemidOrString))) {
       res = await fetch(
-        `${PUBLIC_API_URL}/Item/?id=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
+        `${PUBLIC_API_URL}/Item?id=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
       );
     } else {
       res = await fetch(
-        `${PUBLIC_API_URL}/Item/?search=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
+        `${PUBLIC_API_URL}/Item?search=${itemidOrString}&slot=${slot}&version=${gameVersionFactory.gameVersion.getName()}`
       );
     }
     let data = await res.json();
@@ -86,34 +91,50 @@
         }
       });
       for (const id of enchants) {
-        let res = await fetch(
-          `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
-        );
-        let data = await res.json();
-        if (data["Result"]) {
-          currentEnchants.push(data["Result"][0]);
-          baseEnchants.push(data["Result"][0]);
+        const existingEnchantState = enchantmentState[
+          slot as keyof EnchantmentState
+        ]?.find((_enchant: Enchantment) => _enchant.id === Number(id));
+        if (existingEnchantState) {
+          currentEnchants.push(existingEnchantState);
+          baseEnchants.push(existingEnchantState);
+        } else {
+          let res = await fetch(
+            `${PUBLIC_API_URL}/Enchantment?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
+          );
+          let data = await res.json();
+          if (data["Result"]) {
+            currentEnchants.push(data["Result"][0]);
+            baseEnchants.push(data["Result"][0]);
+          }
         }
       }
+      enchantmentState[slot as keyof EnchantmentState] = currentEnchants;
       for (const id of gems) {
-        let res = await fetch(
-          `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
-        );
-        let data = await res.json();
-        if (data["Result"]) {
-          currentGems.push(data["Result"][0]);
-          baseGems.push(data["Result"][0]);
+        const existingGemState = gemState[
+          slot as keyof EnchantmentState
+        ]?.find((_enchant: Enchantment) => _enchant.source_id === Number(id));
+        if (existingGemState) {
+          currentGems.push(existingGemState);
+          baseGems.push(existingGemState);
+        } else {
+          let res = await fetch(
+            `${PUBLIC_API_URL}/Enchantment?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
+          );
+          let data = await res.json();
+          if (data["Result"]) {
+            currentGems.push(data["Result"][0]);
+            baseGems.push(data["Result"][0]);
+          }
         }
       }
+      gemState[slot as keyof EnchantmentState] = currentGems;
     }
   }
 
   function handleItemClick(item: CharacterItem) {
-    console.log("press on item", item);
     item.wowhead_link = "";
     item.enchantment = "";
     selectedEquipment = JSON.parse(JSON.stringify(item));
-    console.log(selectedEquipment);
   }
 
   function handleSaveItem() {

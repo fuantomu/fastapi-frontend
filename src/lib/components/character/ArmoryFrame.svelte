@@ -5,11 +5,14 @@
     CharacterEquipment,
     CharacterSpec,
     CharacterStatistic,
+    EnchantmentState,
     Glyph,
     Guild,
+    WCLRanking,
+    WCLZone,
   } from "$lib/types";
   import { PUBLIC_API_URL } from "$env/static/public";
-  import { getContext } from "svelte";
+  import { getContext, setContext } from "svelte";
   import CharacterFrame from "./CharacterFrame.svelte";
   import Paper, { Content } from "@smui/paper";
   import EquipmentFrame from "./EquipmentFrame.svelte";
@@ -19,10 +22,23 @@
   import GlyphFrame from "$lib/components/character/GlyphFrame.svelte";
   import TalentFrame from "$lib/components/character/TalentFrame.svelte";
   import CharacterEditFrame from "./CharacterEditFrame.svelte";
+  import {
+    createEnchantmentState,
+    createGlyphState,
+    createWCLState,
+  } from "$lib/helper/armoryState.svelte";
 
   const { id } = $props<{ id: number }>();
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
+  const wcl = createWCLState({} as WCLRanking, {} as WCLZone);
+  setContext("wcl", wcl);
+  const enchantments = createEnchantmentState({} as EnchantmentState);
+  const gems = createEnchantmentState({} as EnchantmentState);
+  setContext("enchantmentState", enchantments);
+  setContext("gemState", gems);
+  const glyphs = createGlyphState([] as Glyph[]);
+  setContext("glyphState", glyphs);
 
   let edit: boolean = $state(id == 0 ? true : false);
   let fetching: boolean = $state(false);
@@ -110,7 +126,7 @@
 
   const fetchEquipment = async () => {
     const res = await fetch(
-      `${PUBLIC_API_URL}/Character/Equipment/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+      `${PUBLIC_API_URL}/Character/Equipment?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
     );
     const data = await res.json();
     formData.equipment = data.Result;
@@ -118,7 +134,7 @@
 
   const fetchSpecialization = async () => {
     const res = await fetch(
-      `${PUBLIC_API_URL}/Character/Specialization/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+      `${PUBLIC_API_URL}/Character/Specialization?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
     );
     const data = await res.json();
     let character_specializations = data.Result;
@@ -279,7 +295,7 @@
 
   const fetchStatistic = async () => {
     const res = await fetch(
-      `${PUBLIC_API_URL}/Character/Statistic/?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
+      `${PUBLIC_API_URL}/Character/Statistic?id=${id}&version=${gameVersionFactory.gameVersion.getName()}`
     );
     const data = await res.json();
     character_statistics = data.Result;
@@ -307,7 +323,7 @@
 
   async function handleRefresh() {
     equipment_updated = t("ui.updatingCharacter");
-    fetching = true
+    fetching = true;
     let response = await fetch(`${PUBLIC_API_URL}/Character/Parse/`, {
       method: "POST",
       body: JSON.stringify({
@@ -336,7 +352,7 @@
     fetching = false;
   }
   async function handleSubmit() {
-    fetching = true
+    fetching = true;
     baseCharacter = JSON.parse(JSON.stringify(formData.character));
     const response = await fetch(`./${formData.character.id}`, {
       method: "POST",
@@ -350,7 +366,7 @@
       window.location.href = `/${gameVersionFactory.gameVersion.getName()}${result["url"]}`;
     }
     edit = false;
-    fetching = false
+    fetching = false;
   }
 </script>
 
@@ -495,6 +511,10 @@
 
     <br />
 
-    <button type="button" style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer" onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button>
+    <button
+      type="button"
+      style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+      onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button
+    >
   {/await}
 </div>

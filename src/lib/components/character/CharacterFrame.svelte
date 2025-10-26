@@ -35,37 +35,36 @@
     .getFactions()
     .find((_faction) => _faction.name == character.faction);
 
-  let ranking: WCLRanking = $state({} as WCLRanking);
-  let zone: WCLZone = $state({} as WCLZone);
+  const wcl: { ranking: WCLRanking; zone: WCLZone } = $state(getContext("wcl"));
 
   async function fetchRanking() {
     const res = await fetch(
-      `${PUBLIC_API_URL}/Warcraftlogs/Ranking/?character=${character.name}&server=${character.realm}&region=${character.region}&wcl_version=${character.realm_version}`
+      `${PUBLIC_API_URL}/Warcraftlogs/Ranking?character=${character.name}&server=${character.realm}&region=${character.region}&wcl_version=${character.realm_version}`
     );
     const data = await res.json();
     if (data.Result) {
-      ranking = data.Result;
+      wcl.ranking = data.Result;
     }
   }
 
   async function fetchZone() {
-    if (ranking.zoneRankings?.zone) {
+    if (wcl.ranking?.zoneRankings?.zone) {
       const zone_res = await fetch(
-        `${PUBLIC_API_URL}/Warcraftlogs/Zone/?zone=${ranking.zoneRankings.zone}&wcl_version=${character.realm_version}`
+        `${PUBLIC_API_URL}/Warcraftlogs/Zone?zone=${wcl.ranking?.zoneRankings.zone}&wcl_version=${character.realm_version}`
       );
       const zone_data = await zone_res.json();
       if (zone_data) {
-        zone = zone_data.Result;
+        wcl.zone = zone_data.Result;
       }
     }
   }
 
   let fetchData = async () => {
-    if (!ranking?.name) {
+    if (!wcl.ranking?.name) {
       await fetchRanking();
-    }
-    if (!zone?.name) {
-      await fetchZone();
+      if (!wcl.zone?.name) {
+        await fetchZone();
+      }
     }
   };
 </script>
@@ -183,10 +182,10 @@
             style="display: flex; align-content: center; justify-content: center; gap: 20px"
           >
             <span
-              >{zone.name} - {ranking.zoneRankings?.size}
-              {zone.difficulties?.find(
+              >{wcl.zone.name} - {wcl.ranking?.zoneRankings?.size}
+              {wcl.zone?.difficulties?.find(
                 (difficulty) =>
-                  difficulty.id === ranking.zoneRankings.difficulty
+                  difficulty.id === wcl.ranking?.zoneRankings.difficulty
               )?.name}</span
             >
           </div>
@@ -197,9 +196,9 @@
               <span>{t(`ui.bestPerformance`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
-                  ranking.zoneRankings?.bestPerformanceAverage ?? 0
+                  wcl.ranking?.zoneRankings?.bestPerformanceAverage ?? 0
                 )});"
-                >{ranking.zoneRankings?.bestPerformanceAverage?.toPrecision(
+                >{wcl.ranking?.zoneRankings?.bestPerformanceAverage?.toPrecision(
                   4
                 )}</span
               >
@@ -210,9 +209,9 @@
               <span>{t(`ui.medianPerformance`)}</span>
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
-                  ranking.zoneRankings?.medianPerformanceAverage ?? 0
+                  wcl.ranking?.zoneRankings?.medianPerformanceAverage ?? 0
                 )});"
-                >{ranking.zoneRankings?.medianPerformanceAverage?.toPrecision(
+                >{wcl.ranking?.zoneRankings?.medianPerformanceAverage?.toPrecision(
                   4
                 )}</span
               >
@@ -224,10 +223,10 @@
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
-                    ranking.zoneRankings?.allStars[0]?.rank /
-                      ranking.zoneRankings?.allStars[0]?.total) *
+                    wcl.ranking?.zoneRankings?.allStars[0]?.rank /
+                      wcl.ranking?.zoneRankings?.allStars[0]?.total) *
                     100
-                )});">{ranking.zoneRankings?.allStars[0]?.rank}</span
+                )});">{wcl.ranking?.zoneRankings?.allStars[0]?.rank}</span
               >
             </div>
             <div
@@ -237,10 +236,10 @@
               <span
                 style="color: var(--ui-colour-wcl-{getRankColor(
                   (1 -
-                    ranking.zoneRankings?.allStars[0]?.serverRank /
-                      ranking.zoneRankings?.allStars[0]?.total) *
+                    wcl.ranking?.zoneRankings?.allStars[0]?.serverRank /
+                      wcl.ranking?.zoneRankings?.allStars[0]?.total) *
                     100
-                )});">{ranking.zoneRankings?.allStars[0]?.serverRank}</span
+                )});">{wcl.ranking?.zoneRankings?.allStars[0]?.serverRank}</span
               >
             </div>
           </div>
@@ -248,7 +247,7 @@
             style="display: flex; align-content: center; justify-content: center; gap: 20px"
           >
             <span>{t(`ui.allStarPoints`)}</span>
-            <span>{ranking.zoneRankings?.allStars[0]?.points}</span>
+            <span>{wcl.ranking?.zoneRankings?.allStars[0]?.points}</span>
           </div>
         </div>
       {/await}

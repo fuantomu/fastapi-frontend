@@ -70,7 +70,7 @@
         key = "id";
       }
       const res = await fetch(
-        `${PUBLIC_API_URL}/Glyph/?${key}=${search}&version=${gameVersionFactory.gameVersion.getName()}&class_name=${character_class}&type=${glyph_type}&limit=-1`
+        `${PUBLIC_API_URL}/Glyph?${key}=${search}&version=${gameVersionFactory.gameVersion.getName()}&class_name=${character_class}&type=${glyph_type}&limit=-1`
       );
       const data = await res.json();
       if (data["Result"]) {
@@ -78,7 +78,7 @@
       }
     } else {
       const res = await fetch(
-        `${PUBLIC_API_URL}/Glyph/?version=${gameVersionFactory.gameVersion.getName()}&class_name=${character_class}&type=${glyph_type}&limit=-1`
+        `${PUBLIC_API_URL}/Glyph?version=${gameVersionFactory.gameVersion.getName()}&class_name=${character_class}&type=${glyph_type}&limit=-1`
       );
       const data = await res.json();
       if (data["Result"]) {

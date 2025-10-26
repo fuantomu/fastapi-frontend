@@ -207,7 +207,6 @@
         if (out && out.length > 0) {
           // Cannot unlearn if current talent has an active connection
           if (out.some((e: Talent) => e.rank > 0)) {
-            console.log("out.some((e: Talent) => e.rank > 0)",out.some((e: Talent) => e.rank > 0))
             return false;
           }
         }

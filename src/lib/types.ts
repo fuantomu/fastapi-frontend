@@ -214,3 +214,24 @@ export type WCLZone = {
     frozen: boolean
     name: string
 }
+
+export type EnchantmentState = {
+    head: Enchantment[],
+    shoulders: Enchantment[],
+    neck: Enchantment[],
+    chest: Enchantment[],
+    shirt: Enchantment[],
+    tabard: Enchantment[],
+    wrist: Enchantment[],
+    hands: Enchantment[],
+    waist: Enchantment[],
+    legs: Enchantment[],
+    feet: Enchantment[],
+    ring_1: Enchantment[],
+    ring_2: Enchantment[],
+    trinket_1: Enchantment[],
+    trinket_2: Enchantment[],
+    main_hand: Enchantment[],
+    off_hand: Enchantment[],
+    ranged: Enchantment[],
+}
