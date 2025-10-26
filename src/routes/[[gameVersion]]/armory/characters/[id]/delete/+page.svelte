@@ -27,7 +27,7 @@
       name="gameVersion"
       value={gameVersion}
     />
-    <button type="submit">Delete</button>
+    <button type="submit" class="button-delete">Delete</button>
   </form>
 {:else if data.error}
   <p>Error Loading</p>
@@ -35,4 +35,4 @@
   <p>Loading</p>
 {/if}
 <br />
-<button onclick={() => handleGoBack()}> Go back </button>
+<button type="button" class="button-base" onclick={() => handleGoBack()}> Go back </button>

@@ -90,7 +90,8 @@
     <div style="display: flex; justify-content: center">
       <button
         onclick={() => handleAddEnchantment()}
-        style="height: 20px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+        class="button-base"
+        style="height: 20px"
         type="button"
         title={t("ui.addEnchantment")}>{t("ui.addEnchantment")}</button
       >
@@ -137,7 +138,8 @@
                   e.preventDefault();
                   handleDeleteEnchantment(enchant);
                 }}
-                style="height: 20px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer;"
+                class="button-base"
+                style="height: 20px"
                 type="button"
                 title={t("ui.deleteEnchantment")}
                 >{t("ui.deleteEnchantment")}</button
@@ -157,7 +159,8 @@
                 e.preventDefault();
                 handleDeleteEnchantment(enchant);
               }}
-              style="height: 20px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer;"
+              class="button-base"
+              style="height: 20px"
               type="button"
               title={t("ui.deleteEnchantment")}
               >{t("ui.deleteEnchantment")}</button
@@ -185,7 +188,7 @@
         />
         <button
           type="button"
-          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
+          class="button-base"
           onclick={() => {
             if (selectedSearch) {
               searchEnchant(selectedSearch);

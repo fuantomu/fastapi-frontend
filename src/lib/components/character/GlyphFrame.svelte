@@ -66,7 +66,8 @@
     {#if edit}
       <button
         type="button"
-        style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer; width: fit-content; align-self: center"
+        class="button-base"
+        style="width: fit-content; align-self: center"
         onclick={() => handleReset()}>{t(`ui.reset`)}</button
       >
     {/if}

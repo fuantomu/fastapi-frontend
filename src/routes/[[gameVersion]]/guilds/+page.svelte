@@ -12,7 +12,7 @@
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
   function handleGoBack() {
-    goto(`/${gameVersion}`);
+    goto(`/${gameVersion}/`);
   }
   function handleAdd() {
     goto(`/${gameVersion}/guilds/add`);

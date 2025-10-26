@@ -474,7 +474,7 @@
         />
         <button
           type="button"
-          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
+          class="button-base"
           onclick={() => {
             if (selectedSearch) {
               searchItem(selectedSearch);
@@ -537,7 +537,7 @@
       >
         <button
           onclick={() => handleSaveItem()}
-          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+          class="button-save"
           type="button"
           title={t("ui.saveItem")}>{t("ui.saveItem")}</button
         >

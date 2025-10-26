@@ -9,7 +9,7 @@
 
 </script>
 
-<h1>Test {t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
+<h1>{t(`version.${gameVersionFactory.gameVersion.getName()}`)}</h1>
 {#if data.characters && data.guilds}
   <ArmoryFrame id={0}></ArmoryFrame>
 {/if}

@@ -648,7 +648,7 @@
   </div>
   <button
     type="button"
-    style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+    class="button-base"
     onclick={() => handleReset()}>{t(`ui.reset`)}</button
   >
 </div>

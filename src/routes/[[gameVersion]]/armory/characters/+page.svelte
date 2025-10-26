@@ -12,10 +12,10 @@
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
   function handleGoBack() {
-    goto(`/${gameVersion}`);
+    goto(`/${gameVersion}/armory`);
   }
   function handleAdd() {
-    goto(`/${gameVersion}/characters/add`);
+    goto(`/${gameVersion}/armory/characters/add`);
   }
 
   function handleSearch(searchText: string) {
@@ -26,7 +26,7 @@
   }
 </script>
 
-<h1>Test - {t(`version.${gameVersion}`)}</h1>
+<h1>{t(`version.${gameVersion}`)}</h1>
 {#if characters}
   <input
     placeholder="Search"
@@ -38,7 +38,7 @@
     {#each characters as character}
       <li>
         <a
-          href="/{gameVersion}/characters/{character.id}"
+          href="/{gameVersion}/armory/characters/{character.id}"
           data-sveltekit-preload-data="off">{character.name} - {character.character_class}</a
         >
       </li>
@@ -49,5 +49,5 @@
 {:else}
   <p>Loading</p>
 {/if}
-<button onclick={() => handleAdd()}> Add new </button>
-<button onclick={() => handleGoBack()}> Go back </button>
+<button type="button" class="button-base" onclick={() => handleAdd()}> Add new </button>
+<button type="button" class="button-base" onclick={() => handleGoBack()}> Go back </button>

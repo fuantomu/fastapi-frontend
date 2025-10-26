@@ -55,6 +55,27 @@ button.button-disabled {
   }
 }
 
+button.button-base {
+  height: 34px; 
+  border: 1px solid black; 
+  background: var(--palette-secondary-light); 
+  cursor: pointer
+}
+
+button.button-delete {
+  height: 34px; 
+  border: 1px solid black; 
+  background: var(--palette-primary-dark); 
+  cursor: pointer
+}
+
+button.button-save {
+  height: 34px; 
+  border: 1px solid black; 
+  background: var(--palette-secondary-dark); 
+  cursor: pointer
+}
+
 .container {
   min-height: 100vh;
 

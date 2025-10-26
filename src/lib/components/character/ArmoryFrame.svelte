@@ -315,7 +315,7 @@
   let equipment_updated: string | null = $state(null);
 
   function handleGoBack() {
-    goto(`/${gameVersionFactory.gameVersion.getName()}/characters`);
+    goto(`/${gameVersionFactory.gameVersion.getName()}/armory/characters`);
   }
   function handleDelete() {
     goto(`${id}/delete`);
@@ -395,10 +395,10 @@
           {/if}
           <button
             type="button"
-            style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+            class="button-base"
             onclick={() => {
               if (window.location.href.includes("/characters/add")) {
-                window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
+                window.location.href = `/${gameVersionFactory.gameVersion.getName()}/armory/characters`;
               } else {
                 if (edit) {
                   formData.character = JSON.parse(
@@ -420,7 +420,7 @@
           {#if edit}
             <button
               type="submit"
-              style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+              class="button-save"
               onclick={() => handleSubmit()}
               disabled={nameError ||
               !formData.character.name ||
@@ -433,12 +433,12 @@
           {/if}
           <button
             type="button"
-            style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+            class="button-base"
             disabled={equipment_updated ? true : false}
             onclick={() => handleRefresh()}>{t("ui.refreshCharacter")}</button
           >
           <button
-            style="height: 34px; border: 1px solid black; background: var(--palette-primary-dark); cursor: pointer"
+            class="button-delete"
             type="button"
             onclick={() => handleDelete()}
             >{t("ui.deleteCharacter")}
@@ -513,7 +513,7 @@
 
     <button
       type="button"
-      style="height: 34px; border: 1px solid black; background: var(--palette-secondary-light); cursor: pointer"
+      class="button-base"
       onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button
     >
   {/await}

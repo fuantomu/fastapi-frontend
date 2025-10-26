@@ -226,7 +226,7 @@
         />
         <button
           type="button"
-          style="height: 34px; border: 1px solid black; background: var(--palette-secondary-dark); cursor: pointer"
+          class="button-save"
           onclick={() => {
             searchGlyphs(selectedGlyph);
           }}>{t("ui.saveItem")}</button
