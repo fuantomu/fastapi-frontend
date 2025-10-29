@@ -1999,7 +1999,7 @@ export const versionType: GameVersionType = {
                         icon: "spell_nature_enchantarmor",
                         cell: "1,1",
                         ranks: [12295, 12676, 12677, 12678, 12679],
-                        required: ["2,1"],
+                        required: [],
                     },
                     {
                         name: "Improved Thunder Clap",
@@ -2020,7 +2020,7 @@ export const versionType: GameVersionType = {
                         icon: "spell_holy_blessingofstamina",
                         cell: "2,1",
                         ranks: [12296],
-                        required: [],
+                        required: ["1,1"],
                     },
                     {
                         name: "Deep Wounds",
