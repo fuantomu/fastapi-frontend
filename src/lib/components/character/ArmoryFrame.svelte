@@ -27,6 +27,7 @@
     createGlyphState,
     createWCLState,
   } from "$lib/helper/armoryState.svelte";
+  import Title from "$lib/components/Title.svelte";
 
   const { id } = $props<{ id: number }>();
 
@@ -39,6 +40,7 @@
   setContext("gemState", gems);
   const glyphs = createGlyphState([] as Glyph[]);
   setContext("glyphState", glyphs);
+  setContext("currentPage", "Armory");
 
   let edit: boolean = $state(id == 0 ? true : false);
   let fetching: boolean = $state(false);
@@ -86,6 +88,11 @@
     } as CharacterSpec,
   });
   let baseCharacter: Character = $state({} as Character);
+
+  if (id === 0){
+    initializeGlyphs()
+  }
+  
 
   const fetchCharacter = async () => {
     const res = await fetch(
@@ -314,9 +321,6 @@
 
   let equipment_updated: string | null = $state(null);
 
-  function handleGoBack() {
-    goto(`/${gameVersionFactory.gameVersion.getName()}/armory/characters`);
-  }
   function handleDelete() {
     goto(`${id}/delete`);
   }
@@ -370,7 +374,12 @@
   }
 </script>
 
-<div >
+<Title
+  title={id === 0 && edit
+    ? t("title.armory.addCharacter")
+    : t("title.armory.showCharacter") + ` - ${formData.character.name ?? ""}`}
+></Title>
+<div>
   {#await fetchData()}
     <p>Loading...</p>
   {:then}
@@ -380,7 +389,7 @@
       {/if}
 
       <Paper
-        style={`display: grid; min-height:600px; grid-template-columns: ${edit ? "40% 50%" : "30% 40% 30%"};`}
+        style={`display: grid; min-height:600px; grid-template-columns: ${edit ? "40% 50%" : "33% 40% 28%"};`}
       >
         <Content>
           {#if edit}
@@ -508,13 +517,5 @@
         </Paper>
       {/if}
     {/if}
-
-    <br />
-
-    <button
-      type="button"
-      class="button-base"
-      onclick={() => handleGoBack()}>{t("ui.goBackPage")}</button
-    >
   {/await}
 </div>

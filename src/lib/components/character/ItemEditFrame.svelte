@@ -110,9 +110,9 @@
       }
       enchantmentState[slot as keyof EnchantmentState] = currentEnchants;
       for (const id of gems) {
-        const existingGemState = gemState[
-          slot as keyof EnchantmentState
-        ]?.find((_enchant: Enchantment) => _enchant.source_id === Number(id));
+        const existingGemState = gemState[slot as keyof EnchantmentState]?.find(
+          (_enchant: Enchantment) => _enchant.source_id === Number(id)
+        );
         if (existingGemState) {
           currentGems.push(existingGemState);
           baseGems.push(existingGemState);
@@ -205,6 +205,8 @@
   {#if equipment?.name}
     <a
       href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
       data-wowhead={`${equipment.wowhead_link}`}
       class="equipment-link"
     >
@@ -365,6 +367,8 @@
         >
           <a
             href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${selectedEquipment?.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
             data-wowhead={`${selectedEquipment?.wowhead_link}`}
             style="
             display: flex;
@@ -377,7 +381,6 @@
             position: relative;
             gap: 20px;
             padding: 8px;
-            cursor: default;
             "
           >
             <div style="display: grid; align-content: center; height: 40px">
@@ -415,7 +418,7 @@
                 onkeypress={() => {}}
                 role="button"
                 tabindex="0"
-                style="cursor: pointer; height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+                style="height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
                 ><img
                   style="width: 32px; height: 32px"
                   src="/image/icon_arrow_up.png"
@@ -431,7 +434,7 @@
                 onkeypress={() => {}}
                 role="button"
                 tabindex="0"
-                style="cursor: pointer;  height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
+                style="height: 32px; width: 32px; display: flex; justify-items: center; align-items: center;"
                 ><img
                   style="width: 32px; height: 32px"
                   src="/image/icon_arrow_down.png"
@@ -505,6 +508,8 @@
           >
             <a
               href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${fitem.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
               data-wowhead={`${fitem?.wowhead_link}`}
               style="
             display: flex;

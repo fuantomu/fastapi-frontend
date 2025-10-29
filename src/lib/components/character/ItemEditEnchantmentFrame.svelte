@@ -34,7 +34,7 @@
         `${PUBLIC_API_URL}/Enchantment/?search=${enchantidOrString}&slot=${type}&version=${gameVersionFactory.gameVersion.getName()}`
       );
     }
-    
+
     let data = await res.json();
 
     data = data["Result"] as Enchantment[];
@@ -112,6 +112,8 @@
           {#if enchant?.source_id}
             <a
               href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${enchant?.source_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
               style="
                 display: flex;
                 align-items: space-between;
@@ -122,7 +124,6 @@
                 position: relative;
                 gap: 20px;
                 padding: 8px;
-                cursor: default;
                 "
             >
               <span
@@ -215,11 +216,13 @@
             handleEnchantClick(fenchant);
           }}
           disabled={true}
-          style="height:fit-content; border-top: 1px solid black; cursor: pointer"
+          style="height:fit-content; border-top: 1px solid black;"
         >
           {#if type !== "Test"}
             <a
               href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${fenchant.source_id}`}
+              target="_blank"
+              rel="noopener noreferrer"
               style="
             display: flex;
             align-items: center;

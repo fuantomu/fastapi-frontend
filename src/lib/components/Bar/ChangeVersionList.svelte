@@ -14,8 +14,7 @@
 
   function handleChangeVersion(version: GameVersionName | undefined) {
     if (version) {
-      let path = window.location.pathname.split("/").slice(2);
-      window.location.href = `/${version}/${path.join("/")}`;
+      window.location.href = window.location.href.replace(gameVersionFactory.gameVersion.getName(), version)
     }
     open = false;
   }
@@ -58,7 +57,6 @@
     display: inline-block;
     border: none;
     padding: 0;
-    cursor: pointer;
     background: transparent;
   }
 </style>

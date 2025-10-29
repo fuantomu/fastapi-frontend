@@ -12,19 +12,18 @@
     row,
     inactive,
     edit = false,
-    onUpdate
+    onUpdate,
   } = $props<{
     talents: Talent[] | null;
     active_talent: Talent | undefined;
     row: number;
     inactive: boolean;
     edit: boolean;
-    onUpdate : (talent: Talent, key: string) => void;
+    onUpdate: (talent: Talent, key: string) => void;
   }>();
 
-
   function handleSelect(talent: Talent) {
-    onUpdate(talent, row)
+    onUpdate(talent, row);
   }
 </script>
 
@@ -79,6 +78,8 @@
             >
               <a
                 href={`${getWowheadLink("spell", gameVersionFactory.gameVersion.getName())}${talent.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 style="
         display: block;
         width: 100%;

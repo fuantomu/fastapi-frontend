@@ -11,12 +11,8 @@
   let { data }: PageProps = $props();
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
-  function handleGoBack() {
-    goto(`${id}`.replace("/delete", ""));
-  }
 </script>
 
-<h1>Test {t(`version.${gameVersion}`)}</h1>
 {#if data.item}
   <form method="POST">
     Are you sure you want to delete the character '{data.item.name}'?
@@ -34,5 +30,3 @@
 {:else}
   <p>Loading</p>
 {/if}
-<br />
-<button type="button" class="button-base" onclick={() => handleGoBack()}> Go back </button>

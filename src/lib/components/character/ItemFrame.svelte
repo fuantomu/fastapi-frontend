@@ -22,6 +22,8 @@
   {#if equipment}
     <a
       href={`${getWowheadLink("item", gameVersionFactory.gameVersion.getName())}${equipment.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
       data-wowhead={`${equipment.wowhead_link}`}
       class="equipment-link"
     >

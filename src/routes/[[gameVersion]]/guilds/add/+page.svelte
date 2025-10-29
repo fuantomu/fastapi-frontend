@@ -16,10 +16,6 @@
   let selectedVersion: GameVersionName = $state(gameVersionFactory.gameVersion.getName());
   let selectedRegion: Region = $state(Region.EU);
 
-  function handleGoBack() {
-    goto(`/${gameVersionFactory.gameVersion.getName()}/guilds`);
-  }
-
   function handleNameInput(inputValue: string) {
     nameInput = `${inputValue.charAt(0).toUpperCase()}${inputValue.slice(1)}`;
     checkDuplicate(nameInput, realmInput);
@@ -102,4 +98,3 @@
   </select>
   <button type="submit" disabled={nameError ? true : false}>Save</button>
 </form>
-<button onclick={() => handleGoBack()}> Go back </button>

@@ -70,7 +70,7 @@
   };
 </script>
 
-<div style="height: 95%;">
+<div>
   <div class="player-grid">
     <div class="icons">
       <WarcraftIcon
@@ -160,7 +160,9 @@
       </div>
     </div>
   </div>
-  <div style="display: flex; align-items: end; height: 75%">
+  <div
+    style="display: flex; padding-top: 20px; align-content: end; height: 100%"
+  >
     <div
       style="display: flex; justify-content: end; align-items: center; border: 1px solid black; padding: 20px"
     >
@@ -256,7 +258,7 @@
               onkeypress={() => {}}
               role="button"
               tabindex="0"
-              style="padding: 5px; display: flex; border: 1px solid black; justify-content: space-between; background-color: var(--palette-secondary-dark); cursor: pointer;"
+              style="padding: 5px; display: flex; border: 1px solid black; justify-content: space-between; background-color: var(--palette-secondary-dark);"
             >
               <span>{t("ui.ranking.individual")}</span>
               <img
@@ -301,11 +303,13 @@
                       )}
                     />
                   </div>
-                  <span
-                    style="display: flex; justify-content: end; border-right: 1px solid black; padding-right: 8px;"
-                    >{encounter.allStars?.points}</span
-                  >
                   {#if encounter.allStars}
+                    <span
+                      style="display: flex; justify-content: end; border-right: 1px solid black; padding-right: 8px;"
+                      >{encounter.allStars.points !== "-"
+                        ? Number(encounter.allStars.points).toPrecision(4)
+                        : encounter.allStars.points}</span
+                    >
                     <span
                       style="display: flex; justify-content: end; color: var(--ui-colour-wcl-{getRankColor(
                         (1 -

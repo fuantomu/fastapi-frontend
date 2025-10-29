@@ -145,7 +145,7 @@ export type WCLRank = {
 export type WCLAllStars = {
     partition: number;
     spec: string | null
-    points: number;
+    points: number | string;
     possiblePoints: number;
     rank: number;
     regionRank: number;

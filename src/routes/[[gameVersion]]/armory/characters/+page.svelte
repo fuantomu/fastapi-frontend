@@ -5,15 +5,13 @@
   import type { PageProps } from "./$types";
   import { GameVersionName } from "$lib/versions/GameVersion";
   import { t } from "$lib/i18n/index.svelte";
+  import Title from "$lib/components/Title.svelte";
 
   let { data }: PageProps = $props();
   let characters: Character[] = $state(data.items ?? []);
   let searchValue: string = $state("");
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
-  function handleGoBack() {
-    goto(`/${gameVersion}/armory`);
-  }
   function handleAdd() {
     goto(`/${gameVersion}/armory/characters/add`);
   }
@@ -26,7 +24,7 @@
   }
 </script>
 
-<h1>{t(`version.${gameVersion}`)}</h1>
+<Title title={t("title.armory.listCharacters")}></Title>
 {#if characters}
   <input
     placeholder="Search"
@@ -39,7 +37,7 @@
       <li>
         <a
           href="/{gameVersion}/armory/characters/{character.id}"
-          data-sveltekit-preload-data="off">{character.name} - {character.character_class}</a
+          >{character.name} - {character.character_class}</a
         >
       </li>
     {/each}
@@ -47,7 +45,6 @@
 {:else if data.error}
   <p>Error Loading</p>
 {:else}
-  <p>Loading</p>
+  <p>{t("ui.loading")}</p>
 {/if}
-<button type="button" class="button-base" onclick={() => handleAdd()}> Add new </button>
-<button type="button" class="button-base" onclick={() => handleGoBack()}> Go back </button>
+<button type="button" class="button-base" onclick={() => handleAdd()}>{t("ui.addNew")}</button>

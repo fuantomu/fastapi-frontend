@@ -11,9 +11,6 @@
   let { data }: PageProps = $props();
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
-  function handleGoBack() {
-    goto(`${id}`.replace("/delete", ""));
-  }
 </script>
 
 <h1>Test {t(`version.${gameVersion}`)}</h1>
@@ -34,5 +31,3 @@
 {:else}
   <p>Loading</p>
 {/if}
-<br />
-<button onclick={() => handleGoBack()}> Go back </button>

@@ -18,10 +18,6 @@
   let members: Character[] = $state(data.characters ?? []);
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   
-
-  function handleGoBack() {
-    goto(`/${gameVersionFactory.gameVersion.getName()}/guilds`);
-  }
   function handleDelete() {
     goto(`${id}/delete`);
   }
@@ -131,6 +127,3 @@
 {:else}
   <p>Loading</p>
 {/if}
-
-<br />
-<button onclick={() => handleGoBack()}> Go back </button>

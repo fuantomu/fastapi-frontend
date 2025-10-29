@@ -11,9 +11,6 @@
   let searchValue: string = $state("");
   const gameVersion = getContext<GameVersionName>("gameVersion");
 
-  function handleGoBack() {
-    goto(`/${gameVersion}/`);
-  }
   function handleAdd() {
     goto(`/${gameVersion}/guilds/add`);
   }
@@ -50,4 +47,3 @@
   <p>Loading</p>
 {/if}
 <button onclick={() => handleAdd()}> Add new </button>
-<button onclick={() => handleGoBack()}> Go back </button>

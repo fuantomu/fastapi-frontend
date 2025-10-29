@@ -42,6 +42,8 @@
 >
   <a
     href={`${getWowheadLink("spell", gameVersionFactory.gameVersion.getName())}${talent.ranks[Math.min(Math.max(0, rank - 1), talent.ranks.length - 1)]}`}
+    target="_blank"
+    rel="noopener noreferrer"
     style="text-decoration:none"
   >
     <div

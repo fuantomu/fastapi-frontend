@@ -26,6 +26,8 @@
       {#if glyph.icon}
         <a
           href={`${getWowheadLink("spell", gameVersionFactory.gameVersion.getName())}${glyph.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
           style="
             display: flex;
             align-items: center;
