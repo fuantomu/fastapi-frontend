@@ -306,8 +306,10 @@
 </script>
 
 <div>
-  <div style="display: flex; flex-direction: column; width: 100%; padding: 10px; gap: 5px;">
-    <div style="grid-template-columns: 20% 40%" class="row">
+  <div
+    style="display: flex; flex-direction: column; width: 100%; padding: 10px; gap: 5px;"
+  >
+    <div style="grid-template-columns: 40% 40%" class="row">
       <span>{t("ui.characterName")}</span>
       <input
         id="name"
@@ -332,7 +334,7 @@
         <p style="color: red;">{nameError}</p>
       </div>
     {/if}
-    <div style="grid-template-columns: 20% 5% 5%" class="row">
+    <div style="grid-template-columns: 40% 5% 5%;" class="row">
       <span>{t("ui.characterRace")}</span>
       <IconButton
         type="button"
@@ -349,8 +351,7 @@
           label={t(`ui.changeRace`)}
         />
       </IconButton>
-
-      {#if data.character.race?.name === "Pandaren"}
+      {#if data.character.race === "Pandaren"}
         <img
           src="/image/icon_{data.character.faction.toLowerCase()}.png"
           alt={t(`faction.${data.character.faction}`)}
@@ -399,7 +400,7 @@
         </List>
       </Menu>
     </div>
-    <div style="grid-template-columns: 20% 5% 5%;" class="row">
+    <div style="grid-template-columns: 40% 5% 5%;" class="row">
       <span>{t("ui.characterClass")}</span>
       <IconButton
         type="button"
@@ -439,7 +440,7 @@
         </List>
       </Menu>
     </div>
-    <div style="grid-template-columns: 20% 5% 5%" class="row">
+    <div style="grid-template-columns: 40% 5% 5%" class="row">
       <span>{t("ui.characterSpecialization")}</span>
       <IconButton
         type="button"
@@ -479,7 +480,7 @@
         </List>
       </Menu>
     </div>
-    <div style="grid-template-columns: 20% 5% 5%" class="row">
+    <div style="grid-template-columns: 40% 5% 5%" class="row">
       <span>{t("ui.characterGender")}</span>
       <IconButton
         type="button"
@@ -495,7 +496,7 @@
         />
       </IconButton>
     </div>
-    <div style="grid-template-columns: 20% 30%;" class="row">
+    <div style="grid-template-columns: 40% 30%;" class="row">
       <span>{t("ui.characterRealm")}</span>
       <div>
         <input
@@ -512,7 +513,7 @@
         />
       </div>
     </div>
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.characterLevel")}</span>
       <div>
         <input
@@ -534,7 +535,7 @@
         />
       </div>
     </div>
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.characterGuild")}</span>
       <div>
         <select
@@ -556,7 +557,7 @@
       </div>
     </div>
     {#if !["classic", "tbc"].includes(gameVersionFactory.gameVersion.getName())}
-      <div style="grid-template-columns: 20% 30%" class="row">
+      <div style="grid-template-columns: 40% 30%" class="row">
         <span>{t("ui.characterAchievementPoints")}</span>
         <div>
           <input
@@ -572,7 +573,7 @@
         </div>
       </div>
     {/if}
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.characterItemLevel")}</span>
       <div>
         <input
@@ -587,7 +588,7 @@
         />
       </div>
     </div>
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.characterRegion")}</span>
       <div>
         <select
@@ -606,7 +607,7 @@
         </select>
       </div>
     </div>
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.characterVersion")}</span>
       <div>
         <select
@@ -625,7 +626,7 @@
         </select>
       </div>
     </div>
-    <div style="grid-template-columns: 20% 30%" class="row">
+    <div style="grid-template-columns: 40% 30%" class="row">
       <span>{t("ui.realmVersion")}</span>
       <div>
         <select
@@ -645,10 +646,8 @@
       </div>
     </div>
   </div>
-  <button
-    type="button"
-    class="button-base"
-    onclick={() => handleReset()}>{t(`ui.reset`)}</button
+  <button type="button" class="button-base" onclick={() => handleReset()}
+    >{t(`ui.reset`)}</button
   >
 </div>
 
@@ -666,6 +665,8 @@
   .row {
     display: grid;
     align-items: center;
+    justify-content: start;
+    margin-right: 5%;
     height: 36px;
     gap: 20px;
   }
