@@ -8,11 +8,31 @@
   import type { GameVersionName } from "$lib/versions/GameVersion";
 
   const gameVersion = getContext<GameVersionName>("gameVersion");
+  let activePage: string = $state(getActivePage())
+
+  function getActivePage() {
+    if (window.location.href.includes("armory")){
+      return "armory"
+    }
+    if (window.location.href.includes("guilds")){
+      return "guilds"
+    }
+    if (window.location.href.includes("planner")){
+      return "planner"
+    }
+    if (window.location.href.includes("history")){
+      return "history"
+    }
+    if (window.location.href.includes("absence")){
+      return "absence"
+    }
+    return ""
+  }
 </script>
 
 <div>
-  <BottomAppBar variant="static" color={"secondary"}>
-    <Section>
+  <BottomAppBar variant="static" color="secondary">
+    <Section style="gap: 20px;">
       <Wrapper>
         <button
           class="image-button"
@@ -28,13 +48,15 @@
         </button>
         <Tooltip yPos="above">{t(`ui.reportBug`)}</Tooltip>
       </Wrapper>
-    </Section>
-    <Section>
+
       <button
         class="image-button"
         style="width: 32px; height: 32px"
         onclick={() => {
-          window.location.href = window.location.href.split("/").slice(0,-1).join("/")
+          window.location.href = window.location.href
+            .split("/")
+            .slice(0, -1)
+            .join("/");
         }}
       >
         <img
@@ -44,20 +66,20 @@
         />
       </button>
     </Section>
+
     <Section>
       <div
-        style="width: 300px; height: 56px; align-self: center; border: 1px solid black;"
+        class="section-div"
+        style={activePage === "armory"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
           class="image-button"
           style="width: 100%; height:100%;  color: var(--ui-colour-quest)"
           type="button"
-          onclick={() => goto(`/${gameVersion}/armory/characters`)}
+          onclick={() => {goto(`/${gameVersion}/armory/characters`); activePage = "armory"}}
           title={t("ui.armory")}
         >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+          <div class="bottom-div">
             <img
               style="width: 32px; height: 32px"
               src="/image/ui/icon_armory.png"
@@ -70,18 +92,17 @@
     </Section>
     <Section>
       <div
-        style="width: 300px; height: 56px; align-self: center; border: 1px solid black;"
+        class="section-div"
+        style={activePage === "guilds"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
           class="image-button"
           style="width: 100%; height:100%; color: var(--ui-colour-guild)"
           type="button"
-          onclick={() => goto(`/${gameVersion}/guilds`)}
+          onclick={() => {goto(`/${gameVersion}/guilds`); activePage = "guilds"}}
           title={t("ui.guild")}
         >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+          <div class="bottom-div">
             <img
               style="width: 32px; height: 32px"
               src="/image/ui/icon_guild.png"
@@ -94,7 +115,8 @@
     </Section>
     <Section>
       <div
-        style="width: 300px; height: 56px; align-self: center; border: 1px solid black;"
+        class="section-div"
+        style={activePage === "planner"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
           disabled
@@ -104,9 +126,7 @@
           onclick={() => {}}
           title={t("ui.raidPlanner")}
         >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+          <div class="bottom-div">
             <img
               style="width: 32px; height: 32px"
               src="/image/ui/icon_raid_planner.png"
@@ -119,7 +139,8 @@
     </Section>
     <Section>
       <div
-        style="width: 300px; height: 56px; align-self: center; border: 1px solid black;"
+        class="section-div"
+        style={activePage === "history"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
           disabled
@@ -129,9 +150,7 @@
           onclick={() => {}}
           title={t("ui.lootHistory")}
         >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+          <div class="bottom-div">
             <img
               style="width: 32px; height: 32px"
               src="/image/ui/icon_loot_history.png"
@@ -144,7 +163,8 @@
     </Section>
     <Section>
       <div
-        style="width: 300px; height: 56px; align-self: center; border: 1px solid black;"
+        class="section-div"
+        style={activePage === "absence"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
           disabled
@@ -154,9 +174,7 @@
           onclick={() => {}}
           title={t("ui.absence")}
         >
-          <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+          <div class="bottom-div">
             <img
               style="width: 32px; height: 32px"
               src="/image/ui/icon_absence.png"
@@ -183,5 +201,19 @@
     border: none;
     padding: 0;
     background: transparent;
+  }
+
+  .section-div {
+    width: 300px;
+    height: 56px;
+    align-self: center;
+    border: 1px solid black;
+  }
+
+  .bottom-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px black;
   }
 </style>

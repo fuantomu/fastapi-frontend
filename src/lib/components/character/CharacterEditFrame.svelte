@@ -22,7 +22,6 @@
   import IconButton from "@smui/icon-button";
   import List, { Item, Text } from "@smui/list";
   import Menu from "@smui/menu";
-  import Paper, { Content } from "@smui/paper";
   import { getContext } from "svelte";
 
   let {
