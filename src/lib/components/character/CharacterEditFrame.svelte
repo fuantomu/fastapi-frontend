@@ -547,7 +547,7 @@
           required
         >
           <option value={-1}>{"None"}</option>
-          {#each guilds.filter((guild: Guild) => guild.version === gameVersionFactory.gameVersion.getName()) as guild}
+          {#each guilds as guild}
             <option
               style={`color: var(--faction-colour-${guild.faction});`}
               value={guild.id}>{guild.name}</option
