@@ -6,9 +6,11 @@
   import { goto } from "$app/navigation";
   import { getContext } from "svelte";
   import type { GameVersionName } from "$lib/versions/GameVersion";
+  import type { Account } from "$lib/types";
 
   const gameVersion = getContext<GameVersionName>("gameVersion");
   let activePage: string = $state(getActivePage())
+  const accountState = getContext<Account>("accountState")
 
   function getActivePage() {
     if (window.location.href.includes("armory")){
@@ -32,7 +34,7 @@
 
 <div>
   <BottomAppBar variant="static" color="secondary">
-    <Section style="gap: 20px;">
+    <Section style="display:flex; align-items: center; justify-content: space-between;">
       <Wrapper>
         <button
           class="image-button"
@@ -53,10 +55,10 @@
         class="image-button"
         style="width: 32px; height: 32px"
         onclick={() => {
-          window.location.href = window.location.href
+          goto(window.location.href
             .split("/")
             .slice(0, -1)
-            .join("/");
+            .join("/"))
         }}
       >
         <img
@@ -119,9 +121,9 @@
         style={activePage === "planner"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
-          disabled
+          disabled={true}
           class="image-button"
-          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); cursor:not-allowed"
+          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor);"
           type="button"
           onclick={() => {}}
           title={t("ui.raidPlanner")}
@@ -143,9 +145,9 @@
         style={activePage === "history"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
-          disabled
+          disabled={accountState.guild? false : true}
           class="image-button"
-          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); cursor:not-allowed"
+          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
           type="button"
           onclick={() => {}}
           title={t("ui.lootHistory")}
@@ -167,9 +169,9 @@
         style={activePage === "absence"? `background-color: var(--game-colour-${gameVersion})` : ""}
       >
         <button
-          disabled
+          disabled={accountState.guild? false : true}
           class="image-button"
-          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); cursor:not-allowed"
+          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
           type="button"
           onclick={() => {}}
           title={t("ui.absence")}
@@ -181,6 +183,31 @@
               alt={t(`ui.absence`)}
             />
             {t("ui.absence")}
+          </div>
+        </button>
+      </div>
+    </Section>
+
+    <Section>
+      <div
+        class="section-div"
+        style={activePage === "options"? `background-color: var(--game-colour-${gameVersion})` : ""}
+      >
+        <button
+          disabled={accountState.level > 0? false : true}
+          class="image-button"
+          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
+          type="button"
+          onclick={() => {}}
+          title={t("ui.options")}
+        >
+          <div class="bottom-div">
+            <img
+              style="width: 32px; height: 32px"
+              src="/image/ui/icon_options.png"
+              alt={t(`ui.options`)}
+            />
+            {t("ui.options")}
           </div>
         </button>
       </div>
@@ -204,7 +231,7 @@
   }
 
   .section-div {
-    width: 300px;
+    width: 100%;
     height: 56px;
     align-self: center;
     border: 1px solid black;

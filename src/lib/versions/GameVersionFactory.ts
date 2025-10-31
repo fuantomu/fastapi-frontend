@@ -15,6 +15,7 @@ import { GameVersion as CataGameVersion } from './cataclysm/GameVersion';
 import { GameVersion as WotlkGameVersion } from './wotlk/GameVersion';
 import { GameVersion as TbcGameVersion } from './tbc/GameVersion';
 import { GameVersion as ClassicGameVersion } from './classic/GameVersion';
+import { goto } from '$app/navigation';
 
 export class GameVersionFactory {
     static createIconProvider(gameVersion: GameVersionName): BaseIconProvider {
@@ -61,7 +62,7 @@ export class GameVersionFactory {
             };
         }
         catch (err) {
-            window.location.href = "/mop"
+            goto("/mop")
             return {
                 iconProvider: GameVersionFactory.createIconProvider(GameVersionName.MOP),
                 gameVersion: new MopGameVersion(),

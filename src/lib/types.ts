@@ -235,3 +235,14 @@ export type EnchantmentState = {
     off_hand: Enchantment[],
     ranged: Enchantment[],
 }
+
+export type AccountLogin = {
+    username: string,
+    hash: string
+}
+
+export type Account = {
+    level: number,
+    guild: number,
+    creation_time: number
+} & AccountLogin

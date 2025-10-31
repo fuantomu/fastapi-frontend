@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import type {
+    Account,
     Character,
     CharacterEquipment,
     CharacterSpec,
@@ -88,11 +89,11 @@
     } as CharacterSpec,
   });
   let baseCharacter: Character = $state({} as Character);
+  let accountState = getContext<Account>("accountState");
 
-  if (id === 0){
-    initializeGlyphs()
+  if (id === 0) {
+    initializeGlyphs();
   }
-  
 
   const fetchCharacter = async () => {
     const res = await fetch(
@@ -100,7 +101,7 @@
     );
     const data = await res.json();
     if (data.Result.length == 0) {
-      window.location.href = `/${gameVersionFactory.gameVersion.getName()}/characters`;
+      window.location.href = `/${gameVersionFactory.gameVersion.getName()}/armory/characters`;
     }
     formData.character = data.Result[0];
     baseCharacter = data.Result[0];
@@ -347,9 +348,6 @@
       }
       await fetchData();
       equipment_updated = null;
-      goto(
-        `/${gameVersionFactory.gameVersion.getName()}/characters/${data["Result"]}`
-      );
     } else {
       equipment_updated = t("ui.errorFetchingData");
     }
@@ -367,7 +365,9 @@
     });
     const result = await response.json();
     if (result["new_character"]) {
-      window.location.href = `/${gameVersionFactory.gameVersion.getName()}${result["url"]}`;
+      goto(
+        `/${gameVersionFactory.gameVersion.getName()}/armory${result["url"]}`
+      );
     }
     edit = false;
     fetching = false;
@@ -377,7 +377,7 @@
 <Title
   title={id === 0 && edit
     ? t("title.armory.addCharacter")
-    : t("title.armory.showCharacter") + ` - ${formData.character.name ?? ""}`}
+    : t("title.armory.showCharacter") + ` - ${formData.character?.name ?? ""}`}
 ></Title>
 <div>
   {#await fetchData()}
@@ -402,30 +402,34 @@
           {:else}
             <CharacterFrame character={formData.character} {character_guild} />
           {/if}
-          <button
-            type="button"
-            class="button-base"
-            onclick={() => {
-              if (window.location.href.includes("/characters/add")) {
-                window.location.href = `/${gameVersionFactory.gameVersion.getName()}/armory/characters`;
-              } else {
-                if (edit) {
-                  formData.character = JSON.parse(
-                    JSON.stringify(baseCharacter)
+          {#if accountState.level > 0}
+            <button
+              type="button"
+              class="button-base"
+              onclick={() => {
+                if (window.location.href.includes("/characters/add")) {
+                  goto(
+                    `/${gameVersionFactory.gameVersion.getName()}/armory/characters`
                   );
-                  formData.active_spec = JSON.parse(
-                    JSON.stringify(formData.baseActiveSpec)
-                  );
-                  formData.off_spec = JSON.parse(
-                    JSON.stringify(formData.baseOffSpec)
-                  );
-                  edit = false;
                 } else {
-                  edit = true;
+                  if (edit) {
+                    formData.character = JSON.parse(
+                      JSON.stringify(baseCharacter)
+                    );
+                    formData.active_spec = JSON.parse(
+                      JSON.stringify(formData.baseActiveSpec)
+                    );
+                    formData.off_spec = JSON.parse(
+                      JSON.stringify(formData.baseOffSpec)
+                    );
+                    edit = false;
+                  } else {
+                    edit = true;
+                  }
                 }
-              }
-            }}>{t(edit ? `ui.cancel` : `ui.edit`)}</button
-          >
+              }}>{t(edit ? `ui.cancel` : `ui.edit`)}</button
+            >
+          {/if}
           {#if edit}
             <button
               type="submit"
@@ -446,12 +450,14 @@
             disabled={equipment_updated ? true : false}
             onclick={() => handleRefresh()}>{t("ui.refreshCharacter")}</button
           >
-          <button
-            class="button-delete"
-            type="button"
-            onclick={() => handleDelete()}
-            >{t("ui.deleteCharacter")}
-          </button>
+          {#if accountState.level > 0}
+            <button
+              class="button-delete"
+              type="button"
+              onclick={() => handleDelete()}
+              >{t("ui.deleteCharacter")}
+            </button>
+          {/if}
         </Content>
         <Content style={"width: 97%"}>
           <EquipmentFrame bind:equipment={formData.equipment} {edit} />

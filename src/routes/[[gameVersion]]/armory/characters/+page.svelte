@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import type { Character } from "$lib/types";
+  import type { Account, Character } from "$lib/types";
   import { getContext } from "svelte";
   import type { PageProps } from "./$types";
   import { GameVersionName } from "$lib/versions/GameVersion";
@@ -11,6 +11,7 @@
   let characters: Character[] = $state(data.items ?? []);
   let searchValue: string = $state("");
   const gameVersion = getContext<GameVersionName>("gameVersion");
+  let accountState = getContext<Account>("accountState");
 
   function handleAdd() {
     goto(`/${gameVersion}/armory/characters/add`);
@@ -35,8 +36,7 @@
   <ul>
     {#each characters as character}
       <li>
-        <a
-          href="/{gameVersion}/armory/characters/{character.id}"
+        <a href="/{gameVersion}/armory/characters/{character.id}"
           >{character.name} - {character.character_class}</a
         >
       </li>
@@ -47,4 +47,8 @@
 {:else}
   <p>{t("ui.loading")}</p>
 {/if}
-<button type="button" class="button-base" onclick={() => handleAdd()}>{t("ui.addNew")}</button>
+{#if accountState.level > 0}
+  <button type="button" class="button-base" onclick={() => handleAdd()}
+    >{t("ui.addNew")}</button
+  >
+{/if}

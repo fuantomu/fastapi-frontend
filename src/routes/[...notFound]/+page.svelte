@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import type { GameVersionName } from "$lib/versions/GameVersion";
   import { getContext, onMount } from "svelte";
 
@@ -6,6 +7,6 @@
     const gameVersion = getContext<GameVersionName>("gameVersion");
 
     onMount(() => {
-        window.location.href = `/${gameVersion??"mop"}/`;
+        goto(`/${gameVersion??"mop"}/`)
     });
 </script>
