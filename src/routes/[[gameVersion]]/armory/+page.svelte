@@ -1,7 +1,5 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { GameVersionName } from "$lib/versions/GameVersion";
-  import { getContext } from "svelte";
 
   function handleGoto(newPage: string) {
     switch (newPage) {

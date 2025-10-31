@@ -47,7 +47,12 @@
         Number.isSafeInteger(Number(data["Result"].timeout))
       ) {
         tokenTimeout(Number(data["Result"].timeout), onTimeout);
-        cookieStore.set("timeout", new Date(Date.now() + Number(data["Result"].timeout * 1000)).toLocaleString())
+        cookieStore.set(
+          "timeout",
+          new Date(
+            Date.now() + Number(data["Result"].timeout * 1000)
+          ).toLocaleString()
+        );
         const account = await fetch(
           `${PUBLIC_API_URL}/Account/?username=${data["Result"].username}`,
           {
@@ -68,9 +73,9 @@
   };
 
   function onTimeout() {
-    accountState.username = ""
-    accountState.level = 0
-    accountState.guild = -1
+    accountState.username = "";
+    accountState.level = 0;
+    accountState.guild = -1;
   }
 
   onDestroy(() => {
@@ -81,8 +86,9 @@
 <div class="container">
   {#await getSession() then}
     {@render children()}
+
+    <BottomBar></BottomBar>
   {/await}
-  <BottomBar></BottomBar>
 </div>
 
 <style>
@@ -108,7 +114,7 @@
       url("/image/ui/cursor_inspect.png") 0 0,
       auto;
   }
-  :global(button:disabled){
+  :global(button:disabled) {
     cursor: not-allowed;
   }
 </style>

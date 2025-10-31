@@ -9,32 +9,37 @@
   import type { Account } from "$lib/types";
 
   const gameVersion = getContext<GameVersionName>("gameVersion");
-  let activePage: string = $state(getActivePage())
-  const accountState = getContext<Account>("accountState")
+  let activePage: string = $state(getActivePage());
+  let accountState = getContext<Account>("accountState");
 
   function getActivePage() {
-    if (window.location.href.includes("armory")){
-      return "armory"
+    if (window.location.href.includes("armory")) {
+      return "armory";
     }
-    if (window.location.href.includes("guilds")){
-      return "guilds"
+    if (window.location.href.includes("guilds")) {
+      return "guilds";
     }
-    if (window.location.href.includes("planner")){
-      return "planner"
+    if (window.location.href.includes("planner")) {
+      return "planner";
     }
-    if (window.location.href.includes("history")){
-      return "history"
+    if (window.location.href.includes("history")) {
+      return "history";
     }
-    if (window.location.href.includes("absence")){
-      return "absence"
+    if (window.location.href.includes("absence")) {
+      return "absence";
     }
-    return ""
+    if (window.location.href.includes("options")) {
+      return "options";
+    }
+    return "";
   }
 </script>
 
 <div>
   <BottomAppBar variant="static" color="secondary">
-    <Section style="display:flex; align-items: center; justify-content: space-between;">
+    <Section
+      style="display:flex; align-items: center; justify-content: space-between;"
+    >
       <Wrapper>
         <button
           class="image-button"
@@ -55,10 +60,7 @@
         class="image-button"
         style="width: 32px; height: 32px"
         onclick={() => {
-          goto(window.location.href
-            .split("/")
-            .slice(0, -1)
-            .join("/"))
+          goto(window.location.href.split("/").slice(0, -1).join("/"));
         }}
       >
         <img
@@ -72,13 +74,18 @@
     <Section>
       <div
         class="section-div"
-        style={activePage === "armory"? `background-color: var(--game-colour-${gameVersion})` : ""}
+        style={activePage === "armory"
+          ? `background-color: var(--game-colour-${gameVersion})`
+          : ""}
       >
         <button
           class="image-button"
           style="width: 100%; height:100%;  color: var(--ui-colour-quest)"
           type="button"
-          onclick={() => {goto(`/${gameVersion}/armory/characters`); activePage = "armory"}}
+          onclick={() => {
+            goto(`/${gameVersion}/armory/characters`);
+            activePage = "armory";
+          }}
           title={t("ui.armory")}
         >
           <div class="bottom-div">
@@ -95,13 +102,18 @@
     <Section>
       <div
         class="section-div"
-        style={activePage === "guilds"? `background-color: var(--game-colour-${gameVersion})` : ""}
+        style={activePage === "guilds"
+          ? `background-color: var(--game-colour-${gameVersion})`
+          : ""}
       >
         <button
           class="image-button"
           style="width: 100%; height:100%; color: var(--ui-colour-guild)"
           type="button"
-          onclick={() => {goto(`/${gameVersion}/guilds`); activePage = "guilds"}}
+          onclick={() => {
+            goto(`/${gameVersion}/guilds`);
+            activePage = "guilds";
+          }}
           title={t("ui.guild")}
         >
           <div class="bottom-div">
@@ -118,7 +130,9 @@
     <Section>
       <div
         class="section-div"
-        style={activePage === "planner"? `background-color: var(--game-colour-${gameVersion})` : ""}
+        style={activePage === "planner"
+          ? `background-color: var(--game-colour-${gameVersion})`
+          : ""}
       >
         <button
           disabled={true}
@@ -142,10 +156,12 @@
     <Section>
       <div
         class="section-div"
-        style={activePage === "history"? `background-color: var(--game-colour-${gameVersion})` : ""}
+        style={activePage === "history"
+          ? `background-color: var(--game-colour-${gameVersion})`
+          : ""}
       >
         <button
-          disabled={accountState.guild? false : true}
+          disabled={accountState.guild ? false : true}
           class="image-button"
           style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
           type="button"
@@ -166,10 +182,12 @@
     <Section>
       <div
         class="section-div"
-        style={activePage === "absence"? `background-color: var(--game-colour-${gameVersion})` : ""}
+        style={activePage === "absence"
+          ? `background-color: var(--game-colour-${gameVersion})`
+          : ""}
       >
         <button
-          disabled={accountState.guild? false : true}
+          disabled={accountState.guild ? false : true}
           class="image-button"
           style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
           type="button"
@@ -188,30 +206,36 @@
       </div>
     </Section>
 
-    <Section>
-      <div
-        class="section-div"
-        style={activePage === "options"? `background-color: var(--game-colour-${gameVersion})` : ""}
-      >
-        <button
-          disabled={accountState.level > 0? false : true}
-          class="image-button"
-          style="width: 100%; height:100%;  color: var(--item-quality-colour-Poor); "
-          type="button"
-          onclick={() => {}}
-          title={t("ui.options")}
+    {#if accountState.level > 0}
+      <Section>
+        <div
+          class="section-div"
+          style={activePage === "options"
+            ? `background-color: var(--game-colour-${gameVersion})`
+            : ""}
         >
-          <div class="bottom-div">
-            <img
-              style="width: 32px; height: 32px"
-              src="/image/ui/icon_options.png"
-              alt={t(`ui.options`)}
-            />
-            {t("ui.options")}
-          </div>
-        </button>
-      </div>
-    </Section>
+          <button
+            class="image-button"
+            style="width: 100%; height:100%;  color: var(--item-quality-colour-Common); "
+            type="button"
+            onclick={() => {
+              goto(`/${gameVersion}/options`);
+              activePage = "options";
+            }}
+            title={t("ui.options")}
+          >
+            <div class="bottom-div">
+              <img
+                style="width: 32px; height: 32px"
+                src="/image/ui/icon_options.png"
+                alt={t(`ui.options`)}
+              />
+              {t("ui.options")}
+            </div>
+          </button>
+        </div>
+      </Section>
+    {/if}
 
     <Section>
       <Wrapper>
