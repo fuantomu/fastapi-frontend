@@ -75,8 +75,8 @@
     page.url.searchParams.entries().forEach(([key, value]) => {
       if (filters[key]) {
         const [modifier, input] = decodeURIComponent(value).split("#");
-        filters[key].modifier = modifier;
-        filters[key].input = input;
+        Object.assign(filters[key].modifier,modifier)
+        Object.assign(filters[key].input,input)
       }
     });
   }
