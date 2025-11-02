@@ -79,7 +79,6 @@
       const enchantments = equipment.wowhead_link.split("&");
       let enchants: string[] = [];
       let gems: string[] = [];
-      console.log(equipment.slot, enchantments)
       enchantments.forEach((etype: string) => {
         let current_type = etype.split("=");
         if (current_type[0] === "upgd") {
@@ -110,7 +109,6 @@
         }
       }
       enchantmentState[slot as keyof EnchantmentState] = currentEnchants;
-      console.log(gems)
       for (const id of gems) {
         const existingGemState = gemState[slot as keyof EnchantmentState]?.find(
           (_enchant: Enchantment) => _enchant.source_id === Number(id)
@@ -123,7 +121,6 @@
             `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}&limit=-1`
           );
           let data = await res.json();
-          console.log(data)
           if (data["Result"]) {
             currentGems.push(data["Result"][0]);
             baseGems.push(data["Result"][0]);

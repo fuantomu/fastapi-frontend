@@ -4,7 +4,6 @@ import { fail, type Actions } from '@sveltejs/kit';
 export const actions: Actions = {
   register: async ({ request }) => {
     const data = await request.formData();
-    console.log(data)
 
     const response = await handleAccountSubmit(data);
     const status = response.status
