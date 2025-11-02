@@ -73,6 +73,9 @@
     },
     "reportBug": "Report a bug",
     "changeVersion": "Change game version",
-    "checkingForCharacter": "Searching for existing character..."
+    "checkingForCharacter": "Searching for existing character...",
+    "list":{
+      "results": "Showing {current} of {total} results"
+    }
   }
 }

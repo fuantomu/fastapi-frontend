@@ -337,13 +337,4 @@
   :global(.wowhead-tooltip .whtt-tooltip-icon) {
     display: none !important;
   }
-  .textinput {
-    background-color: var(--palette-secondary-main);
-    border: 1px solid black;
-    height: 32px;
-    font-size: medium;
-    font-weight: bold;
-    padding: 0;
-    padding-left: 7px;
-  }
 </style>

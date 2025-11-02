@@ -35,7 +35,7 @@
   }
 </script>
 
-<div>
+<div style="margin-top: var(--bottom-bar-size, 70px);">
   <BottomAppBar variant="static" color="secondary">
     <Section
       style="display:flex; align-items: center; justify-content: space-between;"

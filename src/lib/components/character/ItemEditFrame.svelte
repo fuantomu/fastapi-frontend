@@ -79,6 +79,7 @@
       const enchantments = equipment.wowhead_link.split("&");
       let enchants: string[] = [];
       let gems: string[] = [];
+      console.log(equipment.slot, enchantments)
       enchantments.forEach((etype: string) => {
         let current_type = etype.split("=");
         if (current_type[0] === "upgd") {
@@ -99,7 +100,7 @@
           baseEnchants.push(existingEnchantState);
         } else {
           let res = await fetch(
-            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}`
+            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Enchant&version=${gameVersionFactory.gameVersion.getName()}&limit=-1`
           );
           let data = await res.json();
           if (data["Result"]) {
@@ -109,6 +110,7 @@
         }
       }
       enchantmentState[slot as keyof EnchantmentState] = currentEnchants;
+      console.log(gems)
       for (const id of gems) {
         const existingGemState = gemState[slot as keyof EnchantmentState]?.find(
           (_enchant: Enchantment) => _enchant.source_id === Number(id)
@@ -118,9 +120,10 @@
           baseGems.push(existingGemState);
         } else {
           let res = await fetch(
-            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}`
+            `${PUBLIC_API_URL}/Enchantment/?id=${id}&slot=Gem&version=${gameVersionFactory.gameVersion.getName()}&limit=-1`
           );
           let data = await res.json();
+          console.log(data)
           if (data["Result"]) {
             currentGems.push(data["Result"][0]);
             baseGems.push(data["Result"][0]);
@@ -570,15 +573,5 @@
     text-overflow: ellipsis;
     max-width: 100%;
     display: inline-block;
-  }
-
-  .textinput {
-    background-color: var(--palette-secondary-main);
-    border: 1px solid black;
-    height: 32px;
-    font-size: medium;
-    font-weight: bold;
-    padding: 0;
-    padding-left: 7px;
   }
 </style>

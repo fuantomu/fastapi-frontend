@@ -7,16 +7,49 @@ export async function handleAccountSubmit(formData: FormData) {
     const password = formData.get('password') as string
     const level = formData.get('level') as string
     const guild = formData.get('guild') as string
+    let characters = [{ value: "", label: "" }]
+    if (formData.get('characters')?.toString()) {
+        characters = JSON.parse(formData.get('characters')?.toString() ?? "{}")
+    }
 
     const account: Account = {
         username: name,
-        hash: await getHash(name.toLowerCase(),password),
-        level : Number(level),
-        guild : Number(guild ?? -1),
-        creation_time: Date.now()
+        hash: await getHash(name.toLowerCase(), password),
+        level: Number(level),
+        guild: Number(guild ?? -1),
+        creation_time: Date.now(),
+        characters: characters.map((char: { value: string, label: string }) => Number(char.value))
     };
 
+    if (account.characters[0] === 0){
+        account.characters = []
+    }
+
     const response = await fetch(`${PUBLIC_API_URL}/Account/Register`, {
+        method: 'POST', body: JSON.stringify(account), headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+
+    return await response
+}
+
+export async function handleAccountUpdateSubmit(formData: FormData) {
+    const username = formData.get('name') as string
+    const level = formData.get('level') as string
+    const guild = formData.get('guild') as string
+    const password = formData.get("password") as string
+    const characters = JSON.parse(formData.get('characters')?.toString() ?? "{}")
+
+    const account = {
+        username,
+        hash: password.length >= 8? await getHash(username.toLowerCase(), password) : null,
+        level: Number(level),
+        guild: Number(guild ?? -1),
+        characters: characters.map((char: { value: string, label: string }) => Number(char.value))
+    };
+
+    const response = await fetch(`${PUBLIC_API_URL}/Account/`, {
         method: 'POST', body: JSON.stringify(account), headers: {
             'Content-Type': 'application/json'
         },
@@ -31,7 +64,7 @@ export async function handleAccountLogin(formData: FormData) {
 
     const account: AccountLogin = {
         username: name,
-        hash: await getHash(name.toLowerCase(),password)
+        hash: await getHash(name.toLowerCase(), password)
     };
 
     const response = await fetch(`${PUBLIC_API_URL}/Account/Login`, {

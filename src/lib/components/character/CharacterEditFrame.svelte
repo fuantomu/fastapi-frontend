@@ -652,34 +652,6 @@
 </div>
 
 <style>
-  .textinput {
-    width: 400px;
-    background-color: var(--palette-secondary-main);
-    border: 1px solid black;
-    height: 32px;
-    font-size: medium;
-    font-weight: bold;
-    padding: 0;
-    padding-left: 7px;
-  }
-  .row {
-    display: grid;
-    align-items: center;
-    justify-content: start;
-    margin-right: 5%;
-    height: 36px;
-    gap: 20px;
-  }
-  .select {
-    height: 34px;
-    width: 409px;
-    background-color: var(--palette-secondary-main);
-    border: 1px solid black;
-    font-weight: bold;
-    font-size: medium;
-    padding: 0;
-    padding-left: 4px;
-  }
   option {
     background-color: var(--palette-secondary-dark);
     font-weight: bold;

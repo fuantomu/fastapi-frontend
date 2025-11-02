@@ -64,7 +64,13 @@
           accountState.username = account_data["Result"].username;
           accountState.level = account_data["Result"].level;
           accountState.creation_time = account_data["Result"].creation_time;
-          accountState.guild = account_data["Result"].guild;
+          if (Number.isSafeInteger(account_data["Result"].guild)){
+            accountState.guild = account_data["Result"].guild;
+          }
+          else{
+            accountState.guild = -1;
+          }
+          accountState.characters = account_data["Result"].characters
         }
       } else {
         await cookieStore.delete("session");
@@ -93,7 +99,7 @@
 
 <style>
   .container {
-    padding-bottom: var(--bottom-bar-size, 70px);
+    height: fit-content;
   }
   :global(select:hover),
   :global(body) {

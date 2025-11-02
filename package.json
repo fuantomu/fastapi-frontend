@@ -45,6 +45,8 @@
 		"i18next-http-backend": "^3.0.2",
 		"smui-theme": "^8.0.3",
 		"svelte-i18next": "^2.2.2",
+		"svelte-multiselect": "^11.2.4",
+		"svelte-virtuallists": "^1.4.2",
 		"uuid": "^13.0.0",
 		"yarn": "^1.22.22"
 	}

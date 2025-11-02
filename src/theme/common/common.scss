@@ -73,6 +73,37 @@ button.button-save {
   background: var(--palette-secondary-dark); 
 }
 
+input.textinput {
+    width: 400px;
+    background-color: var(--palette-secondary-main);
+    border: 1px solid black;
+    height: 32px;
+    font-size: medium;
+    font-weight: bold;
+    padding: 0;
+    padding-left: 7px;
+}
+
+div.row {
+    display: grid;
+    align-items: center;
+    justify-content: start;
+    margin-right: 5%;
+    height: 36px;
+    gap: 20px;
+}
+
+select.select {
+    height: 34px;
+    width: 409px;
+    background-color: var(--palette-secondary-main);
+    border: 1px solid black;
+    font-weight: bold;
+    font-size: medium;
+    padding: 0;
+    padding-left: 4px;
+}
+
 .container {
   min-height: 100vh;
 
@@ -84,4 +115,23 @@ button.button-save {
 
 .mdc-deprecated-list-item.mdc-ripple-upgraded > i.material-icons {
   margin-right: var(--spacing-s);
+}
+
+.text {
+    font-size: medium;
+    font-weight: normal;
+    text-shadow: none;
+}
+
+span.text {
+    font-size: medium;
+    font-weight: normal;
+    text-shadow: none;
+}
+
+.error {
+    font-size: large;
+    font-weight: bold;
+    text-shadow: none;
+    color: red;
 }

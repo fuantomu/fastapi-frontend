@@ -17,8 +17,8 @@
   class="header-bar"
   style={`background-color: var(--game-colour-${gameVersion})`}
 >
-  <div style="flex: 1; text-align: center">{title ?? t(`version.${gameVersion}`)}</div>
-  <div style="padding-right: 1rem;"><AccountFrame /></div>
+  <div style="flex: 1; text-align: center; user-select: none;">{title ?? t(`version.${gameVersion}`)}</div>
+  <div style="padding-right: 1rem; user-select: none;"><AccountFrame /></div>
 </div>
 
 <style>

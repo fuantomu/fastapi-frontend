@@ -1,9 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
   import { PUBLIC_API_URL } from "$env/static/public";
   import { tokenTimeout } from "$lib/helper/timeout";
   import { t } from "$lib/i18n/index.svelte";
   import type { Account } from "$lib/types";
+  import { GameVersionName } from "$lib/versions/GameVersion";
   import { getContext } from "svelte";
 
   let username: string = $state("");
@@ -18,6 +20,8 @@
     type: "",
   });
   let loggedIn: boolean = $state(accountState.username ? true : false);
+  let showPassword : boolean = $state(false)
+  const gameVersion = getContext<GameVersionName>("gameVersion")
 
   $effect(() => {
     document.body.style.cursor = checkLogin ? "wait" : "";
@@ -36,6 +40,12 @@
 
   function closeModal() {
     isOpen = false;
+    register = false;
+    checkLogin = false;
+    password = ""
+    username = ""
+    infoMessage.msg = ""
+    infoMessage.type = ""
     modal.close();
   }
 
@@ -45,6 +55,7 @@
     accountState.username = "";
     accountState.level = 0;
     accountState.guild = -1;
+    accountState.characters = []
   }
 </script>
 
@@ -66,6 +77,10 @@
     <div
       class="text"
       style="display: block; height: 40px; align-items: center; text-align: center"
+      role="button"
+      tabindex=0
+      onclick={() => goto(`/${gameVersion}/options/${accountState.username}`)}
+      onkeydown={() => {}}
     >
       {t("ui.account.loggedInTrue")}<br />{accountState.username}
     </div>
@@ -77,6 +92,7 @@
   style="background-color: var(--palette-secondary-dark);"
   bind:this={modal}
   closedby="any"
+  onclose={closeModal}
   onkeydown={handleKeydown}
 >
   <form
@@ -133,6 +149,7 @@
               } else {
                 accountState.guild = -1;
               }
+              accountState.characters = data["Result"]["characters"]
             }
 
             if (result.data.timeout) {
@@ -154,7 +171,7 @@
         <span class={infoMessage.type}>{infoMessage.msg}</span>
       {/if}
 
-      <div style="grid-template-columns: 20% 40%" class="row">
+      <div style="grid-template-columns: 30% 40%" class="row">
         <span class="text">{t("ui.account.name")}</span>
         <input
           id="name"
@@ -171,12 +188,12 @@
           title={t("ui.account.name")}
         />
       </div>
-      <div style="grid-template-columns: 20% 40%" class="row">
+      <div style="grid-template-columns: 30% 40%" class="row">
         <span class="text">{t("ui.account.password")}</span>
         <input
           id="password"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Password"
           minlength="8"
           bind:value={password}
@@ -187,6 +204,31 @@
           oninput={() => (infoMessage = {msg: "", type: ""})}
           title={t("ui.account.password")}
         />
+        <button
+            type="button"
+            onmousedown={() => {
+              showPassword = true;
+            }}
+            onmouseup={() => {
+              showPassword = false;
+            }}
+            style="
+              position: absolute; 
+              display: inline-block;
+              bottom: 105px;
+              left: 625px; 
+              height: 26px; 
+              width: 26px;
+              border: none;
+              padding: none;
+              background: transparent"
+            title={t("ui.button.showPassword")}
+            ><img
+              src="/image/ui/icon_eye.png"
+              style="position: absolute; bottom: 0px; left: 0px; width: 32px; height: 32px;"
+              alt={t("ui.button.showPassword")}
+            /></button
+          >
       </div>
       <div style="display: flex; justify-content: space-between;">
         <div>
@@ -213,27 +255,6 @@
 </dialog>
 
 <style>
-  .textinput {
-    width: 400px;
-    background-color: var(--palette-secondary-main);
-    border: 1px solid black;
-    height: 32px;
-    font-size: medium;
-    font-weight: bold;
-    padding: 0;
-    padding-left: 7px;
-  }
-  .text {
-    font-size: medium;
-    font-weight: normal;
-    text-shadow: none;
-  }
-  .error {
-    font-size: large;
-    font-weight: bold;
-    text-shadow: none;
-    color: red;
-  }
   .register {
     font-size: large;
     font-weight: bold;
@@ -259,12 +280,5 @@
         }
       }
     }
-  }
-  .row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 36px;
-    gap: 20px;
   }
 </style>

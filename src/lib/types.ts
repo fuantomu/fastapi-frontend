@@ -245,4 +245,5 @@ export type Account = {
     level: number,
     guild: number,
     creation_time: number
+    characters: number[]
 } & AccountLogin
