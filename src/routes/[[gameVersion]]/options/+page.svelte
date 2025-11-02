@@ -20,15 +20,25 @@
   let characters: Character[] = $state([]);
   let filterOpen: boolean = $state(false);
 
-  const filters = $state({
-    search: "",
-    accountLevelModifier: ">",
-    accountLevelInput: "",
-    accountGuildModifier: "i",
-    accountGuildInput: "",
-    accountCharacterModifier: "i",
-    accountCharacterInput: "",
+  const filters : Record<string, any> = $state({
+    search: page.url.searchParams.get("name") ?? "",
+    level: {
+      modifier: ">",
+      input: ""
+    },
+    guild: {
+      modifier: "i",
+      input: ""
+    },
+    characters: {
+      modifier: "i",
+      input: ""
+    },
   });
+
+  $effect(() => {
+      getSearchParams();
+    })
 
   async function getAccounts() {
     const response = await fetch(`${PUBLIC_API_URL}/Account/`, {
@@ -62,26 +72,11 @@
   }
 
   function getSearchParams() {
-    page.url.searchParams.entries().forEach((element) => {
-      switch (element[0]) {
-        case "name":
-          filters.search = element[1];
-          return;
-        case "level":
-          let decoded_level = decodeURIComponent(element[1]).split("#");
-          filters.accountLevelModifier = decoded_level[0];
-          filters.accountLevelInput = decoded_level[1];
-          return;
-        case "guild":
-          let decoded_guild = decodeURIComponent(element[1]).split("#");
-          filters.accountGuildModifier = decoded_guild[0];
-          filters.accountGuildInput = decoded_guild[1];
-          return;
-        case "character":
-          let decoded_character = decodeURIComponent(element[1]).split("#");
-          filters.accountCharacterModifier = decoded_character[0];
-          filters.accountCharacterInput = decoded_character[1];
-          return;
+    page.url.searchParams.entries().forEach(([key, value]) => {
+      if (filters[key]) {
+        const [modifier, input] = decodeURIComponent(value).split("#");
+        filters[key].modifier = modifier;
+        filters[key].input = input;
       }
     });
   }
@@ -93,45 +88,12 @@
     await getAccounts();
     await getGuilds();
     await getCharacters();
-    getSearchParams();
   };
 
   function updateSort(type: string) {
     currentSort === type ? (reverse = !reverse) : (reverse = false);
     currentSort = type;
     switch (type) {
-      case "name":
-        if (reverse) {
-          return accounts.sort((a: Account, b: Account) =>
-            sortBy(b, a, "username")
-          );
-        }
-        return accounts.sort((a: Account, b: Account) =>
-          sortBy(a, b, "username")
-        );
-      case "level":
-        if (reverse) {
-          return accounts.sort((a: Account, b: Account) =>
-            sortBy(b, a, "level")
-          );
-        }
-        return accounts.sort((a: Account, b: Account) => sortBy(a, b, "level"));
-      case "creation":
-        if (reverse) {
-          return accounts.sort((a: Account, b: Account) =>
-            sortBy(b, a, "creation_time")
-          );
-        }
-        return accounts.sort((a: Account, b: Account) =>
-          sortBy(a, b, "creation_time")
-        );
-      case "guild":
-        if (reverse) {
-          return accounts.sort((a: Account, b: Account) =>
-            sortBy(b, a, "guild")
-          );
-        }
-        return accounts.sort((a: Account, b: Account) => sortBy(a, b, "guild"));
       case "characters":
         if (reverse) {
           return accounts.sort((a: Account, b: Account) =>
@@ -141,6 +103,11 @@
         return accounts.sort((a: Account, b: Account) =>
           a.characters.length > b.characters.length ? 0 : -1
         );
+      default:
+        if (reverse) {
+          return accounts.sort((a: Account, b: Account) => sortBy(b, a, type));
+        }
+        return accounts.sort((a: Account, b: Account) => sortBy(a, b, type));
     }
   }
 
@@ -153,33 +120,33 @@
     return accounts.filter((account: Account) => {
       return (
         account.username.includes(filters.search) &&
-        (filters.accountLevelInput !== ""
+        (filters.level.input !== ""
           ? parseModifier(
-              filters.accountLevelModifier,
+              filters.level.modifier,
               Number(account.level),
-              Number(filters.accountLevelInput)
+              Number(filters.level.input)
             )
           : true) &&
-        (filters.accountGuildInput !== ""
+        (filters.guild.input !== ""
           ? parseModifier(
-              filters.accountGuildModifier,
+              filters.guild.modifier,
               guilds
                 .find((guild: Guild) => guild.id === account.guild)
                 ?.name.toLowerCase() ?? "",
-              filters.accountGuildInput.toLowerCase()
+              filters.guild.input.toLowerCase()
             )
           : true) &&
-        (filters.accountCharacterInput !== ""
+        (filters.characters.input !== ""
           ? account.characters.some((character: number) =>
               parseModifier(
-                filters.accountCharacterModifier,
+                filters.characters.modifier,
                 characters
                   .find(
                     (other_character: Character) =>
                       other_character.id === character
                   )
                   ?.name.toLowerCase() ?? "",
-                filters.accountCharacterInput.toLowerCase()
+                filters.characters.input.toLowerCase()
               )
             )
           : true)
@@ -203,7 +170,7 @@
       <span style="display: flex; justify-content: center;"
         ><input
           style="width: 100%;"
-          placeholder="Search..."
+          placeholder={t("ui.placeholder.search")}
           class="textinput"
           bind:value={filters.search}
           id="search"
@@ -235,24 +202,24 @@
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
         <span
-          style="display: block; justify-self: end; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountLevel")}</span
           ></span
         >
         <span
-          style="display: block; justify-self: center; padding: 20px; width: 70%;"
+          style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
             id="accountLevelSelect"
             name="accountLevelSelect"
-            bind:value={filters.accountLevelModifier}
+            bind:value={filters.level.modifier}
             onchange={() =>
               updateSearchParam(
                 "level",
-                `${filters.accountLevelModifier}#${filters.accountLevelInput}`
+                `${filters.level.modifier}#${filters.level.input}`
               )}
           >
             <option value=">">{t("ui.list.greaterThan")}</option>
@@ -263,11 +230,11 @@
           </select></span
         >
         <span
-          style="display: block; justify-self: start; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountLevel"
             name="accountLevel"
-            bind:value={filters.accountLevelInput}
+            bind:value={filters.level.input}
             placeholder="0"
             type="number"
             class="textinput"
@@ -275,14 +242,14 @@
               if (e.key === "Enter") {
                 updateSearchParam(
                   "level",
-                  `${filters.accountLevelModifier}#${filters.accountLevelInput}`
+                  `${filters.level.modifier}#${filters.level.input}`
                 );
               }
             }}
             onfocusout={() => {
               updateSearchParam(
                 "level",
-                `${filters.accountLevelModifier}#${filters.accountLevelInput}`
+                `${filters.level.modifier}#${filters.level.input}`
               );
             }}
           /></span
@@ -292,24 +259,24 @@
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
         <span
-          style="display: block; justify-self: end; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountGuild")}</span
           ></span
         >
         <span
-          style="display: block; justify-self: center; padding: 20px; width: 70%;"
+          style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
             id="accountGuildSelect"
             name="accountGuildSelect"
-            bind:value={filters.accountGuildModifier}
+            bind:value={filters.guild.modifier}
             onchange={() =>
               updateSearchParam(
                 "guild",
-                `${filters.accountGuildModifier}#${filters.accountGuildInput}`
+                `${filters.guild.modifier}#${filters.guild.input}`
               )}
           >
             <option value="i">{t("ui.list.includes")}</option>
@@ -319,26 +286,26 @@
           </select></span
         >
         <span
-          style="display: block; justify-self: start; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountGuild"
             name="accountGuild"
-            bind:value={filters.accountGuildInput}
-            placeholder="Search..."
+            bind:value={filters.guild.input}
+            placeholder={t("ui.placeholder.search")}
             type="text"
             class="textinput"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Enter") {
                 updateSearchParam(
                   "guild",
-                  `${filters.accountGuildModifier}#${filters.accountGuildInput}`
+                  `${filters.guild.modifier}#${filters.guild.input}`
                 );
               }
             }}
             onfocusout={() => {
               updateSearchParam(
                 "guild",
-                `${filters.accountGuildModifier}#${filters.accountGuildInput}`
+                `${filters.guild.modifier}#${filters.guild.input}`
               );
             }}
           /></span
@@ -348,24 +315,24 @@
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
         <span
-          style="display: block; justify-self: end; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountCharacter")}</span
           ></span
         >
         <span
-          style="display: block; justify-self: center; padding: 20px; width: 70%;"
+          style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
             id="accountCharacterSelect"
             name="accountCharacterSelect"
-            bind:value={filters.accountCharacterModifier}
+            bind:value={filters.characters.modifier}
             onchange={() =>
               updateSearchParam(
-                "character",
-                `${filters.accountCharacterModifier}#${filters.accountCharacterInput}`
+                "characters",
+                `${filters.characters.modifier}#${filters.characters.input}`
               )}
           >
             <option value="i">{t("ui.list.includes")}</option>
@@ -373,26 +340,26 @@
           </select></span
         >
         <span
-          style="display: block; justify-self: start; padding: 20px; min-width: 80px;"
+          style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountCharacter"
             name="accountCharacter"
-            bind:value={filters.accountCharacterInput}
-            placeholder="Search..."
+            bind:value={filters.characters.input}
+            placeholder={t("ui.placeholder.search")}
             type="text"
             class="textinput"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Enter") {
                 updateSearchParam(
-                  "character",
-                  `${filters.accountCharacterModifier}#${filters.accountCharacterInput}`
+                  "characters",
+                  `${filters.characters.modifier}#${filters.characters.input}`
                 );
               }
             }}
             onfocusout={() => {
               updateSearchParam(
-                "character",
-                `${filters.accountCharacterModifier}#${filters.accountCharacterInput}`
+                "characters",
+                `${filters.characters.modifier}#${filters.characters.input}`
               );
             }}
           /></span
@@ -400,14 +367,14 @@
       </div>
     {/if}
     <div
-      style={`display: grid; grid-template-columns: 20% 20% 20% 20% 20%; border: 1px solid black;`}
+      style={`display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid black;`}
     >
       <span
         class="title-span"
         role="button"
         tabindex="0"
         onkeydown={() => {}}
-        onclick={() => updateSort("name")}
+        onclick={() => updateSort("username")}
         >{t("ui.options.accountName")}
       </span>
       <span
@@ -422,7 +389,7 @@
         role="button"
         tabindex="0"
         onkeydown={() => {}}
-        onclick={() => updateSort("creation")}
+        onclick={() => updateSort("creation_time")}
         >{t("ui.options.accountCreation")}</span
       >
       <span
@@ -442,7 +409,7 @@
       >
     </div>
     <VirtualList
-      style="height:600px; border-bottom: 1px solid black; overflow:auto; z-index: 0;"
+      style="height:55vh; border-bottom: 1px solid black; overflow:auto; z-index: 0;"
       items={getFilteredItems()}
     >
       {#snippet vl_slot({ index, item })}
@@ -541,7 +508,7 @@
 
   .div-item {
     display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-columns: repeat(5, 1fr);
     justify-items: center;
     align-items: center;
     height: 32px;
@@ -550,6 +517,6 @@
     background-color: var(--palette-primary-main);
   }
   h4 {
-    padding: 20px;
+    padding-left: 20px;
   }
 </style>

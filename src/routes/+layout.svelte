@@ -99,7 +99,7 @@
 
 <style>
   .container {
-    height: fit-content;
+    height: 100%;
   }
   :global(select:hover),
   :global(body) {

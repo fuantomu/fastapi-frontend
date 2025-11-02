@@ -9,6 +9,7 @@
   import { goto } from "$app/navigation";
   import MultiSelect from "svelte-multiselect";
   import { enhance } from "$app/forms";
+  import { sortBy } from "$lib/helper/sort";
 
   let { data }: PageProps = $props();
 
@@ -67,6 +68,7 @@
     );
     const response_data = await response.json();
     characters = response_data["Result"];
+    characters.sort((a: Character, b: Character) => sortBy(a,b, "name"))
   }
 
   let fetchData = async () => {
@@ -90,6 +92,7 @@
     use:enhance={() => {
       return async ({ result }) => {
         if (result.type === "success" && accountState.level > 0) {
+          accountState.characters = accountCharacters.map((e : any) => e.value)
           goto(`/${gameVersion}/options`);
         } else {
           goto(`/${gameVersion}/`);
