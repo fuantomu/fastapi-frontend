@@ -18,27 +18,14 @@
   let accountState = getContext<Account>("accountState");
   let guilds: Guild[] = $state([]);
   let characters: Character[] = $state([]);
-  let filterOpen: boolean = $state(false);
+  let filterOpen: boolean = $state(page.url.searchParams.size > 0? true: false);
 
   const filters : Record<string, any> = $state({
     search: page.url.searchParams.get("name") ?? "",
-    level: {
-      modifier: ">",
-      input: ""
-    },
-    guild: {
-      modifier: "i",
-      input: ""
-    },
-    characters: {
-      modifier: "i",
-      input: ""
-    },
+    level: getSearchParams("level", ">"),
+    guild: getSearchParams("guild"),
+    characters: getSearchParams("character"),
   });
-
-  $effect(() => {
-      getSearchParams();
-    })
 
   async function getAccounts() {
     const response = await fetch(`${PUBLIC_API_URL}/Account/`, {
@@ -71,14 +58,13 @@
     characters = response_data["Result"];
   }
 
-  function getSearchParams() {
-    page.url.searchParams.entries().forEach(([key, value]) => {
-      if (filters[key]) {
-        const [modifier, input] = decodeURIComponent(value).split("#");
-        Object.assign(filters[key].modifier,modifier)
-        Object.assign(filters[key].input,input)
-      }
-    });
+  function getSearchParams(key: string, defaultModifier: string = "i", defaultInput: string = "") {
+    const param = page.url.searchParams.get(key);
+    if(param){
+      let [mod, search] = decodeURIComponent(param).split("#");
+      return { "modifier": mod, "input": search}
+    }
+    return { "modifier": defaultModifier, "input": defaultInput}
   }
 
   let fetchData = async () => {
