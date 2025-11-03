@@ -6,8 +6,13 @@
     "duplicateCharacter": "'{name}' already exists on '{realm}'",
     "empty": "{var} is empty"
   },
+  "faction": {
+    "Horde": "Horde",
+    "Alliance": "Alliance",
+    "None": "None"
+  },
   "classes": {
-    "Deathknight": "Death Knight",
+    "Deathknight": "Deathknight",
     "Druid": "Druid",
     "Hunter": "Hunter",
     "Mage": "Mage",
@@ -18,7 +23,9 @@
     "Shaman": "Shaman",
     "Warlock": "Warlock",
     "Warrior": "Warrior",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Adventurer": "Unknown",
+    "None": "None"
   },
   "specs": {
     "DeathknightBlood": "Blood",
@@ -56,7 +63,34 @@
     "WarriorArms": "Arms",
     "WarriorFury": "Fury",
     "WarriorProtection": "Protection",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "Adventurer": "Unknown",
+    "None": "None"
+  },
+  "race": {
+    "Human": "Human",
+    "Dwarf": "Dwarf",
+    "Nightelf": "Nightelf",
+    "Gnome": "Gnome",
+    "Draenei": "Draenei",
+    "Worgen": "Worgen",
+    "Orc": "Orc",
+    "Troll": "Troll",
+    "Tauren": "Tauren",
+    "Undead": "Undead",
+    "Bloodelf": "Bloodelf",
+    "Goblin": "Goblin",
+    "Pandaren": "Pandaren",
+    "Alien": "Unknown",
+    "None": "None"
+  },
+  "region": {
+    "EU": "Europe",
+    "US": "Americas",
+    "CN": "China",
+    "KR": "Korea",
+    "TW": "Taiwan",
+    "None": "None"
   },
   "ui":{
     "ranking":{
@@ -76,6 +110,18 @@
     "checkingForCharacter": "Searching for existing character...",
     "list":{
       "results": "Showing {current} of {total} results"
+    },
+    "armory": {
+      "characterName": "Name",
+      "characterRealm": "Realm",
+      "characterRegion": "Region",
+      "characterRace": "Race",
+      "characterFaction": "Faction",
+      "characterClass": "Class",
+      "characterSpec": "Spec",
+      "characterLevel": "Level",
+      "characterGuild": "Guild",
+      "characterAchievementPoints": "Achievement Points"
     }
   }
 }
