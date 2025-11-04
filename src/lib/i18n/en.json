@@ -121,7 +121,8 @@
       "characterSpec": "Spec",
       "characterLevel": "Level",
       "characterGuild": "Guild",
-      "characterAchievementPoints": "Achievement Points"
+      "characterAchievementPoints": "Achievement Points",
+      "deleteConfirmation": "Are you sure you want to delete character '{character}'?"
     }
   }
 }

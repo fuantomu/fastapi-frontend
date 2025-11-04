@@ -62,15 +62,6 @@ export async function handleCharacterSubmit(formData: FormData): Promise<string>
     return `/characters/${id}`
 }
 
-export async function handleCharacterDelete(formData: FormData) {
-    const id = formData.get('id') as string
-    const gameVersion = formData.get('gameVersion') as string
-
-    await fetch(`${PUBLIC_API_URL}/Character/?id=${id}&version=${gameVersion}`, {
-        method: 'DELETE',
-    })
-}
-
 export async function handleDirectCharacterSubmit(character: Character): Promise<string> {
     character.id = character.id ?? 0
     if (!character.last_login_timestamp) {

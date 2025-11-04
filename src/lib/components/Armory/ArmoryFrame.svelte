@@ -29,6 +29,7 @@
     createWCLState,
   } from "$lib/helper/armoryState.svelte";
   import Title from "$lib/components/Title.svelte";
+  import DeleteCharacter from "./DeleteCharacter.svelte";
 
   const { id } = $props<{ id: number }>();
 
@@ -451,12 +452,7 @@
             onclick={() => handleRefresh()}>{t("ui.refreshCharacter")}</button
           >
           {#if accountState.level > 0}
-            <button
-              class="button-delete"
-              type="button"
-              onclick={() => handleDelete()}
-              >{t("ui.deleteCharacter")}
-            </button>
+            <DeleteCharacter character={formData.character}></DeleteCharacter>
           {/if}
         </Content>
         <Content style={"width: 97%"}>
