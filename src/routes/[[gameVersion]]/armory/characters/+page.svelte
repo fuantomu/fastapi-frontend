@@ -137,10 +137,6 @@
     }
     return ICON_QUESTIONMARK;
   }
-
-  function handleAddSearchCharacter(_char: Character) {
-    characters.push(_char);
-  }
 </script>
 
 <Title title={t("title.armory.characters")}></Title>
@@ -666,7 +662,6 @@
         search={filters.search}
         realm={filters.realm.input}
         region={filters.region}
-        onAdd={handleAddSearchCharacter}
       ></SearchCharacter>
     {/if}
 

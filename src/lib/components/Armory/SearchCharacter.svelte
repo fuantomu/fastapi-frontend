@@ -18,15 +18,13 @@
     search = "",
     region = "eu",
     realm = "",
-    onAdd,
   } = $props<{
     guilds: Guild[];
     search: string;
     region: string;
     realm: string;
-    onAdd: (character: Character) => void;
   }>();
-
+  
   let modal: HTMLDialogElement;
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   let accountState = getContext<Account>("accountState");
@@ -38,15 +36,13 @@
     version: gameVersionFactory.gameVersion.getName(),
   });
   let foundCharacter: Character = $state({} as Character);
-  let guildName: string = $state("")
+  let guildName: string = $state("");
   let searching: boolean = $state(false);
   let adding: boolean = $state(false);
 
   function openModal() {
     isOpen = true;
-    filters.search = search;
-    filters.realm = realm;
-    filters.region = region;
+    resetFields()
     modal.showModal();
   }
 
@@ -58,8 +54,8 @@
     modal.close();
   }
   $effect(() => {
-    document.body.style.cursor = (adding || searching) ? "wait" : "";
-  })
+    document.body.style.cursor = adding || searching ? "wait" : "";
+  });
 
   function getRaceIcon(race: string, gender: string) {
     const found_race = gameVersionFactory.gameVersion
@@ -79,9 +75,18 @@
     }
   }
 
-  async function addCharacter(character: Record<string,any>, guild_name: string) {
-    character.guild_name = guild_name
-    adding = true
+  function resetFields() {
+    filters.search = search;
+    filters.realm = realm;
+    filters.region = region;
+  }
+
+  async function addCharacter(
+    character: Record<string, any>,
+    guild_name: string
+  ) {
+    character.guild_name = guild_name;
+    adding = true;
     const res = await fetch(`${PUBLIC_API_URL}/Character/`, {
       method: "POST",
       body: JSON.stringify(character),
@@ -90,7 +95,9 @@
       },
     });
     const data = await res.json();
-    goto(`/${gameVersionFactory.gameVersion.getName()}/armory/characters/${data['Result']}`)
+    goto(
+      `/${gameVersionFactory.gameVersion.getName()}/armory/characters/${data["Result"]}`
+    );
   }
 </script>
 
@@ -121,9 +128,9 @@
   onkeydown={handleKeydown}
 >
   {#if adding}
-  <div class="fullscreen-blur">
-    <p>{t('ui.armory.characterFetch')}</p>
-  </div>
+    <div class="fullscreen-blur">
+      <p>{t("ui.armory.characterFetch")}</p>
+    </div>
   {/if}
   <form
     method="POST"
@@ -135,7 +142,7 @@
         await update({ reset: false });
         searching = false;
         if (result.type === "success" && result.data) {
-          const item = result.data.character as Record<string, any>
+          const item = result.data.character as Record<string, any>;
           foundCharacter = item as Character;
           guildName = item.guild_name;
         }
@@ -144,7 +151,9 @@
   >
     <article>
       <header>
-        <h4>{t("ui.armory.searchCharacter")}</h4>
+        <h4>
+          {t("ui.armory.searchCharacter")}
+        </h4>
       </header>
       <div
         style={`display: grid; grid-template-columns: repeat(3, 20vw); background-color: var(--palette-secondary-dark)`}
@@ -163,7 +172,7 @@
         >
       </div>
       <div
-        style={`display: grid; grid-template-columns: repeat(3, 20vw); background-color: var(--palette-secondary-dark)`}
+        style={`display: grid; grid-template-columns: repeat(3, 20vw) 5vw; background-color: var(--palette-secondary-dark)`}
       >
         <input
           hidden
@@ -207,9 +216,23 @@
           autocomplete="off"
           required
         />
+        <button
+          type="button"
+          style="margin-left: 60px; background: transparent; border: none;
+              padding: none; height: 32px; width: 32px;"
+          title={t("ui.armory.resetSearch")}
+          onclick={() => resetFields()}
+          ><img
+            style="position: relative; height: 32px; width: 32px; display: inline-block;
+              bottom: 1px;
+              left: -6px; "
+            src="/image/ui/icon_refresh.png"
+            alt={t("ui.armory.resetSearch")}
+          /></button
+        >
       </div>
       <div
-        style="display: grid; margin-top: 20px; border-bottom: 1px solid black; user-select: none;"
+        style="margin-top: 20px; border-bottom: 1px solid black; user-select: none;"
       >
         {t("ui.list.searchResult")}
       </div>
