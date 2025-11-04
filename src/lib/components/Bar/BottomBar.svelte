@@ -7,28 +7,35 @@
   import { getContext } from "svelte";
   import type { GameVersionName } from "$lib/versions/GameVersion";
   import type { Account } from "$lib/types";
+  import { page } from "$app/state";
 
   const gameVersion = getContext<GameVersionName>("gameVersion");
   let activePage: string = $state(getActivePage());
   let accountState = getContext<Account>("accountState");
 
+  $effect(() => {
+    if (getActivePage() !== activePage){
+      activePage = getActivePage()
+    }
+  })
+
   function getActivePage() {
-    if (window.location.href.includes("armory")) {
+    if (page.url.pathname.includes("armory")) {
       return "armory";
     }
-    if (window.location.href.includes("guilds")) {
+    if (page.url.pathname.includes("guilds")) {
       return "guilds";
     }
-    if (window.location.href.includes("planner")) {
+    if (page.url.pathname.includes("planner")) {
       return "planner";
     }
-    if (window.location.href.includes("history")) {
+    if (page.url.pathname.includes("history")) {
       return "history";
     }
-    if (window.location.href.includes("absence")) {
+    if (page.url.pathname.includes("absence")) {
       return "absence";
     }
-    if (window.location.href.includes("options")) {
+    if (page.url.pathname.includes("options")) {
       return "options";
     }
     return "";
