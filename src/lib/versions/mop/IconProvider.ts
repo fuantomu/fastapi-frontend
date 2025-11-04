@@ -6,7 +6,7 @@ export class IconProvider implements BaseIconProvider {
     }
 
     getFromSource(icon: string, size: string = '36'): string {
-        return `https://render-eu.worldofwarcraft.com/icons/${size}/${icon}.jpg`;
+        return `https://render.worldofwarcraft.com/icons/${size}/${icon}.jpg`;
     }
 
 }

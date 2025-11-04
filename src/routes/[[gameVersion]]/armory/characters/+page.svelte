@@ -17,6 +17,7 @@
   import { PlayerClass } from "$lib/versions/PlayerClass";
   import { PlayerRace } from "$lib/versions/PlayerRace";
   import { PlayerFaction } from "$lib/versions/PlayerFaction";
+  import SearchCharacter from "$lib/components/Armory/SearchCharacter.svelte";
 
   let { data }: PageProps = $props();
   let characters: Character[] = $state(data.items ?? []);
@@ -29,6 +30,8 @@
   let filterOpen: boolean = $state(
     page.url.searchParams.size > 0 ? true : false
   );
+  let filtered_characters = $derived(getFilteredItems());
+  let filtered_length = $derived(filtered_characters.length);
 
   let filters: Record<string, any> = $state({
     search: page.url.searchParams.get("name") ?? "",
@@ -134,6 +137,10 @@
     }
     return ICON_QUESTIONMARK;
   }
+
+  function handleAddSearchCharacter(_char: Character) {
+    characters.push(_char);
+  }
 </script>
 
 <Title title={t("title.armory.characters")}></Title>
@@ -153,6 +160,8 @@
             bind:value={filters.search}
             id="search"
             name="search"
+            spellcheck="false"
+            autocomplete="off"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Escape") {
                 filters.search = "";
@@ -235,6 +244,8 @@
               placeholder={t("ui.placeholder.search")}
               type="text"
               class="textinput"
+              spellcheck="false"
+              autocomplete="off"
               onkeydown={(e: KeyboardEvent) => {
                 if (e.key === "Enter") {
                   updateSearchParam(
@@ -310,6 +321,8 @@
               placeholder="0"
               type="number"
               class="textinput"
+              spellcheck="false"
+              autocomplete="off"
               onkeydown={(e: KeyboardEvent) => {
                 if (e.key === "Enter") {
                   updateSearchParam(
@@ -333,26 +346,23 @@
           <span style="display: block; justify-self: end;  min-width: 80px;"
             ><span
               style="display: flex; align-items: center; justify-items: center; height: 100%"
-              >{t("ui.armory.characterClass")}</span
+              >{t("ui.armory.characterFaction")}</span
             ></span
           >
           <span style="display: block; justify-self: start;"
             ><select
               style="width: 12vw;"
               class="select"
-              id="characterClassSelect"
-              name="characterClassSelect"
-              bind:value={filters.character_class}
+              id="characterFactionSelect"
+              name="characterFactionSelect"
+              bind:value={filters.faction}
               onchange={() =>
-                updateSearchParam(
-                  "character_class",
-                  `${filters.character_class}`
-                )}
+                updateSearchParam("faction", `${filters.faction}`)}
             >
-              <option value={"None"}>{t(`classes.None`)}</option>
-              {#each gameVersionFactory.gameVersion.getClasses() as _class}
-                <option value={_class.name}
-                  >{t(`classes.${_class.name}`)}</option
+              <option value={"None"}>{t(`faction.None`)}</option>
+              {#each gameVersionFactory.gameVersion.getFactions() as _faction}
+                <option value={_faction.name}
+                  >{t(`faction.${_faction.name}`)}</option
                 >
               {/each}
             </select></span
@@ -390,6 +400,8 @@
               placeholder={t("ui.placeholder.search")}
               type="text"
               class="textinput"
+              spellcheck="false"
+              autocomplete="off"
               onkeydown={(e: KeyboardEvent) => {
                 if (e.key === "Enter") {
                   updateSearchParam(
@@ -413,27 +425,31 @@
           <span style="display: block; justify-self: end;  min-width: 80px;"
             ><span
               style="display: flex; align-items: center; justify-items: center; height: 100%"
-              >{t("ui.armory.characterFaction")}</span
+              >{t("ui.armory.characterClass")}</span
             ></span
           >
           <span style="display: block; justify-self: start;"
             ><select
               style="width: 12vw;"
               class="select"
-              id="characterFactionSelect"
-              name="characterFactionSelect"
-              bind:value={filters.faction}
+              id="characterClassSelect"
+              name="characterClassSelect"
+              bind:value={filters.character_class}
               onchange={() =>
-                updateSearchParam("faction", `${filters.faction}`)}
+                updateSearchParam(
+                  "character_class",
+                  `${filters.character_class}`
+                )}
             >
-              <option value={"None"}>{t(`faction.None`)}</option>
-              {#each gameVersionFactory.gameVersion.getFactions() as _faction}
-                <option value={_faction.name}
-                  >{t(`faction.${_faction.name}`)}</option
+              <option value={"None"}>{t(`classes.None`)}</option>
+              {#each gameVersionFactory.gameVersion.getClasses() as _class}
+                <option value={_class.name}
+                  >{t(`classes.${_class.name}`)}</option
                 >
               {/each}
             </select></span
           >
+
           <span style="display: block; justify-self: end;  min-width: 80px;"
             ><span
               style="display: flex; align-items: center; justify-items: center; height: 100%"
@@ -548,80 +564,90 @@
           >
         {/if}
       </div>
-      <VirtualList
-        style="height: 55vh; border-bottom: 1px solid black; overflow:auto; z-index: 0;"
-        items={getFilteredItems()}
-      >
-        {#snippet vl_slot({ index, item })}
-          <div
-            role="button"
-            tabindex="0"
-            class="div-item"
-            onkeydown={() => {}}
-            onclick={() => goto(`/${gameVersion}/armory/characters/${item.id}`)}
-          >
-            <span style="display: flex; align-items: center;"
-              >{item.name}
-              {#if accountState.characters?.includes(item.id)}
-                <img
-                  src="/image/ui/icon_home.png"
-                  style="width: 16px; height: 16px;"
-                  alt={t("ui.armory.owner")}
-                />
+      {#if filtered_length === 0}
+        <div
+          style="display: block; align-self: center; justify-self: center; color: var(--item-quality-colour-Poor)"
+        >
+          {t("ui.list.noResults")}
+        </div>
+      {:else}
+        <VirtualList
+          style="height: 55vh; border-bottom: 1px solid black; overflow:auto; z-index: 0;"
+          items={filtered_characters}
+        >
+          {#snippet vl_slot({ index, item })}
+            <div
+              role="button"
+              tabindex="0"
+              class="div-item"
+              onkeydown={() => {}}
+              onclick={() =>
+                goto(`/${gameVersion}/armory/characters/${item.id}`)}
+            >
+              <span style="display: flex; align-items: center;"
+                >{item.name}
+                {#if accountState.characters?.includes(item.id)}
+                  <img
+                    src="/image/ui/icon_home.png"
+                    style="width: 16px; height: 16px;"
+                    alt={t("ui.armory.owner")}
+                  />
+                {/if}
+              </span>
+              <div
+                style="display: grid; grid-template-columns: 70% 30%; width: 100%; justify-items: center;"
+              >
+                <span>{item.realm} </span>
+                <span>{item.region.toUpperCase()}</span>
+              </div>
+              <div
+                style="display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; justify-items: center;"
+              >
+                <WarcraftIcon src={getRaceIcon(item.race, item.gender)}
+                ></WarcraftIcon>
+                <WarcraftIcon
+                  src={gameVersionFactory.gameVersion
+                    .getFactions()
+                    .find(
+                      (_faction: PlayerFaction) =>
+                        _faction.name === item.faction
+                    )?.icon ?? ICON_QUESTIONMARK}
+                ></WarcraftIcon>
+                <WarcraftIcon
+                  src={gameVersionFactory.gameVersion
+                    .getClasses()
+                    .find(
+                      (_class: PlayerClass) =>
+                        _class.name === item.character_class
+                    )?.icon ?? ICON_QUESTIONMARK}
+                ></WarcraftIcon>
+                <WarcraftIcon
+                  src={gameVersionFactory.gameVersion
+                    .getSpecs()
+                    .find(
+                      (spec: PlayerSpec) =>
+                        spec.name ===
+                        `${item.character_class}${item.active_spec}`
+                    )?.icon ?? ICON_QUESTIONMARK}
+                ></WarcraftIcon>
+              </div>
+              <span>{item.level}</span>
+              {#if item.guild !== null}
+                <span
+                  >{guilds.find((guild: Guild) => guild.id === item.guild)
+                    ?.name}</span
+                >
+              {:else}
+                <span style="color: var(--item-quality-colour-Poor);"
+                  >{t("ui.armory.noGuild")}</span
+                >
               {/if}
-            </span>
-            <div
-              style="display: grid; grid-template-columns: 70% 30%; width: 100%; justify-items: center;"
-            >
-              <span>{item.realm} </span>
-              <span>{item.region.toUpperCase()}</span>
+              <span>{item.achievement_points}</span>
             </div>
-            <div
-              style="display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; justify-items: center;"
-            >
-              <WarcraftIcon src={getRaceIcon(item.race, item.gender)}
-              ></WarcraftIcon>
-              <WarcraftIcon
-                src={gameVersionFactory.gameVersion
-                  .getFactions()
-                  .find(
-                    (_faction: PlayerFaction) => _faction.name === item.faction
-                  )?.icon ?? ICON_QUESTIONMARK}
-              ></WarcraftIcon>
-              <WarcraftIcon
-                src={gameVersionFactory.gameVersion
-                  .getClasses()
-                  .find(
-                    (_class: PlayerClass) =>
-                      _class.name === item.character_class
-                  )?.icon ?? ICON_QUESTIONMARK}
-              ></WarcraftIcon>
-              <WarcraftIcon
-                src={gameVersionFactory.gameVersion
-                  .getSpecs()
-                  .find(
-                    (spec: PlayerSpec) =>
-                      spec.name === `${item.character_class}${item.active_spec}`
-                  )?.icon ?? ICON_QUESTIONMARK}
-              ></WarcraftIcon>
-            </div>
-            <span>{item.level}</span>
-            {#if item.guild !== null}
-              <span
-                >{guilds.find((guild: Guild) => guild.id === item.guild)
-                  ?.name}</span
-              >
-            {:else}
-              <span style="color: var(--item-quality-colour-Poor);"
-                >{t("ui.armory.noGuild")}</span
-              >
-            {/if}
-            <span>{item.achievement_points}</span>
-          </div>
-        {/snippet}
-      </VirtualList>
-      <div
-        style="
+          {/snippet}
+        </VirtualList>
+        <div
+          style="
       position: absolute;
       bottom: 0;
       left: 0;
@@ -631,18 +657,26 @@
       pointer-events: none;
       justify-items: end;
     "
-      >
-        
-      </div>
-      
+        ></div>
+      {/if}
     </div>
+    {#if filtered_length <= 15}
+      <SearchCharacter
+        {guilds}
+        search={filters.search}
+        realm={filters.realm.input}
+        region={filters.region}
+        onAdd={handleAddSearchCharacter}
+      ></SearchCharacter>
+    {/if}
+
     <span
-          style="display: flex; justify-self: end; margin-right: 20px; color: var(--item-quality-colour-Poor); z-index: 0;"
-          >{t(`ui.list.results`, {
-            current: getFilteredItems().length,
-            total: characters.length,
-          })}</span
-        >
+      style="display: flex; justify-self: end; margin-right: 20px; color: var(--item-quality-colour-Poor); z-index: 0;"
+      >{t(`ui.list.results`, {
+        current: filtered_length,
+        total: characters.length,
+      })}</span
+    >
     {#if accountState.level > 0}
       <button
         type="button"

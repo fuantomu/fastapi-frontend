@@ -80,6 +80,8 @@
             name="name"
             type="text"
             placeholder="Username"
+            spellcheck="false"
+            autocomplete="off"
             bind:value={account.username}
             oninput={() => (infoMessage = "")}
             class="textinput"
@@ -96,6 +98,8 @@
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            spellcheck="false"
+            autocomplete="off"
             bind:value={account.hash}
             class="textinput"
             required

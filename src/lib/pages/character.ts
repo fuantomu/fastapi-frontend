@@ -118,3 +118,17 @@ export async function handleDirectSpecializationSubmit(specialization: Character
     })
     return "Success"
 }
+export async function handleCharacterSearch(formData: FormData) {
+    const name = formData.get('search') as string
+    const realm = formData.get('realmInput') as string
+    const region = formData.get('characterRegionSelect') as string
+    const version = formData.get('version') as string
+
+    let response = await fetch(`${PUBLIC_API_URL}/Character/Search?name=${name}&realm=${realm}&region=${region}&version=${version}`, {
+        method: 'GET',headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+
+    return response
+}

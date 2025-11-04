@@ -468,6 +468,7 @@
           class="textinput"
           type="text"
           spellcheck="false"
+          autocomplete="off"
           onkeypress={(e: KeyboardEvent) => {
             if (e.key === "Enter" && selectedSearch) {
               searchItem(selectedSearch);

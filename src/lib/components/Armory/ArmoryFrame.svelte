@@ -20,8 +20,8 @@
   import type { VersionContext } from "$lib/versions/VersionContext";
   import { t } from "$lib/i18n/index.svelte";
   import StatisticFrame from "./StatisticFrame.svelte";
-  import GlyphFrame from "$lib/components/character/GlyphFrame.svelte";
-  import TalentFrame from "$lib/components/character/TalentFrame.svelte";
+  import GlyphFrame from "$lib/components/Armory/GlyphFrame.svelte";
+  import TalentFrame from "$lib/components/Armory/TalentFrame.svelte";
   import CharacterEditFrame from "./CharacterEditFrame.svelte";
   import {
     createEnchantmentState,

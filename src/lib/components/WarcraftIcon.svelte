@@ -10,18 +10,18 @@
   let checkSource = () => {
     if (src) {
       if (!src.includes("worldofwarcraft.com")) {
-        return `https://render-eu.worldofwarcraft.com/icons/56/${src}.jpg`;
+        return `https://render.worldofwarcraft.com/icons/56/${src}.jpg`;
       }
       return src;
     }
-    return `https://render-eu.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`;
+    return `https://render.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`;
   };
 </script>
 
 <Wrapper>
   {#if !src}
     <img
-      src={`https://render-eu.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`}
+      src={`https://render.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`}
       alt={label}
       class="warcraft-icon {grayscale ? 'grayscale' : ''}"
     />

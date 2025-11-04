@@ -10,7 +10,7 @@
   import type { PlayerClass } from "$lib/consts";
   import TalentTreeCellFrame from "./TalentTreeCellFrame.svelte";
   import type { CharacterSpec, Talent } from "$lib/types";
-  import TalentArrow from "../talent/TalentArrow.svelte";
+  import TalentArrow from "$lib/components/Talent/TalentArrow.svelte";
   import { getMaxTalentPoints, getSpentPoints } from "$lib/helper/talents";
 
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");

@@ -18,9 +18,13 @@
   let accountState = getContext<Account>("accountState");
   let guilds: Guild[] = $state([]);
   let characters: Character[] = $state([]);
-  let filterOpen: boolean = $state(page.url.searchParams.size > 0? true: false);
+  let filterOpen: boolean = $state(
+    page.url.searchParams.size > 0 ? true : false
+  );
+  let filtered_accounts = $derived(getFilteredItems());
+  let filtered_length = $derived(filtered_accounts.length);
 
-  const filters : Record<string, any> = $state({
+  const filters: Record<string, any> = $state({
     search: page.url.searchParams.get("name") ?? "",
     level: getSearchParams("level", ">"),
     guild: getSearchParams("guild"),
@@ -58,13 +62,17 @@
     characters = response_data["Result"];
   }
 
-  function getSearchParams(key: string, defaultModifier: string = "i", defaultInput: string = "") {
+  function getSearchParams(
+    key: string,
+    defaultModifier: string = "i",
+    defaultInput: string = ""
+  ) {
     const param = page.url.searchParams.get(key);
-    if(param){
+    if (param) {
       let [mod, search] = decodeURIComponent(param).split("#");
-      return { "modifier": mod, "input": search}
+      return { modifier: mod, input: search };
     }
-    return { "modifier": defaultModifier, "input": defaultInput}
+    return { modifier: defaultModifier, input: defaultInput };
   }
 
   let fetchData = async () => {
@@ -161,6 +169,8 @@
           bind:value={filters.search}
           id="search"
           name="search"
+          spellcheck="false"
+          autocomplete="off"
           onkeydown={(e: KeyboardEvent) => {
             if (e.key === "Escape") {
               filters.search = "";
@@ -187,15 +197,13 @@
       <div
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
-        <span
-          style="display: block; justify-self: end;  min-width: 80px;"
+        <span style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountLevel")}</span
           ></span
         >
-        <span
-          style="display: block; justify-self: center;  width: 70%;"
+        <span style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
@@ -215,8 +223,7 @@
             <option value="<=">{t("ui.list.lessThanEqual")}</option>
           </select></span
         >
-        <span
-          style="display: block; justify-self: start;  min-width: 80px;"
+        <span style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountLevel"
             name="accountLevel"
@@ -224,6 +231,8 @@
             placeholder="0"
             type="number"
             class="textinput"
+            spellcheck="false"
+            autocomplete="off"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Enter") {
                 updateSearchParam(
@@ -244,15 +253,13 @@
       <div
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
-        <span
-          style="display: block; justify-self: end;  min-width: 80px;"
+        <span style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountGuild")}</span
           ></span
         >
-        <span
-          style="display: block; justify-self: center;  width: 70%;"
+        <span style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
@@ -271,8 +278,7 @@
             <option value="eq">{t("ui.list.equal")}</option>
           </select></span
         >
-        <span
-          style="display: block; justify-self: start;  min-width: 80px;"
+        <span style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountGuild"
             name="accountGuild"
@@ -280,6 +286,8 @@
             placeholder={t("ui.placeholder.search")}
             type="text"
             class="textinput"
+            spellcheck="false"
+            autocomplete="off"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Enter") {
                 updateSearchParam(
@@ -300,15 +308,13 @@
       <div
         style={`display: grid; grid-template-columns: 42% 16% 42%; border-top: 1px solid black; background-color: var(--palette-secondary-dark)`}
       >
-        <span
-          style="display: block; justify-self: end;  min-width: 80px;"
+        <span style="display: block; justify-self: end;  min-width: 80px;"
           ><span
             style="display: flex; align-items: center; justify-items: center; height: 100%"
             >{t("ui.options.accountCharacter")}</span
           ></span
         >
-        <span
-          style="display: block; justify-self: center;  width: 70%;"
+        <span style="display: block; justify-self: center;  width: 70%;"
           ><select
             style="width: 100%;"
             class="select"
@@ -325,8 +331,7 @@
             <option value="eq">{t("ui.list.equal")}</option>
           </select></span
         >
-        <span
-          style="display: block; justify-self: start;  min-width: 80px;"
+        <span style="display: block; justify-self: start;  min-width: 80px;"
           ><input
             id="accountCharacter"
             name="accountCharacter"
@@ -334,6 +339,8 @@
             placeholder={t("ui.placeholder.search")}
             type="text"
             class="textinput"
+            spellcheck="false"
+            autocomplete="off"
             onkeydown={(e: KeyboardEvent) => {
               if (e.key === "Enter") {
                 updateSearchParam(
@@ -396,7 +403,7 @@
     </div>
     <VirtualList
       style="height:55vh; border-bottom: 1px solid black; overflow:auto; z-index: 0;"
-      items={getFilteredItems()}
+      items={filtered_accounts}
     >
       {#snippet vl_slot({ index, item })}
         <a
@@ -455,21 +462,19 @@
       left: 0;
       width: 100%;
       height: 25px;
-      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
-      z-index: 1;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5));
       pointer-events: none;
       justify-items: end;
     "
-    >
-      <span
-        style="display: flex; margin-top: 30px; margin-right: 20px; color: var(--item-quality-colour-Poor)"
-        >{t(`ui.list.results`, {
-          current: getFilteredItems().length,
-          total: accounts.length,
-        })}</span
-      >
-    </div>
+    ></div>
   </div>
+  <span
+    style="display: flex; justify-self: end; margin-right: 20px; color: var(--item-quality-colour-Poor); z-index: 0;"
+    >{t(`ui.list.results`, {
+      current: filtered_accounts.length,
+      total: accounts.length,
+    })}</span
+  >
   <button
     type="button"
     class="button-base"

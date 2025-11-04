@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ArmoryFrame from "$lib/components/character/ArmoryFrame.svelte";
+  import ArmoryFrame from "$lib/components/Armory/ArmoryFrame.svelte";
 
 </script>
 

@@ -504,6 +504,8 @@
           name="realm"
           type="text"
           placeholder="Realm"
+          spellcheck="false"
+          autocomplete="off"
           bind:value={data.character.realm}
           onbeforeinput={handleValidInput}
           oninput={() => handleRealmInput(data.character.realm)}
