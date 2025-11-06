@@ -1,5 +1,11 @@
 <script lang="ts">
-  import type { Character, Guild, WCLGuildRanking, WCLRanking, WCLZone } from "$lib/types";
+  import type {
+    Character,
+    Guild,
+    WCLGuildRanking,
+    WCLRanking,
+    WCLZone,
+  } from "$lib/types";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
   import { ICON_QUESTIONMARK } from "$lib/consts";
@@ -36,7 +42,8 @@
     .getFactions()
     .find((_faction) => _faction.name == character.faction);
 
-  const wcl: { ranking: WCLRanking; zone: WCLZone, guild: WCLGuildRanking } = $state(getContext("wcl"));
+  const wcl: { ranking: WCLRanking; zone: WCLZone; guild: WCLGuildRanking } =
+    $state(getContext("wcl"));
 
   async function fetchRanking() {
     const res = await fetch(
@@ -118,14 +125,13 @@
         <div>
           {#if character.guild !== -1 && character.guild !== null}
             <a
-            class="guild"
-            href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
-            style={`color: var(--faction-colour-${character_guild.faction})`}
-          >
-            {character_guild.name}
-          </a>
+              class="guild"
+              href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
+              style={`color: var(--faction-colour-${character_guild.faction})`}
+            >
+              {character_guild.name}
+            </a>
           {/if}
-          
         </div>
       </div>
       <div class="class-line">
@@ -282,49 +288,65 @@
                 <span>{t("ui.ranking.rank")}</span>
               </div>
               {#each wcl.ranking?.zoneRankings?.rankings as encounter}
-                <div
-                  style="display: grid; grid-template-columns:50% 50px 40px 60px; gap: 30px; padding-left: 8px; padding-right: 8px; border-left: 1px solid black; border-right: 1px solid black;"
+                <a
+                  style="
+                  text-decoration: none;
+                  color: inherit;
+                  "
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://{character.realm_version}.warcraftlogs.com/character/{character.region.toLowerCase()}/{character.realm
+                    .toLowerCase()
+                    .replace(
+                      ' ',
+                      '-'
+                    )}/{character.name.toLowerCase()}?boss={encounter.encounter
+                    .id}"
                 >
-                  <span style="border-right: 1px solid black;"
-                    >{encounter.encounter.name}</span
-                  >
                   <div
-                    style="display: flex; justify-content: end; align-items: center; gap: 2px; border-right: 1px solid black; padding-right: 8px; color: var(--ui-colour-wcl-{getRankColor(
-                      encounter.rankPercent ?? 0
-                    )})"
+                    style="display: grid; grid-template-columns:50% 50px 40px 60px; gap: 30px; padding-left: 8px; padding-right: 8px; border-left: 1px solid black; border-right: 1px solid black;"
                   >
-                    {Math.floor(encounter.rankPercent ?? 0)}
-                    <WarcraftIcon
-                      mini={true}
-                      label={t(`specs.${encounter.spec}`)}
-                      src={gameVersionFactory.iconProvider.getFromSource(
-                        gameVersionFactory.gameVersion
-                          .getSpecs()
-                          .find(
-                            (_spec) =>
-                              _spec.name ===
-                              `${character.character_class}${encounter?.spec?.charAt(0).toUpperCase()}${encounter?.spec?.slice(1).toLowerCase()}`
-                          )?.icon ?? ICON_QUESTIONMARK
-                      )}
-                    />
+                    <span style="border-right: 1px solid black;"
+                      >{encounter.encounter.name}</span
+                    >
+                    <div
+                      style="display: flex; justify-content: end; align-items: center; gap: 2px; border-right: 1px solid black; padding-right: 8px; color: var(--ui-colour-wcl-{getRankColor(
+                        encounter.rankPercent ?? 0
+                      )})"
+                    >
+                      {Math.floor(encounter.rankPercent ?? 0)}
+                      <WarcraftIcon
+                        mini={true}
+                        label={t(`specs.${encounter.spec}`)}
+                        src={gameVersionFactory.iconProvider.getFromSource(
+                          gameVersionFactory.gameVersion
+                            .getSpecs()
+                            .find(
+                              (_spec) =>
+                                _spec.name ===
+                                `${character.character_class}${encounter?.spec?.charAt(0).toUpperCase()}${encounter?.spec?.slice(1).toLowerCase()}`
+                            )?.icon ?? ICON_QUESTIONMARK
+                        )}
+                      />
+                    </div>
+                    {#if encounter.allStars}
+                      <span
+                        style="display: flex; justify-content: end; border-right: 1px solid black; padding-right: 8px;"
+                        >{encounter.allStars.points !== "-"
+                          ? Number(encounter.allStars.points).toPrecision(4)
+                          : encounter.allStars.points}</span
+                      >
+                      <span
+                        style="display: flex; justify-content: end; color: var(--ui-colour-wcl-{getRankColor(
+                          (1 -
+                            encounter.allStars?.rank /
+                              encounter.allStars?.total) *
+                            100
+                        )})">{encounter.allStars?.rank}</span
+                      >
+                    {/if}
                   </div>
-                  {#if encounter.allStars}
-                    <span
-                      style="display: flex; justify-content: end; border-right: 1px solid black; padding-right: 8px;"
-                      >{encounter.allStars.points !== "-"
-                        ? Number(encounter.allStars.points).toPrecision(4)
-                        : encounter.allStars.points}</span
-                    >
-                    <span
-                      style="display: flex; justify-content: end; color: var(--ui-colour-wcl-{getRankColor(
-                        (1 -
-                          encounter.allStars?.rank /
-                            encounter.allStars?.total) *
-                          100
-                      )})">{encounter.allStars?.rank}</span
-                    >
-                  {/if}
-                </div>
+                </a>
               {/each}
               <div style="border-top: 1px solid black"></div>
             {/if}
