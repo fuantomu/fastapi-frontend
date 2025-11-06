@@ -104,6 +104,9 @@
     if (data.Result.length == 0) {
       window.location.href = `/${gameVersionFactory.gameVersion.getName()}/armory/characters`;
     }
+    if (data.Result[0].guild === null){
+      data.Result[0].guild = -1
+    }
     formData.character = data.Result[0];
     baseCharacter = data.Result[0];
   };
@@ -323,10 +326,6 @@
 
   let equipment_updated: string | null = $state(null);
 
-  function handleDelete() {
-    goto(`${id}/delete`);
-  }
-
   async function handleRefresh() {
     equipment_updated = t("ui.updatingCharacter");
     fetching = true;
@@ -370,6 +369,9 @@
         `/${gameVersionFactory.gameVersion.getName()}/armory${result["url"]}`
       );
     }
+    character_guild =
+      guilds.find((guild: Guild) => guild.id === formData.character?.guild) ??
+      ({} as Guild);
     edit = false;
     fetching = false;
   }
@@ -401,7 +403,7 @@
               bind:nameError
             ></CharacterEditFrame>
           {:else}
-            <CharacterFrame character={formData.character} {character_guild} />
+            <CharacterFrame bind:character={formData.character} {character_guild} />
           {/if}
           {#if accountState.level > 0}
             <button

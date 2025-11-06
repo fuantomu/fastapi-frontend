@@ -78,7 +78,7 @@
 
     return characters.filter((character: Character) => {
       return (
-        character.name.includes(filters.search) &&
+        character.name.toLowerCase().includes(filters.search.toLowerCase()) &&
         (filters.level.input !== ""
           ? parseModifier(
               filters.level.modifier,
@@ -656,14 +656,6 @@
         ></div>
       {/if}
     </div>
-    {#if filtered_length <= 15}
-      <SearchCharacter
-        {guilds}
-        search={filters.search}
-        realm={filters.realm.input}
-        region={filters.region}
-      ></SearchCharacter>
-    {/if}
 
     <span
       style="display: flex; justify-self: end; margin-right: 20px; color: var(--item-quality-colour-Poor); z-index: 0;"
@@ -672,6 +664,14 @@
         total: characters.length,
       })}</span
     >
+    {#if filtered_length <= 15}
+      <SearchCharacter
+        {guilds}
+        search={filters.search}
+        realm={filters.realm.input}
+        region={filters.region}
+      ></SearchCharacter>
+    {/if}
     {#if accountState.level > 0}
       <button
         type="button"

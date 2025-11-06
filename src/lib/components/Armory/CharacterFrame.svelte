@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Character, Guild, WCLRanking, WCLZone } from "$lib/types";
+  import type { Character, Guild, WCLGuildRanking, WCLRanking, WCLZone } from "$lib/types";
   import WarcraftIcon from "../WarcraftIcon.svelte";
   import { getContext } from "svelte";
   import { ICON_QUESTIONMARK } from "$lib/consts";
@@ -13,7 +13,7 @@
   const gameVersionFactory = getContext<VersionContext>("gameVersionFactory");
   let expandRanking: boolean = $state(false);
 
-  let { character, character_guild } = $props<{
+  let { character = $bindable(), character_guild } = $props<{
     character: Character;
     character_guild: Guild;
   }>();
@@ -36,7 +36,7 @@
     .getFactions()
     .find((_faction) => _faction.name == character.faction);
 
-  const wcl: { ranking: WCLRanking; zone: WCLZone } = $state(getContext("wcl"));
+  const wcl: { ranking: WCLRanking; zone: WCLZone, guild: WCLGuildRanking } = $state(getContext("wcl"));
 
   async function fetchRanking() {
     const res = await fetch(
@@ -116,13 +116,16 @@
         </span>
 
         <div>
-          <a
+          {#if character.guild !== -1 && character.guild !== null}
+            <a
             class="guild"
             href={`/${gameVersionFactory.gameVersion.getName()}/guilds/${character_guild.id}`}
             style={`color: var(--faction-colour-${character_guild.faction})`}
           >
             {character_guild.name}
           </a>
+          {/if}
+          
         </div>
       </div>
       <div class="class-line">
@@ -167,6 +170,8 @@
       style="display: flex; justify-content: end; align-items: center; border: 1px solid black; padding: 20px"
     >
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href="https://{character.realm_version}.warcraftlogs.com/character/{character.region.toLowerCase()}/{character.realm
           .toLowerCase()
           .replace(' ', '-')}/{character.name.toLowerCase()}"

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { t } from "$lib/i18n/index.svelte";
-  import type { Character } from "$lib/types";
+  import type { Guild } from "$lib/types";
   import type { VersionContext } from "$lib/versions/VersionContext";
   import { getContext } from "svelte";
   import { PUBLIC_API_URL } from "$env/static/public";
   import { goto } from "$app/navigation";
 
-  const { character } = $props<{
-    character: Character;
+  const { guild } = $props<{
+    guild: Guild;
   }>();
 
   let modal: HTMLDialogElement;
@@ -30,14 +30,17 @@
     }
   }
 
-  async function deleteCharacter() {
-    await fetch(`${PUBLIC_API_URL}/Character/?id=${character.id}&version=${gameVersionFactory.gameVersion.getName()}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    goto(`/${gameVersionFactory.gameVersion.getName()}/armory/characters/`);
+  async function deleteGuild() {
+    await fetch(
+      `${PUBLIC_API_URL}/Guild/?id=${guild.id}&version=${gameVersionFactory.gameVersion.getName()}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    goto(`/${gameVersionFactory.gameVersion.getName()}/guilds/`);
   }
 </script>
 
@@ -55,7 +58,7 @@
     width: 20vw;
     border: 1px solid black;"
   >
-    {t("ui.armory.deleteCharacter")}
+    {t("ui.guilds.deleteGuild")}
   </div>
 </div>
 <dialog
@@ -70,16 +73,16 @@
   <article>
     <header>
       <h4>
-        {t("ui.armory.deleteCharacter")}
+        {t("ui.guilds.deleteGuild")}
       </h4>
     </header>
     <div>
-        {t("ui.armory.deleteConfirmation", {"character": character.name})}
+      {t("ui.guilds.deleteConfirmation", { guild: guild.name })}
     </div>
     <div class="search-item">
       <button
         type="button"
-        onclick={() => deleteCharacter()}
+        onclick={() => deleteGuild()}
         style="
         background-color: var(--palette-primary-main);
         display: flex; 
@@ -89,7 +92,7 @@
         border: 1px solid black;
         user-select: none;"
       >
-        {t("ui.armory.delete")}
+        {t("ui.guild.delete")}
       </button>
       <button
         type="button"
@@ -103,7 +106,7 @@
         border: 1px solid black;
         user-select: none;"
       >
-        {t("ui.armory.cancel")}
+        {t("ui.guild.cancel")}
       </button>
     </div>
   </article>

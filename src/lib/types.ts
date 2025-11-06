@@ -21,6 +21,16 @@ export type Character = {
     realm_version: RealmVersion;
 };
 
+export type RosterCharacter = {
+    id: number;
+    name: string;
+    level: number;
+    race: Race;
+    character_class: PlayerClass;
+    rank: number;
+    parsed: boolean;
+}
+
 export type CharacterEquipment = {
     head: CharacterItem | null;
     shoulders: CharacterItem | null;
@@ -112,6 +122,7 @@ export type Guild = {
     created_timestamp: number;
     region: Region,
     version: GameVersionName;
+    realm_version: RealmVersion;
 }
 
 export type WCLName = {
@@ -213,6 +224,29 @@ export type WCLZone = {
     expansion: WCLName
     frozen: boolean
     name: string
+}
+
+export type WCLSimpleRanking = {
+    number: number
+    color: string | null
+}
+
+export type WCLGuildZoneRankType = {
+    worldRank: WCLSimpleRanking
+    regionRank: WCLSimpleRanking
+    serverRank: WCLSimpleRanking
+}
+
+export type WCLGuildZoneRanking = {
+    progress: WCLGuildZoneRankType
+    speed: WCLGuildZoneRankType
+    completeRaidSpeed: WCLGuildZoneRankType
+}
+
+export type WCLGuildRanking = {
+    name: string,
+    id: number
+    zoneRanking: WCLGuildZoneRanking
 }
 
 export type EnchantmentState = {

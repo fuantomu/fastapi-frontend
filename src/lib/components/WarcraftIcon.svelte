@@ -6,22 +6,23 @@
   export let label: string = "";
   export let grayscale: boolean = false;
   export let mini : boolean = false;
+  export let size: number = 56;
 
   let checkSource = () => {
     if (src) {
       if (!src.includes("worldofwarcraft.com")) {
-        return `https://render.worldofwarcraft.com/icons/56/${src}.jpg`;
+        return `https://render.worldofwarcraft.com/icons/${size}/${src}.jpg`;
       }
       return src;
     }
-    return `https://render.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`;
+    return `https://render.worldofwarcraft.com/icons/${size}/${ICON_QUESTIONMARK}.jpg`;
   };
 </script>
 
 <Wrapper>
   {#if !src}
     <img
-      src={`https://render.worldofwarcraft.com/icons/56/${ICON_QUESTIONMARK}.jpg`}
+      src={`https://render.worldofwarcraft.com/icons/${size}/${ICON_QUESTIONMARK}.jpg`}
       alt={label}
       class="warcraft-icon {grayscale ? 'grayscale' : ''}"
     />

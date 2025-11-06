@@ -22,3 +22,22 @@ export function getRankColor(rank: number) {
         return "grey"
     }
 }
+
+export function getWCLColor(color: string){
+    switch(color){
+        case "artifact":
+            return "tan"
+        case "legendary": 
+            return "orange"
+        case "astounding":
+            return "pink"
+        case "epic":
+            return "purple"
+        case "rare":
+            return "blue"
+        case "uncommon":
+            return "green"
+        default:
+            return "grey"
+    }
+}

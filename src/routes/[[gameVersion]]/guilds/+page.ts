@@ -4,9 +4,9 @@ import type { Guild } from '$lib/types';
 import { sortBy } from '$lib/helper/sort';
 
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageLoad = async ({ fetch, params }) => {
     try {
-        const res = await fetch(`${PUBLIC_API_URL}/Guild/`);
+        const res = await fetch(`${PUBLIC_API_URL}/Guild/?version=${params.gameVersion}`);
         const data = await res.json()
         const items: Guild[] = data.Result;
 

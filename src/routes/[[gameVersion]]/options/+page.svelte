@@ -113,7 +113,7 @@
     }
     return accounts.filter((account: Account) => {
       return (
-        account.username.includes(filters.search) &&
+        account.username.toLowerCase().includes(filters.search.toLowerCase()) &&
         (filters.level.input !== ""
           ? parseModifier(
               filters.level.modifier,

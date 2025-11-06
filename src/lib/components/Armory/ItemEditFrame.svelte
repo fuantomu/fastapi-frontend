@@ -111,7 +111,7 @@
       enchantmentState[slot as keyof EnchantmentState] = currentEnchants;
       for (const id of gems) {
         const existingGemState = gemState[slot as keyof EnchantmentState]?.find(
-          (_enchant: Enchantment) => _enchant.source_id === Number(id)
+          (_enchant: Enchantment) => _enchant?.source_id === Number(id)
         );
         if (existingGemState) {
           currentGems.push(existingGemState);
